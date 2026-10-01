@@ -396,6 +396,7 @@ function genPatch(seed,kind){
     track:r.range(.3,.8),env:pad?r.range(0,1.8):r.range(.5,4),fd:r.exp(.06,.7),fs:r.range(.1,.6),
     lfoDiv:pad?r.pick([4,8,16,32]):r.pick([1,2,4,8]),lfoDepth:r.chance(pad?.75:.5)?r.range(200,pad?1500:1100):0,lfoShape:r.pick(['sine','triangle'])};
   if(P.filter.type==='bandpass'){P.filter.q=Math.min(P.filter.q,4);P.filter.cut*=1.3}
+  if(pad){const r8=rng((seed^0x0BE7A1)>>>0);P.filter.cut*=1.2;if(r8.chance(.45))P.filter.cut=Math.min(6000,P.filter.cut*r8.range(1.6,2.4))}   // v1.25 (Jesse: pads often a bit dark): a touch brighter, and nearly half are open; own dice
   P.drift=pad?r.range(3,9):r.range(1,5);
   const d1=r.range(.1,.5),d2=r.range(.5,1);
   P.drive=r.w([[0,2],[d1,2],[d2,pad?.3:1]]);
@@ -451,7 +452,12 @@ function genPatch(seed,kind){
     if(P.mallet==='vibes'&&r3.chance(.6))L.trem={rate:r3.range(3.5,6.5),depth:r3.range(.15,.35)};
     const hd=r3.range(0,1);L.hard=+hd.toFixed(3);L.click*=.6+.8*hd;P.filter.cut=Math.max(P.filter.cut*(.6+.9*hd),1100);
     if(r3.chance(.33)&&P.layers.length>1){const pair={marimba:'piano',piano:'marimba',vibes:'glockenspiel',glockenspiel:'vibes',xylophone:'marimba',guitar:'piano',organ:'marimba',wood:'marimba',kalimba:'glockenspiel',balafon:'marimba','e-piano':'vibes',wurli:'marimba',celesta:'piano','music box':'marimba'}[P.mallet]||'marimba';
-      const D=mk(pair,KR[pair]);D.level=+r3.range(.3,.5).toFixed(3);D.pan=+r3.range(-.4,.4).toFixed(3);D.oct=pair==='glockenspiel'?L.oct+1:L.oct+r3.pick([0,1]);D.hard=+r3.range(0,1).toFixed(3);D.decay=Math.min(D.decay,L.decay*1.5);P.layers[1]=D}}}
+      const D=mk(pair,KR[pair]);D.level=+r3.range(.3,.5).toFixed(3);D.pan=+r3.range(-.4,.4).toFixed(3);D.oct=pair==='glockenspiel'?L.oct+1:L.oct+r3.pick([0,1]);D.hard=+r3.range(0,1).toFixed(3);D.decay=Math.min(D.decay,L.decay*1.5);P.layers[1]=D}
+    /* v1.25 (Jesse: now and then weirder sounds, as long as they are mid-high and a little softened, never shrill): about a quarter of the
+       leads get an odd struck timbre instead: glass (nearly harmonic, a slow shimmer), blip (short, FM, a Dozzy or Villalobos click-tone) or
+       hollow (odd partials only, like a stopped pipe). Up to an octave higher, a soft mallet and the filter capped at 2.6 kHz. Own dice. */
+    {const r7=rng((seed^0x7EB1D5)>>>0);if(r7.chance(.26)){const KW={glass:{R:[1,3.01,5.07,7.2],lv:[1,.24,.08,.03],dk:[1,.55,.35,.2],d:[.3,.9],cl:.12},blip:{R:[1,2,3],lv:[1,.2,.05],dk:[1,.4,.2],d:[.06,.2],cl:.06,fm:{r:1.5,i:.9,dec:.05}},hollow:{R:[1,3,5],lv:[1,.2,.07],dk:[1,.6,.4],d:[.15,.55],cl:.06}};
+      const wk=r7.w([['glass',1.2],['blip',1],['hollow',1]]),Wl=mk(wk,KW[wk]);Wl.oct=r7.pick([0,1,1]);Wl.hard=+r7.range(0,.35).toFixed(3);P.layers[0]=Wl;P.mallet=wk;P.amp.d=Wl.decay*.8;P.filter.cut=Math.min(Math.max(P.filter.cut,1100),2600)}}}}
   genFx(r,P);
   // v1.14 (Jesse: leads start with a smeared, resonating noise, and it came with Echo): struck leads stay clean. No effect chain on a lead
   // (Halo's diffused repeats and Sonar's dispersion rode on the Echo knob), so Echo is only Worp's plain delay; no Air layer either
@@ -466,7 +472,7 @@ function genPatch(seed,kind){
 
 /* ---------- lead phrases (v1.3, v1.9, v1.12): nine ways to make a line, after minimalist practice. Everything follows from the seed and the
    step number, so the same lead plays the same line in Worp, in Ngoma and in an export, and it keeps changing without dice. ---------- */
-const PH_STYLES={loop:'Loop',phase:'Phase',modules:'Modules',additive:'Additive',iso:'Isorhythm',pulse:'Pulse',anchor:'Anchor',triplet:'Triplets',bounce:'Bounce'};
+const PH_STYLES={loop:'Loop',phase:'Phase',modules:'Modules',additive:'Additive',iso:'Isorhythm',pulse:'Pulse',anchor:'Anchor',triplet:'Triplets',bounce:'Bounce',arp:'Arpeggio',stab:'Stabs'};
 const PH_AFTER={loop:'a phrase that changes one step every few passes',
   phase:'after Steve Reich: two voices play the same cell, and one slips a step ahead every few passes until they meet again',
   modules:'after Terry Riley’s In C: short figures, each repeated a while before the next, often over a steady high pulse',
@@ -475,7 +481,9 @@ const PH_AFTER={loop:'a phrase that changes one step every few passes',
   pulse:'after Reich’s Music for 18 Musicians: steady pulses on chord tones that swell and fade, the chord moving every few bars',
   anchor:'the melody plays the rhythm of the anchor, the timeline the drums revolve around (the clave, bell or surdo next to Ngoma, a son clave on its own), on a short row of notes that moves on every few bars',
   triplet:'triplet figures against the straight grid, like a bell part in 12/8 over a 4/4 groove',
-  bounce:'after Dillon Bastan’s Bouncy Notes: balls dropped on the keys bounce lower and faster until they rest, each bounce a note, off the grid like a real ball'};
+  bounce:'after Dillon Bastan’s Bouncy Notes: balls dropped on the keys bounce lower and faster until they rest, each bounce a note, off the grid like a real ball',
+  arp:'a short, simple arpeggio on the chord, in sixteenths or triplets, with a few gaps, the way a techno line turns a chord into a pulse',
+  stab:'minimal techno: a few short notes on a sparse, off-centre grid (sometimes dotted eighths, three against four), one or two pitches that trade places, after Villalobos and Donato Dozzy'};
 // v1.9: an anchor rhythm from a pattern string (x/X = stroke, X accented, . = rest): for step i, null or {k: which stroke of the cycle, acc}
 const CLAVE_TPL='X..x..x...x.x...';
 // v1.11: timelines to fall back on when the anchor is straight (a surdo on the beats gives a dull line): son and rumba clave, bossa, gahu, shiko, a double tresillo
@@ -497,6 +505,12 @@ function genPhraseStyle(P){
       ph.arot=r3.pick([1,3,5,6,7,10,11]);ph.tl=r3.int(0,TIMELINES.length-1)}   // v1.11: interlock = the anchor turned by a few sixteenths, a second timeline that locks in with the first
     else if(x3>=.14&&x3<.28){ph.style='triplet';const F=['xxx','x.x','xx.','.xx','.x.','..x','x.x'];ph.figs=[0,1,2,3].map(()=>r3.pick(F));if(r3.chance(.5))ph.figs[r3.int(1,3)]='...';ph.trot=r3.pick([0,1,1,2]);ph.cross=r3.chance(.35);
       const L=r3.pick([6,8,9,12]);ph.line=[];let d=0;for(let j=0;j<L;j++){ph.line.push(d);d=Math.max(-2,Math.min(n+1,d+r3.pick([-1,1,1,2,-2,0])))}ph.rep=r3.pick([2,4])}}
+  /* v1.25 (Jesse: leads more on techno patterns: triplets, simple arpeggios, short; Reich and Riley stay): about four in ten leads become
+     an Arpeggio or Stabs line. Own dice, so the other styles keep their seeds. */
+  {const r6=rng((P.seed^0xA4F7E5)>>>0);if(r6()<.4){ph.style=r6.chance(.55)?'arp':'stab';
+    if(ph.style==='arp'){const L=r6.pick([3,4,4,5]),sh=r6.pick(['up','up','updown','skip']),T=[0,2,4,n,n+2].slice(0,Math.max(3,L));let nt=T.slice(0,L);if(sh==='updown')nt=nt.concat(nt.slice(1,-1).reverse());if(sh==='skip')nt=[0,4,2,n].slice(0,L);
+      ph.notes=nt;ph.trip=r6.chance(.35);ph.K=r6.pick([16,13,12,11]);ph.rot=0;ph.arot=r6.int(0,15);ph.roots=[0,r6.pick([3,-2,1,2]),r6.pick([0,2,-1]),r6.pick([4,-3,1])].slice(0,r6.pick([2,3,4]));ph.bars=r6.pick([2,4]);ph.gate=+r6.range(.18,.3).toFixed(3)}
+    else{ph.dot=r6.chance(.4);ph.K=r6.pick([3,4,5,5,7]);ph.rot=0;ph.srot=r6.int(1,15);const d0=r6.pick([0,i5,2,n]);ph.a=d0;ph.b=d0+r6.pick([2,-1,n,i5,1]);ph.gate=+r6.range(.12,.22).toFixed(3)}}}
   const deg=()=>r.w([[0,4],[i5,2.5],[2,2],[1,1.2],[3,1],[n-1,1],[n,1.5],[i5-n,.8]]);
   if(ph.style==='loop'){ph.var=[];for(let c=0;c<8;c++){const k=r.int(0,ph.len-1);ph.var.push({k,deg:ph.steps[k].deg+(r.chance(.5)?1:-1),flip:r.chance(.35)&&k!==0})}}
   if(ph.style==='phase'){const L=r.pick([12,8,12,6]),on=L===12?r.pick(['xxx.xx.x.xx.','x.xx.xxx.x.x','xx.x.xx.xx.x']):L===8?r.pick(['xx.x.xx.','x.xxx.x.']):'xx.xx.';
@@ -521,7 +535,7 @@ function rnd01(a,b){let h=(a*374761393+b*668265263)>>>0;h=Math.imul(h^(h>>>13),1
 // octave or step to a neighbour, chosen by the seed, so a line keeps its shape but never plays four bars the same way twice
 function phraseAt(P,i){const ev=phraseAt0(P,i),ph=P.phrase;if(!ev.length||!ph||ph.style==='pulse')return ev;const R=phCtx().res||4,blk=Math.floor(i/(R*16)),u=rnd01((P.seed^0x0B5E^(blk*40503))>>>0,i);
   if(u>=.2*Math.pow(phCx(),1.5))return ev;const nS=SCALES[P.scale].length;return ev.map(e=>e.v?e:{...e,deg:e.deg+(u<.05?nS:u<.1?1:-1),tie:false})}
-function phraseAt0(P,i){const ph=P.phrase;if(!ph)return[];if(ph.rot&&ph.style!=='anchor'&&ph.style!=='triplet'&&ph.style!=='bounce'&&!PH_HALF[ph.style]){i-=ph.rot;if(i<0)return[]}
+function phraseAt0(P,i){const ph=P.phrase;if(!ph)return[];if(ph.rot&&ph.style!=='anchor'&&ph.style!=='triplet'&&ph.style!=='bounce'&&ph.style!=='arp'&&ph.style!=='stab'&&!PH_HALF[ph.style]){i-=ph.rot;if(i<0)return[]}
   if(PH_HALF[ph.style]){   // v1.11: not on plain eighths but on a seeded Euclidean grid (5 to 11 of 16), so the line is syncopated, like a bell part
     const R=phCtx().res||4,N=R*4,G=ph._g||(ph._g=(()=>{const r5=rng((P.seed^0xE0C1D)>>>0),K=r5.pick([5,6,7,7,9,10,11]),g=euclidW(K,16,r5.int(1,15));const rk=[];let c=0;g.forEach(x=>{rk.push(c);if(x)c++});return{g,rk,K}})());
     const pos=i%N,gp=N===16?pos:Math.floor(pos*16/N);if(!G.g[gp])return[];return phraseCore(P,Math.floor(i/N)*G.K+G.rk[gp]).map(e=>({...e,gate:(e.gate||.6)*1.3}))}
@@ -551,6 +565,11 @@ function phraseCore(P,i){const ph=P.phrase,Z=phZ(),CX=phCx();
       if(ph.cross&&blk%2===1){const j=i%16;if(j%3)return[];return[{v:0,deg:ph.line[(Math.floor(i/3)+blk)%ph.line.length],acc:j===0,gate:.4}]}   // every other block: dotted eighths, three against four
       if(p===3)return[];const f=ph.figs[beat%4];if(f[(p+(ph.trot||0))%3]!=='x')return[];
       return[{v:0,deg:ph.line[(beat*3+p+blk)%ph.line.length],acc:p===(3-(ph.trot||0))%3,gate:.4,off:p/3}]}
+    case'arp':{const R=phCtx().res||4,B=R*4,j=i%B,bar=Math.floor(i/B),root=ph.roots[Math.floor(bar/(ph.bars*Z))%ph.roots.length],nt=ph.notes,M=ph._mk||(ph._mk={}),mask=M[B]||(M[B]=euclidW(Math.round(ph.K*B/16),B,ph.arot%B));
+      if(ph.trip&&R===4){const p=i%4;if(p===3)return[];const beat=Math.floor(i/4),k=beat*3+p;return[{v:0,deg:root+nt[k%nt.length],acc:p===0&&beat%2===0,gate:ph.gate,off:p/3,vel:p?.62:.85}]}
+      if(!mask[j])return[];return[{v:0,deg:root+nt[i%nt.length],acc:j%R===0,gate:ph.gate,vel:j%R===0?.88:.6}]}
+    case'stab':{const R=phCtx().res||4,B=R*4,j=i%B,blk=Math.floor(i/(B*2*Z)),M=ph._mk||(ph._mk={}),mask=M[B]||(M[B]=euclidW(Math.max(2,Math.round(ph.K*B/16)),B,ph.srot%B));
+      if(ph.dot&&R===4?(i%3!==0):!mask[j])return[];const u=rnd01((P.seed^0x57AB)>>>0,i),d=(blk%2&&u<.45)?ph.b:ph.a;return[{v:0,deg:d+(u>.93?SCALES[P.scale].length:0),acc:u<.3,gate:ph.gate,vel:.55+.4*(1-u)}]}
     case'phase':{const L=ph.L,a=ph.cell[i%L],sh=Math.floor(i/(L*ph.rep*Z))%L,b=ph.cell[(i+sh)%L],out=[];if(a)out.push({v:0,deg:a.deg,acc:a.acc,gate:.45});if(b&&sh)out.push({v:1,deg:b.deg,acc:false,gate:.5,vel:.42});return out}
     case'modules':{let x=i%(ph.T*Z);for(const m of ph.mods){const span=m.notes.length*m.rep*Z;if(x<span){const s=m.notes[x%m.notes.length],out=[];if(s)out.push({v:0,deg:s.deg,acc:s.acc,gate:.5});if(ph.pulse&&i%2===0)out.push({v:1,deg:SCALES[P.scale].length*2,acc:false,gate:.25,vel:.35});return out}x-=span}return[]}
     case'additive':{let x=i%(ph.T*Z);for(const s of ph.stages){const span=s*ph.stageRep*Z;if(x<span){const j=x%s;return[{v:0,deg:ph.fig[j],acc:j===0,gate:.45}]}x-=span}return[]}
