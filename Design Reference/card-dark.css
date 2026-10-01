@@ -1,0 +1,27 @@
+/* the rhythm card a few shades lighter than its zone (Jesse, 01-10; a paper-light card distracted), the menu calmer: no pills
+   with frames, links as text with an orange line, the preset chips as keycaps. */
+.chips{gap:6px}
+.chip{background:var(--cap);border:0;border-radius:6px;padding:5px 12px;font-size:13px;color:var(--text);
+  box-shadow:0 2px 0 var(--capdk),0 3px 5px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.07)}
+.chip:hover{background:#363430}
+.chip[aria-pressed=true]{background:var(--text);color:#1d1c1a;box-shadow:0 2px 0 #8d877c,0 3px 5px rgba(0,0,0,.35)}
+.tabs{border-bottom-color:#2e2c28}
+.tab{padding:7px 9px}
+.pinfo{--ink:var(--text);--inkm:var(--muted);--rule:#3d3b36;
+  background:#2b2a26;color:var(--ink);border:0;border-radius:8px;padding:14px 20px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1px 0 #0d0c0b,0 6px 14px -8px rgba(0,0,0,.6)}
+.pinfo .pi-l h2{color:var(--ink);font-size:20px}
+.pinfo .pi-r{border-left-color:var(--rule)}
+.pinfo .pi-r p{color:var(--ink)}
+.pinfo .kl{color:var(--inkm)}
+.pinfo .pi-meta{gap:2px 0;font-size:12px}
+.pinfo .pill{border:0;background:none;padding:0;color:var(--inkm);font-size:12px;letter-spacing:.02em}
+
+.pinfo .pill.acc{color:var(--ink);font-weight:700}
+.pinfo .pi-ins{gap:4px 12px}
+.pinfo .pi-ins .pill{color:var(--ink);font-weight:600;font-size:12.5px}
+.pinfo .dots i{box-shadow:inset 0 0 0 1.5px #55524b}
+.pinfo .dots i.a{background:var(--accent);box-shadow:none}
+.pinfo .dots i.s{background:var(--accent)}
+.pinfo .pi-more,.pinfo .ft-link{color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:1.5px;justify-self:start;align-self:flex-start;font-size:12.5px;font-weight:600}
+.pinfo .pi-orig{margin-top:2px}

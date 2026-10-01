@@ -1,0 +1,167 @@
+
+/* ===== v155 skin D (Jesse, 01-10): A in the dark. Braun/TE order with colour that means something (green low, ochre mid,
+   blue high, orange for play and what is on), the black knobs with an aluminium core from C, keycap buttons, and a drumhead
+   as the one ornament. Always dark. Glow only where a real device glows (LEDs, LCD). ===== */
+:root,:root[data-theme="light"],:root[data-theme="dark"]{
+  --bg:#141311; --panel:#1d1c1a; --panel2:#262522; --line:#33312c; --text:#ece6da; --muted:#a59f92;
+  --accent:#ff6a2b; --art1:#76a6d6; --art2:#e6ae2c; --cell:#2c2a27; --cellbeat:#34322e; --track:#3a3833;
+  --onaccent:#1a1310; --focus:#ff8a52; --ledoff:#3a3833; --card:#262522;
+  --low:#47a37c; --mid:#e6ae2c; --high:#76a6d6; --cap:#2f2d29; --capdk:#0f0e0d;
+  --kb1:#0e0e0d; --kb2:#3e3e3b; --kcap:#dcdfdb; --knotch:#141311; --kedge:#f2f2ee;
+  color-scheme:dark}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#141311; --panel:#1d1c1a; --panel2:#262522; --line:#33312c; --text:#ece6da; --muted:#a59f92;
+  --accent:#ff6a2b; --art1:#76a6d6; --art2:#e6ae2c; --cell:#2c2a27; --cellbeat:#34322e; --track:#3a3833; --onaccent:#1a1310; --focus:#ff8a52; --ledoff:#3a3833; --card:#262522; color-scheme:dark}}
+body{background:var(--bg)}
+::selection{background:var(--accent);color:#1a1310}
+html{scrollbar-color:#3a3833 var(--bg)}
+input,select{accent-color:var(--accent)}
+
+/* the drumhead: rings for the cycles, the rim with ten tension lugs, one orange ring that turns once per bar while playing */
+.top{position:relative}
+.drumorn{position:absolute;left:360px;top:-176px;width:270px;height:270px;pointer-events:none;z-index:0;color:#403d37}
+.drumorn .beat{transform-origin:100px 100px;transform:rotate(20deg)}
+body.playing .drumorn .beat{animation:drumturn calc(var(--beat,.65s) * 4) linear infinite}
+@keyframes drumturn{to{transform:rotate(380deg)}}
+@media (prefers-reduced-motion:reduce){body.playing .drumorn .beat{animation:none}}
+@media (max-width:900px){.drumorn{left:auto;right:0;top:-190px;width:220px;height:220px}}
+body{overflow-x:clip}
+.top>*:not(.drumorn){position:relative;z-index:1}
+.brand h1{color:var(--text)}
+.brand p{color:var(--muted)}
+
+/* zones: a lacquered case, wells inside it */
+.zone{background:linear-gradient(180deg,#201f1c,#1b1a18);border:0;border-radius:14px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -1px 0 rgba(0,0,0,.6),0 14px 30px -18px rgba(0,0,0,.9),0 2px 4px rgba(0,0,0,.35)}
+.zplay{background:linear-gradient(180deg,#24231f,#1d1c1a);border:0}
+.zone .rack,.zone .groove,.zone .kitbar,.zone .sound,.zlayers .units>.fxg{background:#181715!important;box-shadow:inset 0 1px 3px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.04)!important;border:0!important}
+.zh{border-bottom-color:var(--line)}
+.zh h2{font-size:12.5px;letter-spacing:.18em}
+.zh small{color:var(--muted)}
+
+/* keycaps */
+.btn,.tg,.seg button,.roll .tg{background:var(--cap);color:var(--text);border:0!important;
+  box-shadow:0 2px 0 var(--capdk),0 3px 5px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.07);transition:transform .08s,box-shadow .08s,background .15s}
+.btn:hover,.tg:hover,.seg button:hover{background:#363430}
+.btn:active,.tg:active,.seg button:active{transform:translateY(1px);box-shadow:0 1px 0 var(--capdk),0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05)}
+.seg{border:0;gap:3px;overflow:visible;background:transparent}
+.seg button{border-radius:5px;color:var(--muted)}
+.seg button[aria-pressed=true],.tg[aria-pressed=true]{background:var(--text);color:#1d1c1a;box-shadow:0 2px 0 #8d877c,0 3px 5px rgba(0,0,0,.35)}
+.btn.primary,.play{background:var(--accent);color:#1a1310;box-shadow:0 2px 0 #a63d10,0 4px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.25)}
+.play{border-radius:8px}
+.play:hover{background:#ff7a40;box-shadow:0 2px 0 #a63d10,0 6px 12px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.25)}
+@keyframes invite{0%{box-shadow:0 2px 0 #a63d10,0 0 0 0 rgba(255,106,43,.5)}70%{box-shadow:0 2px 0 #a63d10,0 0 0 12px rgba(255,106,43,0)}100%{box-shadow:0 2px 0 #a63d10,0 0 0 0 rgba(255,106,43,0)}}
+.freshbtn{background:var(--text)!important;color:#1d1c1a!important;box-shadow:0 2px 0 #8d877c,0 3px 5px rgba(0,0,0,.35)!important}
+.roll .tg{color:var(--accent)}
+.field input[type=number],.field select,.len,.knob.selk select,select{background:#121110;border:0!important;border-radius:6px;color:var(--text);box-shadow:inset 0 1px 3px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.05)}
+
+/* the display */
+.scope{background:#111210;border:0;border-radius:8px;box-shadow:inset 0 2px 8px rgba(0,0,0,.85),0 1px 0 rgba(255,255,255,.06)}
+.sc-l{color:#8e978f}
+
+/* tracks: one colour per group (a square by the name, the hits, the value rings), the stroke by letter and shade:
+   full = open or bass, dark = mute or tone, light = slap. No tint, no stripe: the groups are told apart by colour and air. */
+.rg-low{--g:var(--low)}.rg-mid{--g:var(--mid)}.rg-high{--g:var(--high)}
+.lane[class*=rg-],.kpanel[class*=rg-]{background:transparent;box-shadow:none}
+.lane{border-top-color:#2a2825}
+.lane[class*=rg-] .reg{color:var(--g)}
+.lane .lname b::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--g);margin-right:7px;vertical-align:1px}
+.lname span{color:var(--muted)}
+.lane[class*=rg-] .cell{--c:var(--g)}
+.lane[class*=rg-] .cell.a1{--c:color-mix(in srgb,var(--g) 50%,#0e0e0d)}
+.lane[class*=rg-] .cell.a2{--c:color-mix(in srgb,var(--g) 55%,#fff)}
+.cell{border-radius:4px;box-shadow:0 1px 0 #0d0c0b,inset 0 1px 0 rgba(255,255,255,.045)}
+.cell.h{color:#17150f;box-shadow:0 1px 0 rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.25)}
+.cell.h.a1{color:var(--text)}
+.cell.h.soft{color:var(--text)}
+.cell.now{box-shadow:0 0 0 2px var(--text)}
+.cell.mgc{box-shadow:0 0 0 2px var(--art1)}
+.lane.muted{opacity:.55}
+.roll .tg{color:var(--muted)}
+.legend .sw{border-radius:2px}
+.legend span:nth-child(1) .sw{background:var(--mid)!important}
+.legend span:nth-child(2) .sw{background:color-mix(in srgb,var(--mid) 50%,#0e0e0d)!important}
+.legend span:nth-child(3) .sw{background:color-mix(in srgb,var(--mid) 55%,#fff)!important}
+
+/* knobs: black body, aluminium core, white pointer; the thin ring shows the value: cream, in the group colour on a track */
+.kn{--kc:#cfc8bb;background:conic-gradient(from 225deg, var(--kc) 0deg calc(var(--p) * 270deg), #2e2c28 calc(var(--p) * 270deg) 270deg, transparent 270deg)}
+.kn::after,.knob.big .kn::after{
+  background:
+    linear-gradient(var(--kedge),var(--kedge)) 50% 1px/2px 30% no-repeat,
+    radial-gradient(circle, #e2e5e1 0 25%, #a3a7a2 29%, rgba(0,0,0,.6) 32%, transparent 34%),
+    radial-gradient(circle at 50% 32%, #43433f, #0e0e0d 72%);
+  box-shadow:0 3px 5px rgba(0,0,0,.6),0 0 0 1px #050505}
+.knob.big .kn::after{background:
+    linear-gradient(var(--kedge),var(--kedge)) 50% 2px/2.5px 26% no-repeat,
+    radial-gradient(circle, #e2e5e1 0 22%, #a3a7a2 26%, rgba(0,0,0,.6) 29%, transparent 31%),
+    radial-gradient(circle at 50% 32%, #43433f, #0e0e0d 72%)}
+.zlayers .mgk .kn::after{
+  background:
+    linear-gradient(var(--kedge),var(--kedge)) 50% 3px/2px 28% no-repeat,
+    radial-gradient(circle, #e2e5e1 0 24%, #a3a7a2 28%, rgba(0,0,0,.6) 31%, transparent 33%),
+    radial-gradient(circle at 50% 32%, #43433f, #0e0e0d 72%) !important;
+  box-shadow:0 0 0 2px #181715,0 4px 7px rgba(0,0,0,.6) !important}
+.kpanel[class*=rg-] .kn{--kc:var(--g)}
+.kl,.zlayers .mgk .kl{font-size:10px;letter-spacing:.07em;font-weight:600}
+.kv{font-size:10.5px;color:#cfc8bb}
+
+/* lights stay lights, everything else loses its halo */
+.fxh .lbl::before{box-shadow:none}
+.apps2 .ng{text-shadow:none}
+.apps2 .nglogo{filter:none}
+.wname.lcd b{text-shadow:0 0 3px rgba(255,160,50,.35)}
+.wname.lcd small{text-shadow:none}
+.pi-more,a{color:var(--accent)}
+
+/* density (Jesse: many functions, too much scrolling; the small track knobs are fine) */
+.wrap{gap:12px;padding-block:14px 40px}
+.zone{padding:12px 14px 14px;gap:10px}
+.zplay{padding:12px 14px;gap:10px}
+.btn{height:30px;padding:0 11px;font-size:13px}
+.play{height:38px;min-width:110px;font-size:15px}
+.field input[type=number],.field select{height:30px;padding:4px 7px}
+.tg,.seg button{height:26px}
+.cell{height:28px;width:22px}
+.lane{padding:3px 0;gap:8px}
+.brand h1 svg{height:40px}
+.scope{height:80px}
+.zh{padding-bottom:7px}
+.zh small,.legend{font-size:12px}
+.pinfo{padding:12px 16px!important;gap:10px 20px!important}
+.kpanel{padding-bottom:6px;row-gap:6px}
+/* Groove on one row (Jesse, 01-10) */
+.gsl{grid-template-columns:repeat(7,minmax(0,1fr));gap:10px 14px}
+.gsl .macro select{width:100%;min-width:0;font-size:12px;height:28px}
+@media (max-width:1100px){.gsl{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:640px){.gsl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* the rhythm card a few shades lighter than its zone (Jesse, 01-10; a paper-light card distracted), the menu calmer: no pills
+   with frames, links as text with an orange line, the preset chips as keycaps. */
+.chips{gap:6px}
+.chip{background:var(--cap);border:0;border-radius:6px;padding:5px 12px;font-size:13px;color:var(--text);
+  box-shadow:0 2px 0 var(--capdk),0 3px 5px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.07)}
+.chip:hover{background:#363430}
+.chip[aria-pressed=true]{background:var(--text);color:#1d1c1a;box-shadow:0 2px 0 #8d877c,0 3px 5px rgba(0,0,0,.35)}
+.tabs{border-bottom-color:#2e2c28}
+.tab{padding:7px 9px}
+.pinfo{--ink:var(--text);--inkm:var(--muted);--rule:#3d3b36;
+  background:#2b2a26;color:var(--ink);border:0;border-radius:8px;padding:14px 20px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1px 0 #0d0c0b,0 6px 14px -8px rgba(0,0,0,.6)}
+.pinfo .pi-l h2{color:var(--ink);font-size:20px}
+.pinfo .pi-r{border-left-color:var(--rule)}
+.pinfo .pi-r p{color:var(--ink)}
+.pinfo .kl{color:var(--inkm)}
+.pinfo .pi-meta{gap:2px 0;font-size:12px}
+.pinfo .pill{border:0;background:none;padding:0;color:var(--inkm);font-size:12px;letter-spacing:.02em}
+
+.pinfo .pill.acc{color:var(--ink);font-weight:700}
+.pinfo .pi-ins{gap:4px 12px}
+.pinfo .pi-ins .pill{color:var(--ink);font-weight:600;font-size:12.5px}
+.pinfo .dots i{box-shadow:inset 0 0 0 1.5px #55524b}
+.pinfo .dots i.a{background:var(--accent);box-shadow:none}
+.pinfo .dots i.s{background:var(--accent)}
+.pinfo .pi-more,.pinfo .ft-link{color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:1.5px;justify-self:start;align-self:flex-start;font-size:12.5px;font-weight:600}
+.pinfo .pi-orig{margin-top:2px}
+@media (max-width:720px){.pinfo .pi-r{border-top-color:var(--rule)}}
+.pinfo .pi-meta{display:block;line-height:1.6}
+.pinfo .pi-more,.pinfo .ft-link{text-underline-offset:4px;text-decoration-thickness:1px}
+.pinfo .pi-meta .pill{display:inline-block}
+.pinfo .pi-meta .pill+.pill::before{content:none}.pinfo .pi-meta .pill{margin-right:12px}

@@ -1,0 +1,895 @@
+{
+	"patcher": {
+		"fileversion": 1,
+		"appversion": {
+			"major": 9,
+			"minor": 1,
+			"revision": 5,
+			"architecture": "x64",
+			"modernui": 1
+		},
+		"classnamespace": "box",
+		"rect": [
+			100.0,
+			100.0,
+			640.0,
+			480.0
+		],
+		"openinpresentation": 1,
+		"default_fontsize": 10.0,
+		"default_fontname": "Arial Bold",
+		"gridsize": [
+			8.0,
+			8.0
+		],
+		"boxes": [
+			{
+				"box": {
+					"id": "obj-1",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 9,
+					"outlettype": [
+						"int",
+						"int",
+						"int",
+						"float",
+						"list",
+						"float",
+						"float",
+						"int",
+						"int"
+					],
+					"patching_rect": [
+						20.0,
+						20.0,
+						300.0,
+						20.0
+					],
+					"text": "plugsync~"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-2",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 4,
+					"outlettype": [
+						"int",
+						"float",
+						"int",
+						"int"
+					],
+					"patching_rect": [
+						340.0,
+						20.0,
+						100.0,
+						20.0
+					],
+					"text": "dspstate~"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"outlettype": [
+						"bang"
+					],
+					"patching_rect": [
+						340.0,
+						-20.0,
+						60.0,
+						20.0
+					],
+					"text": "loadbang"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-4",
+					"maxclass": "newobj",
+					"numinlets": 4,
+					"numoutlets": 1,
+					"outlettype": [
+						""
+					],
+					"patching_rect": [
+						20.0,
+						80.0,
+						200.0,
+						20.0
+					],
+					"text": "pak 0 0. 0. 0."
+				}
+			},
+			{
+				"box": {
+					"id": "obj-5",
+					"maxclass": "newobj",
+					"numinlets": 2,
+					"numoutlets": 1,
+					"outlettype": [
+						""
+					],
+					"patching_rect": [
+						20.0,
+						110.0,
+						80.0,
+						20.0
+					],
+					"text": "speedlim 20"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-6",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"outlettype": [
+						""
+					],
+					"patching_rect": [
+						20.0,
+						140.0,
+						90.0,
+						20.0
+					],
+					"text": "prepend live"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-7",
+					"maxclass": "live.dial",
+					"numinlets": 1,
+					"numoutlets": 2,
+					"outlettype": [
+						"",
+						"float"
+					],
+					"parameter_enable": 1,
+					"patching_rect": [
+						240.0,
+						110.0,
+						44.0,
+						48.0
+					],
+					"presentation": 1,
+					"presentation_rect": [
+						150.0,
+						20.0,
+						44.0,
+						48.0
+					],
+					"saved_attribute_attributes": {
+						"valueof": {
+							"parameter_initial": [
+								0.0
+							],
+							"parameter_initial_enable": 1,
+							"parameter_longname": "Offset",
+							"parameter_mmax": 50.0,
+							"parameter_mmin": -50.0,
+							"parameter_modmode": 0,
+							"parameter_shortname": "Offset",
+							"parameter_type": 0,
+							"parameter_unitstyle": 2
+						}
+					},
+					"varname": "Offset"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-8",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"outlettype": [
+						""
+					],
+					"patching_rect": [
+						240.0,
+						170.0,
+						100.0,
+						20.0
+					],
+					"text": "prepend offset"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-9",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 2,
+					"outlettype": [
+						"signal",
+						"signal"
+					],
+					"patcher": {
+						"fileversion": 1,
+						"appversion": {
+							"major": 9,
+							"minor": 1,
+							"revision": 5,
+							"architecture": "x64",
+							"modernui": 1
+						},
+						"classnamespace": "box",
+						"rect": [
+							60.0,
+							60.0,
+							1340.0,
+							900.0
+						],
+						"toolbarvisible": 0,
+						"boxes": [
+							{
+								"box": {
+									"comment": "transport and offset",
+									"id": "sub-1",
+									"index": 1,
+									"maxclass": "inlet",
+									"numinlets": 0,
+									"numoutlets": 1,
+									"outlettype": [
+										""
+									],
+									"patching_rect": [
+										10.0,
+										10.0,
+										30.0,
+										30.0
+									]
+								}
+							},
+							{
+								"box": {
+									"disablefind": 0,
+									"id": "sub-2",
+									"latency": 64.0,
+									"maxclass": "jweb~",
+									"numinlets": 1,
+									"numoutlets": 3,
+									"outlettype": [
+										"signal",
+										"signal",
+										""
+									],
+									"patching_rect": [
+										10.0,
+										60.0,
+										1280.0,
+										860.0
+									],
+									"rendermode": 1,
+									"url": "file:///Users/jjburkunk/MijnOS/Ngoma/public/index.html",
+									"presentation": 1,
+									"presentation_rect": [
+										0.0,
+										0.0,
+										1340.0,
+										900.0
+									]
+								}
+							},
+							{
+								"box": {
+									"comment": "left",
+									"id": "sub-3",
+									"index": 1,
+									"maxclass": "outlet",
+									"numinlets": 1,
+									"numoutlets": 0,
+									"patching_rect": [
+										10.0,
+										940.0,
+										30.0,
+										30.0
+									]
+								}
+							},
+							{
+								"box": {
+									"comment": "right",
+									"id": "sub-4",
+									"index": 2,
+									"maxclass": "outlet",
+									"numinlets": 1,
+									"numoutlets": 0,
+									"patching_rect": [
+										60.0,
+										940.0,
+										30.0,
+										30.0
+									]
+								}
+							},
+							{
+								"box": {
+									"id": "sub-5",
+									"linecount": 2,
+									"maxclass": "message",
+									"numinlets": 2,
+									"numoutlets": 1,
+									"outlettype": [
+										""
+									],
+									"patching_rect": [
+										1320.0,
+										60.0,
+										300.0,
+										22.0
+									],
+									"text": "url file:///Users/jjburkunk/MijnOS/Ngoma/public/index.html"
+								}
+							},
+							{
+								"box": {
+									"id": "sub-6",
+									"maxclass": "message",
+									"numinlets": 2,
+									"numoutlets": 1,
+									"outlettype": [
+										""
+									],
+									"patching_rect": [
+										1320.0,
+										100.0,
+										300.0,
+										22.0
+									],
+									"text": "url https://ngoma.pages.dev"
+								}
+							},
+							{
+								"box": {
+									"id": "sub-7",
+									"maxclass": "comment",
+									"numinlets": 1,
+									"numoutlets": 0,
+									"patching_rect": [
+										1320.0,
+										30.0,
+										320.0,
+										20.0
+									],
+									"text": "Local file (default) or the website. Click to switch."
+								}
+							},
+							{
+								"box": {
+									"id": "sub-r",
+									"maxclass": "newobj",
+									"text": "route open",
+									"numinlets": 1,
+									"numoutlets": 2,
+									"outlettype": [
+										"",
+										""
+									],
+									"patching_rect": [
+										10,
+										30,
+										80,
+										22
+									]
+								}
+							},
+							{
+								"box": {
+									"id": "sub-f",
+									"maxclass": "message",
+									"text": "front",
+									"numinlets": 2,
+									"numoutlets": 1,
+									"outlettype": [
+										""
+									],
+									"patching_rect": [
+										100,
+										30,
+										40,
+										22
+									]
+								}
+							},
+							{
+								"box": {
+									"id": "sub-t",
+									"maxclass": "newobj",
+									"text": "thispatcher",
+									"numinlets": 1,
+									"numoutlets": 2,
+									"outlettype": [
+										"",
+										""
+									],
+									"patching_rect": [
+										150,
+										30,
+										80,
+										22
+									],
+									"save": [
+										"#N",
+										"thispatcher",
+										";",
+										"#Q",
+										"end",
+										";"
+									]
+								}
+							}
+						],
+						"lines": [
+							{
+								"patchline": {
+									"destination": [
+										"sub-3",
+										0
+									],
+									"source": [
+										"sub-2",
+										0
+									]
+								}
+							},
+							{
+								"patchline": {
+									"destination": [
+										"sub-4",
+										0
+									],
+									"source": [
+										"sub-2",
+										1
+									]
+								}
+							},
+							{
+								"patchline": {
+									"destination": [
+										"sub-2",
+										0
+									],
+									"source": [
+										"sub-5",
+										0
+									]
+								}
+							},
+							{
+								"patchline": {
+									"destination": [
+										"sub-2",
+										0
+									],
+									"source": [
+										"sub-6",
+										0
+									]
+								}
+							},
+							{
+								"patchline": {
+									"source": [
+										"sub-1",
+										0
+									],
+									"destination": [
+										"sub-r",
+										0
+									]
+								}
+							},
+							{
+								"patchline": {
+									"source": [
+										"sub-r",
+										0
+									],
+									"destination": [
+										"sub-f",
+										0
+									]
+								}
+							},
+							{
+								"patchline": {
+									"source": [
+										"sub-f",
+										0
+									],
+									"destination": [
+										"sub-t",
+										0
+									]
+								}
+							},
+							{
+								"patchline": {
+									"source": [
+										"sub-r",
+										1
+									],
+									"destination": [
+										"sub-2",
+										0
+									]
+								}
+							}
+						],
+						"openinpresentation": 1,
+						"statusbarvisible": 0,
+						"enablehscroll": 0,
+						"enablevscroll": 0,
+						"lefttoolbarpinned": 2,
+						"toptoolbarpinned": 2,
+						"righttoolbarpinned": 2,
+						"bottomtoolbarpinned": 2
+					},
+					"patching_rect": [
+						20.0,
+						210.0,
+						120.0,
+						20.0
+					],
+					"text": "p ngoma"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-10",
+					"maxclass": "newobj",
+					"numinlets": 2,
+					"numoutlets": 2,
+					"outlettype": [
+						"signal",
+						"signal"
+					],
+					"patching_rect": [
+						20.0,
+						260.0,
+						100.0,
+						20.0
+					],
+					"text": "plugout~ 1 2"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-11",
+					"maxclass": "live.text",
+					"mode": 0,
+					"numinlets": 1,
+					"numoutlets": 2,
+					"outlettype": [
+						"",
+						""
+					],
+					"parameter_enable": 1,
+					"patching_rect": [
+						400.0,
+						110.0,
+						110.0,
+						24.0
+					],
+					"presentation": 1,
+					"presentation_rect": [
+						10.0,
+						24.0,
+						120.0,
+						26.0
+					],
+					"saved_attribute_attributes": {
+						"valueof": {
+							"parameter_enum": [
+								"val1",
+								"val2"
+							],
+							"parameter_longname": "Open",
+							"parameter_mmax": 1,
+							"parameter_modmode": 0,
+							"parameter_shortname": "Open",
+							"parameter_type": 2
+						}
+					},
+					"text": "Open Ngoma",
+					"texton": "Open Ngoma",
+					"varname": "Open"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-13",
+					"maxclass": "message",
+					"numinlets": 2,
+					"numoutlets": 1,
+					"outlettype": [
+						""
+					],
+					"patching_rect": [
+						400.0,
+						175.0,
+						40.0,
+						20.0
+					],
+					"text": "open"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-14",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"outlettype": [
+						""
+					],
+					"patching_rect": [
+						400.0,
+						205.0,
+						60.0,
+						20.0
+					],
+					"text": "pcontrol"
+				}
+			},
+			{
+				"box": {
+					"fontsize": 10.0,
+					"id": "obj-15",
+					"linecount": 2,
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						10.0,
+						70.0,
+						200.0,
+						29.0
+					],
+					"presentation": 1,
+					"presentation_linecount": 3,
+					"presentation_rect": [
+						210.0,
+						20.0,
+						190.0,
+						40.0
+					],
+					"text": "Tempo and start/stop follow Live. Offset nudges Ngoma earlier (-) or later (+)."
+				}
+			}
+		],
+		"lines": [
+			{
+				"patchline": {
+					"destination": [
+						"obj-4",
+						1
+					],
+					"source": [
+						"obj-1",
+						6
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-4",
+						2
+					],
+					"source": [
+						"obj-1",
+						5
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-4",
+						0
+					],
+					"source": [
+						"obj-1",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-14",
+						0
+					],
+					"source": [
+						"obj-13",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-9",
+						0
+					],
+					"source": [
+						"obj-14",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-4",
+						3
+					],
+					"source": [
+						"obj-2",
+						1
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-2",
+						0
+					],
+					"source": [
+						"obj-3",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-5",
+						0
+					],
+					"source": [
+						"obj-4",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-6",
+						0
+					],
+					"source": [
+						"obj-5",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-9",
+						0
+					],
+					"source": [
+						"obj-6",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-8",
+						0
+					],
+					"source": [
+						"obj-7",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-9",
+						0
+					],
+					"source": [
+						"obj-8",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-10",
+						1
+					],
+					"source": [
+						"obj-9",
+						1
+					]
+				}
+			},
+			{
+				"patchline": {
+					"destination": [
+						"obj-10",
+						0
+					],
+					"source": [
+						"obj-9",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-11",
+						0
+					],
+					"destination": [
+						"obj-13",
+						0
+					]
+				}
+			}
+		],
+		"parameters": {
+			"obj-11": [
+				"Open",
+				"Open",
+				0
+			],
+			"obj-7": [
+				"Offset",
+				"Offset",
+				0
+			],
+			"parameterbanks": {
+				"0": {
+					"index": 0,
+					"name": "",
+					"parameters": [
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-"
+					],
+					"buttons": [
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-",
+						"-"
+					]
+				}
+			},
+			"inherited_shortname": 1
+		},
+		"autosave": 0,
+		"oscreceiveudpport": 0
+	}
+}

@@ -1,0 +1,8 @@
+node_modules/
+.wrangler/
+backup/
+.DS_Store
+Claude outputs/
+Design Reference/tmp/
+getij/
+*.zip

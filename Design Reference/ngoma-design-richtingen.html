@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ngoma design richtingen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#2a2826;color:#e9e4da;font:500 14px/1.45 Archivo,system-ui,sans-serif;padding:40px 16px 80px}
+.page{max-width:1180px;margin:0 auto}
+.intro{max-width:760px;margin:0 0 40px}
+.intro h1{font:800 28px/1.1 Archivo,sans-serif;margin:0 0 10px;letter-spacing:-.01em}
+.intro p{margin:0 0 6px;color:#c9c2b5}
+.var{margin:0 0 64px}
+.vh{display:flex;gap:14px;align-items:baseline;margin:0 0 14px;flex-wrap:wrap}
+.vh b{font:800 20px Archivo,sans-serif}
+.vh span{color:#b8b1a4}
+.note{color:#c9c2b5;margin:14px 0 0;max-width:820px}
+.note strong{color:#efe9de}
+::selection{background:#ff5a1f;color:#fff}
+
+/* ---------- shared structure ---------- */
+.dev{position:relative;overflow:hidden}
+.top{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start}
+.brand .nm{display:block}
+.disp{min-width:300px;height:78px;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:8px 12px}
+.disp .r1,.disp .r3{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.disp .r2{font-size:30px;font-weight:700;letter-spacing:.02em;line-height:1}
+.tr{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 18px}
+.tr .sp{flex:1}
+.btn{border:0;font:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px}
+.btn svg{width:13px;height:13px}
+.scn{display:flex;gap:6px;align-items:center}
+.scn i{font-style:normal;width:28px;height:28px;display:grid;place-items:center;font-size:12px}
+.lbl{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:0 0 16px}
+.tabs a{padding:7px 12px;font-size:13px;cursor:pointer}
+.lanes{display:flex;flex-direction:column;gap:8px}
+.lane{display:grid;grid-template-columns:140px 64px 1fr 320px;gap:14px;align-items:center;padding:10px 12px;position:relative}
+.ln .n{font-weight:700;font-size:15px;display:block;line-height:1.1}
+.ln .k{font-size:11px}
+.ms{display:flex;gap:4px}
+.ms i{font-style:normal;width:28px;height:26px;display:grid;place-items:center;font-size:11px;font-weight:700}
+.steps{display:grid;grid-template-columns:repeat(16,1fr);gap:5px}
+.steps .gap{margin-left:7px}
+.st{height:30px;position:relative;display:grid;place-items:center;font-size:11px;font-weight:700}
+.kn{display:flex;gap:14px;justify-content:flex-end}
+.k1{display:flex;flex-direction:column;align-items:center;gap:4px;width:46px}
+.k1 .v{font-size:10.5px;font-variant-numeric:tabular-nums}
+.knob{width:34px;height:34px;border-radius:50%;position:relative}
+.knob::after{content:"";position:absolute;left:50%;top:3px;width:2px;height:11px;margin-left:-1px;transform-origin:50% 14px;transform:rotate(var(--r,0deg))}
+.mst{display:flex;gap:26px;align-items:flex-end;margin-top:18px;padding:14px 16px;flex-wrap:wrap}
+.mst .k1{width:56px}
+.mst .knob{width:46px;height:46px}
+.mst .knob::after{top:4px;height:15px;transform-origin:50% 19px}
+.led{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* ================= A: Braun / TE ================= */
+.A{background:#e7e3da;color:#1e1d1b;padding:28px 30px 26px;border-radius:14px;box-shadow:0 1px 0 #f7f4ee inset,0 18px 40px -18px rgba(0,0,0,.55),0 2px 4px rgba(0,0,0,.2)}
+.A .nm{font:800 34px/1 Archivo,sans-serif;letter-spacing:-.02em}
+.A .sub{font-size:12.5px;color:#5c5850}
+.A .disp{background:#1f2321;color:#f0ece2;border-radius:6px;box-shadow:inset 0 2px 6px rgba(0,0,0,.6)}
+.A .disp .r1,.A .disp .r3{color:#9aa39d}
+.A .disp .r2{font-family:"Barlow Semi Condensed",sans-serif;color:#ff6a2b}
+.A .btn{background:#d9d4c9;color:#1e1d1b;border-radius:7px;font-weight:600;box-shadow:0 2px 0 #b3ad9f,0 3px 5px rgba(0,0,0,.12)}
+.A .btn.play{background:#ff5a1f;color:#fff;box-shadow:0 2px 0 #c4400f,0 3px 6px rgba(0,0,0,.18);padding:0 22px}
+.A .btn.rec svg{color:#d6281c}
+.A .btn.fresh{background:#1e1d1b;color:#e7e3da;box-shadow:0 2px 0 #000}
+.A .lbl{color:#6c675d}
+.A .scn i{background:#d9d4c9;border-radius:5px;color:#6c675d;box-shadow:0 1px 0 #b3ad9f}
+.A .scn i.on{background:#1f5a46;color:#fff;box-shadow:0 1px 0 #0f3326}
+.A .tabs{border-bottom:1px solid #cfc9bd;padding-bottom:10px}
+.A .tabs a{color:#5c5850;border-radius:6px}
+.A .tabs a.on{background:#1e1d1b;color:#e7e3da}
+.A .lane{background:#efece5;border-radius:9px}
+.A .ln .n::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--g);margin-right:8px;vertical-align:1px}
+.A .lane[data-g=low]{--g:#1f5a46}.A .lane[data-g=mid]{--g:#e2a400}.A .lane[data-g=high]{--g:#3e6f9c}
+.A .ln .k{color:#7a756b}
+.A .ms i{background:#d9d4c9;border-radius:5px;color:#4a463f}
+.A .st{background:#dcd7cc;border-radius:5px;box-shadow:0 1px 0 #bdb7aa}
+.A .st.on{background:var(--g);color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.A .st.soft{background:color-mix(in srgb,var(--g) 45%,#dcd7cc);color:#fff}
+.A .st.ph{outline:2px solid #1e1d1b;outline-offset:1px}
+.A .k1 .l{font-size:10.5px;font-weight:600;color:#6c675d;letter-spacing:.04em}
+.A .knob{background:radial-gradient(circle at 50% 38%,#fbfaf7,#dedad1 70%);box-shadow:0 2px 3px rgba(0,0,0,.22),0 0 0 1px #c9c3b7}
+.A .knob::after{background:#1e1d1b;border-radius:1px}
+.A .mst{background:#dcd7cc;border-radius:9px}
+.A .mst .knob.big{background:radial-gradient(circle at 50% 38%,#ff7a45,#ff5a1f 70%);box-shadow:0 2px 3px rgba(0,0,0,.25),0 0 0 1px #c4400f}
+.A .mst .knob.big::after{background:#fff}
+
+/* ================= B: Eurorack ================= */
+.B{background:
+  repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,rgba(0,0,0,.025) 1px 2px),
+  linear-gradient(180deg,#e2e4e5,#cfd2d4);
+  color:#2b2d30;padding:40px 34px 34px;border-radius:3px;font-family:"Barlow",sans-serif;
+  box-shadow:0 1px 0 #f4f5f6 inset,0 -1px 0 #a9adb1 inset,0 22px 40px -20px rgba(0,0,0,.6)}
+.B::before,.B::after{content:"";position:absolute;left:0;right:0;height:16px;background:repeating-linear-gradient(90deg,#c3c6c9 0 6px,#d4d7d9 6px 12px);border-bottom:1px solid #a9adb1}
+.B::before{top:0}.B::after{bottom:0;border-top:1px solid #a9adb1;border-bottom:0}
+.B .screw{position:absolute;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#f2f3f4,#9ea3a8 75%);box-shadow:0 1px 2px rgba(0,0,0,.4);z-index:2}
+.B .screw::after{content:"";position:absolute;left:3px;right:3px;top:6px;height:2px;background:#6d7277;transform:rotate(35deg)}
+.B .rings{position:absolute;right:-260px;top:-300px;width:640px;height:640px;opacity:.3;pointer-events:none}
+.B .nm{font:700 34px/1 "Barlow Semi Condensed",sans-serif;letter-spacing:.01em}
+.B .nm small{font:600 13px "Barlow",sans-serif;margin-left:10px;color:#4f5358;letter-spacing:.02em}
+.B .sub{font-size:12.5px;color:#4f5358}
+.B .disp{background:#14191b;color:#d9f3f0;border-radius:3px;box-shadow:inset 0 0 0 2px #2f3538,inset 0 3px 8px rgba(0,0,0,.8);font-family:"Barlow Semi Condensed",sans-serif}
+.B .disp .r1,.B .disp .r3{color:#6fa7a5}
+.B .disp .r2{color:#7fe0d6}
+.B .btn{background:#2b2d30;color:#e8eaeb;border-radius:4px;font-weight:600;font-family:"Barlow Semi Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;font-size:13px;box-shadow:0 3px 0 #15171a,0 4px 6px rgba(0,0,0,.25)}
+.B .btn.play{background:#e8452c;box-shadow:0 3px 0 #9f2b18,0 4px 6px rgba(0,0,0,.25);padding:0 22px}
+.B .btn.rec svg{color:#ff5a48}
+.B .btn.fresh{background:#1fa3b5;box-shadow:0 3px 0 #13707d,0 4px 6px rgba(0,0,0,.25)}
+.B .lbl{color:#2b2d30;font-family:"Barlow Semi Condensed",sans-serif;letter-spacing:.12em}
+.B .scn i{border-radius:50%;background:radial-gradient(circle at 45% 40%,#f3f4f5,#c0c4c8);box-shadow:0 1px 2px rgba(0,0,0,.35),0 0 0 2px #9ea3a8;color:#4f5358;font-family:"Barlow Semi Condensed";font-weight:700}
+.B .scn i.on{background:radial-gradient(circle at 45% 40%,#9ff2e9,#1fa3b5);color:#05343a}
+.B .tabs a{font-family:"Barlow Semi Condensed",sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:12.5px;color:#4f5358;border:1px solid transparent;border-radius:3px}
+.B .tabs a.on{border-color:#2b2d30;color:#2b2d30}
+.B .lanes{gap:0;border-top:1.5px solid #2b2d30}
+.B .lane{border-bottom:1px dotted #7d8287;padding:12px 4px}
+.B .ln .n{font-family:"Barlow Semi Condensed",sans-serif;font-size:17px;text-transform:uppercase;letter-spacing:.06em}
+.B .ln .k{color:#4f5358}
+.B .ln .g{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.1em;padding:1px 6px;border-radius:2px;margin-top:4px;color:#fff;background:var(--g)}
+.B .lane[data-g=low]{--g:#2b2d30}.B .lane[data-g=mid]{--g:#e8452c}.B .lane[data-g=high]{--g:#1fa3b5}
+.B .ms i{border-radius:3px;background:#2b2d30;color:#d4d7d9;box-shadow:0 2px 0 #15171a}
+.B .st{background:#3a3e42;border-radius:3px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.35),0 1px 0 #f4f5f6;color:#2b2d30}
+.B .st::after{content:"";position:absolute;top:5px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#545a5f}
+.B .st.on::after{background:#ff7a5c;box-shadow:0 0 0 2px rgba(255,122,92,.25)}
+.B .lane[data-g=high] .st.on::after{background:#6ff0e2;box-shadow:0 0 0 2px rgba(111,240,226,.25)}
+.B .lane[data-g=low] .st.on::after{background:#fff2c7;box-shadow:0 0 0 2px rgba(255,242,199,.25)}
+.B .st.soft::after{opacity:.5}
+.B .st.ph{background:#555a5f}
+.B .k1 .l{font:700 10.5px "Barlow Semi Condensed",sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.B .knob{background:radial-gradient(circle at 50% 50%,var(--cap,#f1f1ef) 0 44%,transparent 46%),repeating-conic-gradient(#1b1c1e 0 6deg,#2e3033 6deg 12deg);box-shadow:0 3px 4px rgba(0,0,0,.4)}
+.B .knob::after{background:#2b2d30;width:3px;margin-left:-1.5px;top:2px;height:9px}
+.B .lane[data-g=mid] .knob{--cap:#f1f1ef}
+.B .mst{border:1.5px solid #2b2d30;border-radius:3px}
+.B .mst .knob.big{--cap:#1fa3b5}
+.B .mst .knob.big::after{background:#fff}
+.B .jack{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#0c0d0e 0 30%,#b9bdc1 34% 55%,#e8eaeb 60%,#8f9499 75%);box-shadow:0 1px 2px rgba(0,0,0,.4)}
+
+/* ================= C: pedaal / object ================= */
+.C{background:radial-gradient(120% 80% at 30% 0%,#5d6a37,#46512a 70%);color:#d8bd62;padding:34px 34px 30px;border-radius:22px;font-family:"Barlow",sans-serif;
+  box-shadow:0 2px 0 rgba(255,255,255,.12) inset,0 -6px 0 rgba(0,0,0,.25) inset,0 26px 46px -18px rgba(0,0,0,.7),0 3px 6px rgba(0,0,0,.3)}
+.C .plate{position:absolute;inset:0;pointer-events:none}
+.C .nm{font:800 52px/0.95 Fraunces,Georgia,serif;letter-spacing:-.01em;color:#e1c66b}
+.C .sub{font-size:12.5px;color:#c9b468}
+.C .disp{background:#2a2f18;border-radius:10px;box-shadow:inset 0 2px 8px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.1);color:#f2d27a}
+.C .disp .r1,.C .disp .r3{color:#a8995a}
+.C .disp .r2{font-family:"Barlow Semi Condensed",sans-serif;color:#ffd770}
+.C .btn{background:linear-gradient(180deg,#d7c06a,#b99f47);color:#2a2f18;border-radius:999px;font-weight:700;box-shadow:0 3px 0 #7d6a2a,0 5px 8px rgba(0,0,0,.35)}
+.C .btn.play{margin:0 10px 0 4px;width:64px;height:64px;padding:0;justify-content:center;background:radial-gradient(circle at 45% 35%,#f3f4f2,#a7aaa6 60%,#7f827e);border-radius:50%;box-shadow:0 0 0 6px #8a8d88,0 0 0 8px #5b5e59,0 6px 10px rgba(0,0,0,.5);color:#2a2f18}
+.C .btn.play svg{width:18px;height:18px}
+.C .btn.rec svg{color:#c4321f}
+.C .btn.fresh{background:transparent;color:#e1c66b;box-shadow:inset 0 0 0 2px #c9b468}
+.C .lbl{color:#c9b468}
+.C .scn i{border-radius:50%;box-shadow:inset 0 0 0 1.5px #b9a457;color:#c9b468}
+.C .scn i.on{background:#e1c66b;color:#2a2f18}
+.C .tabs a{color:#c9b468;font-weight:600;border-radius:999px}
+.C .tabs a.on{background:#e1c66b;color:#2a2f18}
+.C .lanes{gap:10px}
+.C .lane{background:rgba(32,38,16,.35);border-radius:14px;box-shadow:inset 0 1px 3px rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.07)}
+.C .ln .n{font:600 20px/1 Fraunces,Georgia,serif;color:#e1c66b}
+.C .ln .k{color:#a8995a}
+.C .lane[data-g=low]{--g:#e1c66b}.C .lane[data-g=mid]{--g:#f08a4b}.C .lane[data-g=high]{--g:#bfe0d4}
+.C .ms i{border-radius:50%;box-shadow:inset 0 0 0 1.5px #8f8247;color:#c9b468}
+.C .st{border-radius:50%;width:28px;height:28px;justify-self:center;box-shadow:inset 0 0 0 1.5px rgba(225,198,107,.45)}
+.C .st.on{background:var(--g);box-shadow:0 0 0 3px rgba(0,0,0,.15)}
+.C .st.soft{background:color-mix(in srgb,var(--g) 50%,transparent)}
+.C .st.ph{box-shadow:inset 0 0 0 1.5px rgba(225,198,107,.45),0 0 0 3px #e1c66b}
+.C .k1 .l{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:#d8bd62}
+.C .k1 .v{color:#c9b468}
+.C .knob{width:36px;height:36px;background:radial-gradient(circle at 50% 50%,#d9dcd8 0 30%,#9ea29d 34%,transparent 37%),radial-gradient(circle at 50% 40%,#3a3a38,#121211 72%);box-shadow:0 4px 6px rgba(0,0,0,.5),0 0 0 1px #0a0a09}
+.C .knob::after{background:#f2f2ee;top:1px;height:10px;transform-origin:50% 17px}
+.C .mst{background:rgba(32,38,16,.35);border-radius:14px}
+.C .mst .knob{width:50px;height:50px}
+.C .mst .knob::after{transform-origin:50% 24px;height:13px}
+.C .ledC{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff,#ffd27a 40%,#c7871d);box-shadow:0 0 0 2px #2a2f18}
+
+
+/* ================= D: A in dark, knobs of C, drumhead ornament ================= */
+.D{--bg:#1d1c1a;--sf:#262522;--sf2:#2f2d29;--ink:#ece6da;--mut:#a59f92;--low:#47a37c;--mid:#e6ae2c;--high:#76a6d6;--or:#ff6a2b;
+  background:linear-gradient(180deg,#22211e,#1b1a18);color:var(--ink);padding:28px 30px 26px;border-radius:14px;
+  box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 -1px 0 rgba(0,0,0,.6) inset,0 20px 40px -18px rgba(0,0,0,.8),0 2px 4px rgba(0,0,0,.4)}
+.D .orn{position:absolute;left:380px;top:-178px;width:300px;height:300px;pointer-events:none}
+@media (max-width:900px){.D .orn{left:auto;right:-60px;top:-150px}}
+.D .top,.D .tr,.D .tabs,.D .lanes,.D .mst{position:relative}
+.D .brand{padding-left:4px}
+.D .nm{font:800 34px/1 Archivo,sans-serif;letter-spacing:-.02em}
+.D .sub{font-size:12.5px;color:var(--mut)}
+.D .disp{background:#121311;color:var(--ink);border-radius:6px;box-shadow:inset 0 2px 6px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.06)}
+.D .disp .r1,.D .disp .r3{color:#8e978f}
+.D .disp .r2{font-family:"Barlow Semi Condensed",sans-serif;color:var(--or)}
+.D .btn{background:var(--sf2);color:var(--ink);border-radius:7px;font-weight:600;box-shadow:0 2px 0 #11100f,0 3px 5px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+.D .btn.play{background:var(--or);color:#1d1c1a;box-shadow:0 2px 0 #a63d10,0 3px 6px rgba(0,0,0,.4);padding:0 22px}
+.D .btn.rec svg{color:#ef4a36}
+.D .btn.fresh{background:var(--ink);color:#1d1c1a;box-shadow:0 2px 0 #8d877c}
+.D .lbl{color:var(--mut)}
+.D .scn i{background:var(--sf2);border-radius:5px;color:var(--mut);box-shadow:0 1px 0 #11100f,inset 0 1px 0 rgba(255,255,255,.05)}
+.D .scn i.on{background:var(--low);color:#0f1f18}
+.D .tabs{border-bottom:1px solid #34322d;padding-bottom:10px}
+.D .tabs a{color:var(--mut);border-radius:6px}
+.D .tabs a.on{background:var(--ink);color:#1d1c1a}
+.D .lane{background:var(--sf);border-radius:9px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.D .lane[data-g=low]{--g:var(--low)}.D .lane[data-g=mid]{--g:var(--mid)}.D .lane[data-g=high]{--g:var(--high)}
+.D .ln .n::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--g);margin-right:8px;vertical-align:1px}
+.D .ln .k{color:var(--mut)}
+.D .ms i{background:var(--sf2);border-radius:5px;color:#cfc8bb;box-shadow:0 1px 0 #11100f}
+.D .st{background:#34322e;border-radius:5px;box-shadow:0 1px 0 #11100f,inset 0 1px 0 rgba(255,255,255,.05)}
+.D .st.on{background:var(--g);color:#1a1916}
+.D .st.soft{background:color-mix(in srgb,var(--g) 38%,#34322e);color:#1a1916}
+.D .st.ph{outline:2px solid var(--ink);outline-offset:1px}
+.D .k1 .l{font-size:10.5px;font-weight:600;color:var(--mut);letter-spacing:.04em}
+.D .k1 .v{color:#cfc8bb}
+.D .knob{width:36px;height:36px;background:radial-gradient(circle at 50% 50%,#dcdfdb 0 30%,#9ea29d 34%,transparent 37%),radial-gradient(circle at 50% 35%,#3e3e3b,#0e0e0d 72%);
+  box-shadow:0 4px 6px rgba(0,0,0,.6),0 0 0 1px #050505,0 0 0 2px rgba(255,255,255,.07)}
+.D .knob::after{background:#f2f2ee;top:1px;height:10px;transform-origin:50% 17px}
+.D .mst{background:#191816;border-radius:9px;box-shadow:inset 0 1px 3px rgba(0,0,0,.6)}
+.D .mst .knob{width:50px;height:50px}
+.D .mst .knob::after{transform-origin:50% 24px;height:13px}
+.D .mst .knob.big{background:radial-gradient(circle at 50% 50%,#ffd2bd 0 26%,#d9561f 30%,transparent 33%),radial-gradient(circle at 50% 35%,#3e3e3b,#0e0e0d 72%)}
+@media (max-width:900px){
+ .lane{grid-template-columns:1fr auto;}
+ .lane .steps{grid-column:1/-1}
+ .lane .kn{grid-column:1/-1;justify-content:flex-start;flex-wrap:wrap}
+ .top{grid-template-columns:1fr}
+ .disp{min-width:0}
+ .C .nm{font-size:40px}
+}
+</style></head>
+<body><div class="page">
+<div class="intro">
+<h1>Ngoma: drie designrichtingen</h1>
+<p>Statische schetsen van het hoofdscherm: transport, scenes, ritmekeuze, vier sporen en het masterblok. Inhoud en indeling zijn bij alle drie gelijk; alleen de huid verschilt. Zo wordt het straks ook gebouwd: alleen CSS, de klankmotor blijft onaangeroerd.</p>
+<p>Nieuw bovenaan: D, de combinatie van jouw keuze. A, B en C staan eronder ter vergelijking.</p>
+</div>
+
+<section class="var"><div class="vh"><b>D. A in het donker</b><span>Orde en functiekleur van A, knoppen van C, een trommelvel als ornament</span></div>
+<div class="dev D" id="D"></div>
+<p class="note"><strong>Idee:</strong> het warme antraciet van een gelakte kast, met de kleurcode van A iets helderder gemaakt voor het donker. De knoppen zijn die van C: zwart met een aluminium kern. Het ornament is een trommelvel van bovenaf: ringen voor de cycli, de spanschroeven langs de rand, en één ring die meeloopt met de maat. Het zakt bovenin half het paneel binnen, tussen naam en display, en raakt de bediening niet. In het echte Ngoma kan die oranje ring meedraaien met de tel.</p>
+</section>
+
+<section class="var"><div class="vh"><b>A. Braun / TE</b><span>Strenge orde, kleur alleen waar het iets zegt</span></div>
+<div class="dev A" id="A"></div>
+<p class="note"><strong>Idee:</strong> een licht, warm grijs paneel zoals een Braun-apparaat. Kleur draagt betekenis: groen = laag, oker = midden, blauw = hoog, oranje = spelen en het hoofdvolume. Knoppen zijn kleine cilinders met een streep, stappen zijn toetsjes die oplichten in de kleur van hun groep. Rustig bij veel bediening en het makkelijkst te lezen. Risico: kan te braaf worden als we de kleur niet durven.</p>
+</section>
+
+<section class="var"><div class="vh"><b>B. Eurorack</b><span>Aluminium paneel, schroeven, zeefdruk, één motief</span></div>
+<div class="dev B" id="B"></div>
+<p class="note"><strong>Idee:</strong> geborsteld aluminium met rails en schroeven, zoals Grids en Cwejman. Zwarte geribbelde knoppen met lichte kap, stappen als rubberen knopjes met een led. Het motief is een stel concentrische ringen: ritmecycli, de cirkel van de trommel. Teal en rood als accent. Het meest "instrument". Risico: wordt druk als elk detail even hard roept; de ringen moeten zacht blijven.</p>
+</section>
+
+<section class="var"><div class="vh"><b>C. Pedaal / object</b><span>Gekleurde behuizing, echt materiaal, karakter</span></div>
+<div class="dev C" id="C"></div>
+<p class="note"><strong>Idee:</strong> een gelakte olijfgroene kast met gouden opdruk, zoals Plumes. Play is een metalen voetschakelaar, de knoppen zijn zwart met een aluminium kern, de stappen ronde gouden stippen. Een serif voor de naam geeft het een eigen gezicht. Het meest herkenbaar en warm. Risico: met de volledige Full view (veel meer knoppen) kan het zwaar worden; dan moet de Simple view het gezicht dragen.</p>
+</section>
+</div>
+
+<script>
+const PLAY='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>';
+const REC='<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" fill="currentColor"/></svg>';
+const lanes=[
+ {n:'Surdo',k:'B1',g:'low',p:{0:'O',8:'O'},soft:[],kn:[80,0,80,'C',0]},
+ {n:'Conga',k:'G3',g:'mid',p:{2:'O',6:'O',10:'O',14:'O'},soft:[],kn:[80,0,80,'L50',22]},
+ {n:'Bongo',k:'G4',g:'mid',p:{6:'S',9:'S',13:'S',15:'O'},soft:[7],kn:[80,0,80,'R55',20]},
+ {n:'Shaker',k:'tone 0',g:'high',p:{0:'X',4:'X',8:'X',12:'X'},soft:[2,3,6,7,10,11,14,15],kn:[80,0,80,'R58',15]}];
+const KL=['Level','Tune','Decay','Pan','Rev'];
+const rot=(i,v)=>{ if(i===3){ if(v==='C')return 0; const n=parseInt(v.slice(1)); return (v[0]==='L'?-1:1)*n*1.35; } return -135+(i===1?135: (+v)/100*270); };
+const knob=(l,v,i,big)=>`<div class="k1"><span class="l">${l}</span><div class="knob${big?' big':''}" style="--r:${rot(i,v)}deg"></div><span class="v">${i===2?v+'%':v}</span></div>`;
+function build(id){
+ const el=document.getElementById(id);
+ let h='';
+ if(id==='B') h+='<span class="screw" style="left:10px;top:1px"></span><span class="screw" style="right:10px;top:1px"></span><span class="screw" style="left:10px;bottom:1px"></span><span class="screw" style="right:10px;bottom:1px"></span>'+
+   '<svg class="rings" viewBox="0 0 200 200" aria-hidden="true">'+[...Array(9)].map((_,k)=>`<circle cx="100" cy="100" r="${12+k*10}" fill="none" stroke="#9ea3a8" stroke-width=".6" stroke-dasharray="${k%3===0?'0':k%3===1?'2 3':'1 2'}"/>`).join('')+'</svg>';
+ if(id==='C') h+='<svg class="plate" viewBox="0 0 1180 760" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="#b49a45" stroke-opacity=".22" stroke-width="2">'+
+   [[1030,110],[1110,40],[960,30]].map(([x,y])=>[...Array(6)].map((_,k)=>`<circle cx="${x}" cy="${y}" r="${14+k*14}"/>`).join('')).join('')+'</g></svg>';
+
+ if(id==='D'){ const lugs=[...Array(10)].map((_,k)=>{ const t=k/10*2*Math.PI, x=100+92*Math.cos(t), y=100+92*Math.sin(t), d=t*180/Math.PI+90;
+     return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${d.toFixed(1)})"><rect x="-3" y="-6" width="6" height="12" rx="1.5" fill="#46433d"/><circle r="1.6" fill="#6a665e"/></g>`; }).join('');
+   h+='<svg class="orn" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="92" fill="none" stroke="#3a3833" stroke-width="7"/>'+
+     [80,68,56,44,32,20].map((r,k)=>`<circle cx="100" cy="100" r="${r}" fill="none" stroke="${k===2?'#ff6a2b':'#403d37'}" stroke-opacity="${k===2?.7:1}" stroke-width="${k===2?1.1:.8}" ${k===2?'stroke-dasharray="60 292" transform="rotate(20 100 100)"':''}/>`).join('')+
+     '<circle cx="100" cy="100" r="7" fill="#2b2a26"/>'+lugs+'</svg>'; }
+ const name = id==='C' ? 'Ngoma' : id==='B' ? 'NGOMA<small>tuned world percussion</small>' : 'Ngoma';
+ h+=`<div class="top"><div class="brand"><span class="nm">${name}</span><span class="sub">${id==='B'?'Ritmes uit vele tradities, gestemd in één toonsoort':'Tuned world percussion for imaginary places'}</span></div>
+  <div class="disp"><div class="r1"><span>Cumbia · Caribbean</span><span>${id==='C'?'<span class="ledC"></span>':'Bar 3 · 2'}</span></div><div class="r2">92 BPM</div><div class="r3"><span>A minor penta</span><span>Life 45 · Poly 25</span></div></div></div>`;
+ h+=`<div class="tr"><button class="btn play">${PLAY}${id==='C'?'':'Play'}</button><button class="btn fresh">Refresh!</button><button class="btn rec">${REC}Rec</button><button class="btn">Capture</button><button class="btn">Drop</button>
+  <span class="sp"></span><span class="lbl">Scenes</span><div class="scn">${[1,2,3,4,5,6,7,8].map(n=>`<i class="${n===2?'on':''}">${n}</i>`).join('')}</div></div>`;
+ h+=`<div class="tabs">${['Afro-Cuban','West African','Brazilian','Middle Eastern','Caribbean','South Africa','North Indian','Euclidean'].map(t=>`<a class="${t==='Caribbean'?'on':''}">${t}</a>`).join('')}</div>`;
+ h+='<div class="lanes">'+lanes.map(L=>{
+   const st=[...Array(16)].map((_,s)=>{ const v=L.p[s], soft=L.soft.includes(s); const c=['st',v?'on':'',soft&&!v?'soft':'',s===5?'ph':'',s%4===0&&s?'gap':''].join(' ');
+     return `<div class="${c}">${id==='A'&&v?v:''}</div>`; }).join('');
+   const grp=id==='B'?`<span class="g">${L.g}</span>`:'';
+   return `<div class="lane" data-g="${L.g}"><div class="ln"><span class="n">${L.n}</span><span class="k">${L.k}</span> ${grp}</div>
+   <div class="ms"><i>M</i><i>S</i></div><div class="steps">${st}</div>
+   <div class="kn">${L.kn.map((v,i)=>knob(KL[i],v,i)).join('')}</div></div>`; }).join('')+'</div>';
+ h+=`<div class="mst"><span class="lbl" style="align-self:center">Master</span>${knob('Room',25,0)}${knob('Master',30,0)}${knob('Filter',78,0)}${knob('Env',30,0)}${knob('LFO',12,0)}
+   <span class="sp" style="flex:1"></span>${id==='B'?'<div class="k1"><span class="l">Out L</span><span class="jack"></span></div><div class="k1"><span class="l">Out R</span><span class="jack"></span></div>':''}${knob('Volume',100,0,true)}</div>`;
+ el.innerHTML=h;
+}
+['A','B','C','D'].forEach(build);
+</script>
+</body></html>
