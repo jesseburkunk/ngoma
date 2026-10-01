@@ -15,25 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Michroma&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=VT323&display=swap">
 <style>
-:root{
-  --bg:#ECE6DA; --panel:#F6F2EA; --panel2:#E3DBCC; --line:#D2C7B3; --text:#211C15; --muted:#6C6252;
-  --accent:#9E6718; --art1:#3C6A8C; --art2:#A9432C; --cell:#DDD4C3; --cellbeat:#D2C7B3; --track:#CFC4B0;
-  --onaccent:#FBF7EF; --focus:#3C6A8C; --ledoff:#CFC4B0; --card:#FFFDF8;
-  --cream:var(--text); --oxblood:var(--bg);
-  color-scheme:light;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#15130F; --panel:#1D1A15; --panel2:#29251E; --line:#37312A; --text:#EEE7DA; --muted:#9C9282;
-    --accent:#E2B56B; --art1:#86ADCC; --art2:#DA7A60; --cell:#2A261F; --cellbeat:#342F27; --track:#3A342B;
-    --onaccent:#15130F; --focus:#86ADCC; --ledoff:#3A342B; --card:#2B2720; color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#15130F; --panel:#1D1A15; --panel2:#29251E; --line:#37312A; --text:#EEE7DA; --muted:#9C9282;
-  --accent:#E2B56B; --art1:#86ADCC; --art2:#DA7A60; --cell:#2A261F; --cellbeat:#342F27; --track:#3A342B;
-  --onaccent:#15130F; --focus:#86ADCC; --ledoff:#3A342B; --card:#2B2720; color-scheme:dark;
-}
+:root{--cream:var(--text);--oxblood:var(--bg)}   /* v163: the colour tokens live in the skin (end of this file); these two aliases stay */
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font:14px/1.45 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;padding:0 16px;}
 .wrap{max-width:1180px;margin:0 auto;padding-block:20px 48px;display:flex;flex-direction:column;gap:18px}
@@ -483,12 +465,9 @@ body.drumsoff .lane .steps{opacity:.3}
 .tapbtn{padding:0 7px;font-size:12px}
 .tapbtn.tapped{animation:tapf .18s ease-out}@keyframes tapf{0%{background:var(--accent);color:var(--onaccent)}100%{}}
 body.m4l #tap{display:none}
-body.simple #take{display:none}
 .jambtn{margin-left:6px;font-variant-numeric:tabular-nums}.jambtn.on{border-color:#c0392b;color:#e74c3c}.jambtn.wait{border-style:dashed}
-body.simple .mini #mbb{display:none}
 .bbout #bbbtn.set{border-color:var(--accent);color:var(--accent)}
 #capture{border-top-right-radius:0;border-bottom-right-radius:0}#take{margin-left:-7px;border-top-left-radius:0;border-bottom-left-radius:0;padding:0 10px}   /* Capture and Take as one pair */
-body.simple #capture{border-radius:8px}
 
 /* ---------- Transport in groups (v94): play, time, tuning, mix */
 .tgrp{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}
@@ -498,7 +477,6 @@ body.simple #capture{border-radius:8px}
 .tgrp.tmix.inscenes{margin-left:auto;padding-left:0;border-left:0;display:flex;align-items:center}
 .tmix.inscenes .mvk{margin:-10px 0 -12px}
 .scenes .schelp{flex-basis:100%}
-body.simple .tgrp.ttune{display:none}
 @media (max-width:720px){.tgrp+.tgrp{padding-left:0;border-left:0}.tgrp.tmix{margin-left:0}}
 
 /* ---------- Sticky mini transport (v94): appears when the main transport scrolls away */
@@ -511,7 +489,6 @@ body.simple .tgrp.ttune{display:none}
 .mini .mscn{display:flex;gap:4px;margin-left:auto}
 .mini .mscn .scbtn{height:28px;padding:0 8px;max-width:none}
 .mini .mscn .scbtn span{display:none}
-body.simple .mini .mscn{display:none}
 @media (max-width:560px){.mini .mname,.mini #mcap,.mini .mbpm{display:none}.mini{gap:6px;padding:6px 10px}.mini .mscn{gap:2px}.mini .mscn .scbtn{padding:0 6px;height:26px}.mini #mplay{min-width:0}}
 
 /* ---------- Scenes (v91) */
@@ -538,7 +515,6 @@ body.inmorph .steps{border-radius:4px;animation:mpulse 2s ease-in-out infinite} 
 .scbtn[aria-pressed=true]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .scbtn.stored{animation:scst .5s ease-out}@keyframes scst{0%{background:var(--accent);color:var(--onaccent)}100%{}}
 .schelp{color:var(--muted);font-size:11px}
-body.simple .scenes{display:none}
 @media (max-width:560px){.schelp{display:none}.scbtn span{display:none}.scbtn{padding:0 10px}}
 
 /* ---------- Changes on the next bar (v88) */
@@ -554,12 +530,6 @@ body.simple .scenes{display:none}
 /* ---------- Simple view (v76): same engine, fewer controls. Nothing is reset; Full shows everything again. */
 .viewseg{margin-right:4px}
 body:not(.simple) .simonly{display:none!important}
-body.simple #drop, body.simple .groove, body.simple .kitbar, body.simple .sound, body.simple .export, body.simple #magicU,
-body.simple .rtools, body.simple .legend, body.simple #resetbasis, body.simple #libbtn,
-body.simple #key, body.simple #scale, body.simple #tuneall, body.simple .transport label.chk,
-body.simple .lane .kfold, body.simple .lane .kpanel, body.simple .lane .lctl, body.simple .lane .reg{display:none!important}
-body.simple .transport label.field:has(#key), body.simple .transport label.field:has(#scale){display:none!important}
-body.simple .rack{padding-top:14px}
 .btn.surprise, #surprise{font-weight:700}
 
 /* ===== v107 layout: four zones, each with its own role (play, rhythm, layers, studio). Depth instead of colour: the page, the
@@ -1097,7 +1067,7 @@ input,select{accent-color:var(--accent)}
     <dt>Drop · Drums off</dt><dd>Hold <i>Drop</i> (key D) for a breakdown: the drums drop out, bells, clave and shaker keep time. <i>Drums off</i> silences all drums until you press it again (key M).</dd>
     <dt>← →</dt><dd>Step back and forth through your last 30 versions, like a browser.<details class="g-more"><summary>More</summary>Every randomize, new variant, Rnd, kit roll, reset and scene is kept as a version, so you can roll freely and return to the one that grooved.</details></dd>
     <dt>Key · Scale · Tune to key</dt><dd>The key and scale of your track. <i>Tune to key</i> tunes the drums: low drums to the root, tumba and bongo to the fifth, djembe to the minor seventh. <i>Lock to scale</i> makes the Tune knobs land only on notes of the scale.</dd>
-    <dt>Chords · Per</dt><dd>One chord scheme for the whole piece. The pad, Worp, Resonate and the tuned drums follow it. <i>Per</i> sets how long each chord lasts.<details class="g-more"><summary>More</summary><i>Drone</i> (the default) is Ngoma as it was: no changes. <i>Auto</i> picks a scheme that suits the tradition: Afro-Cuban 1 · 4 · 5 · 4, Caribbean 1 · 4, Middle Eastern and Southern Europe 1 · 7 · 6 · 5; North Indian stays on the drone. <i>Wander</i> finds its own way and comes home now and then. Every chord is built from your scale, so whatever you play on top still fits; in a pentatonic scale many chords have no third and show as sus4. The tuned drums move with the chord and keep their place in it (the root drum lands on the new root, the fifth on the new fifth); shakers, triangle, tambourine and claps stay. Switch that off with <i>Drums too</i>. The scope at the top shows the chord now and the next one. Export a loop at least as long as the scheme to get all of it.</details></dd>
+    <dt>Chords · Per</dt><dd>One chord scheme for the whole piece. The pad, Worp, Resonate and the tuned drums follow it. <i>Per</i> sets how long each chord lasts.<details class="g-more"><summary>More</summary><i>Drone</i> (the default) is Ngoma as it was: no changes. <i>Auto</i> picks a scheme that suits the tradition: Afro-Cuban 1 · 4 · 5 · 4, Caribbean 1 · 4, Middle Eastern and Southern Europe 1 · 7 · 6 · 5; North Indian stays on the drone. <i>Wander</i> finds its own way and comes home now and then. Every chord is built from your scale, so whatever you play on top still fits; in a pentatonic scale many chords have no third and show as sus4. The tuned drums move with the chord and keep their place in it (the root drum lands on the new root, the fifth on the new fifth); shakers, triangle, tambourine and claps stay. Switch that off with <i>Drums too</i>. The scope at the top shows the chord now and the next one. Export a loop at least as long as the scheme to get all of it; Ngoma tells you when it is shorter. With Chords on, the export also has a MIDI file with the chords (three notes from your scale per chord), for a pad or piano in your DAW.</details></dd>
     <dt>MIDI</dt><dd>Play along from a MIDI keyboard. Click <i>MIDI: connect</i> once; after that Ngoma connects by itself.<details class="g-more"><summary>More</summary><i>Lead</i> or <i>Pad</i> picks what your keys play (the Worp pad; when the one you pick is off, the other plays). <i>Tight</i> makes every key wait for the next sixteenth while Ngoma plays, so what you play lands on the grid; a key just after the line plays at once.</details></dd>
     <dt>Stable</dt><dd>Next to Volume. For a laptop where the sound stutters: a bigger audio buffer and a longer look-ahead, at the cost of a little more delay on MIDI keys. When the scope shows <i>LATE</i>, Ngoma could not keep up for a moment.</dd>
     <dt>Volume</dt><dd>Master volume for listening, at the end of the scenes line. Double-click for full. Exports are always at -16 LUFS, whatever it says.</dd>
@@ -4066,7 +4036,7 @@ let dropped=[];
 function dropMask(){ const hi=S.lanes.some((L,i)=>INSTR[i].reg==='high'&&hasHits(L)&&!L.mute); return INSTR.map(I=>hi?I.reg!=='high':I.reg==='low'); }
 function preview(i,a=0){ clearTimeout(suspT); if(!playing && actx) suspT=setTimeout(()=>{ if(!playing && actx.state==='running') actx.suspend(); },6000);
  ensureCtx(); { const l=AG.lanes[i]; [l.mG,l.rG,l.eG].forEach(n=>{ if(n){ n.gain.cancelScheduledValues(actx.currentTime); n.gain.setValueAtTime(1,actx.currentTime); } }); }   /* v143: a preview always gets its effects */
- voice(actx,AG.lanes[i].in,i,a,actx.currentTime+.01,.95,true); }
+ voice(actx,AG.lanes[i].in,i,a,actx.currentTime+.01,.95,true,undefined,chTn(i,playing?gStep:0)); }   /* v164: the preview is in the chord too */
 
 /* =========================================================
    UI
@@ -4781,6 +4751,16 @@ function midiBytesX(total){
   const L=out.length; const trk=[0x4D,0x54,0x72,0x6B,(L>>>24)&255,(L>>>16)&255,(L>>>8)&255,L&255];
   return new Uint8Array([...hdr,...trk,...out]);
 }
+/* v164 Chords in the export: a second MIDI file with the chord of the scheme, three notes from your scale per chord, for a pad or piano
+   in your DAW. Only when Chords is on. chLen: how many steps the whole scheme takes, for the warning when the loop is shorter. */
+function chLen(){ const p=chProgOf(); if(p==='drone') return 0; const L=p==='wander'?4:CH_PROGS.find(x=>x[0]===p)[2].length; return L*chPer(); }
+function chordMidiBytes(total){ const ppq=480, tps=ppq/S.res, per=chPer(), sc=padSc(), n=sc.length, ev=[];
+  for(let g=0;g<total;g+=per){ const d=chordAt(g), end=Math.min(total,g+per); [0,2,4].forEach(k=>{ const x=d+k, m=48+S.key+sc[((x%n)+n)%n]+12*Math.floor(x/n); ev.push([g*tps,1,0x90,m,80],[end*tps-1,0,0x80,m,0]); }); }
+  ev.sort((a,b)=>a[0]-b[0]||a[1]-b[1]); const out=[], vlq=v=>{ const a=[v&0x7F]; while(v>>=7) a.unshift((v&0x7F)|0x80); out.push(...a); };
+  const name=[...new TextEncoder().encode('Ngoma chords')]; vlq(0); out.push(0xFF,0x03,name.length,...name);
+  const us=Math.round(60000000/S.bpm); vlq(0); out.push(0xFF,0x51,0x03,(us>>16)&255,(us>>8)&255,us&255); vlq(0); out.push(0xFF,0x58,0x04,4,2,24,8);
+  let last=0; for(const [t,,st,m,v] of ev){ vlq(t-last); out.push(st,m,v); last=t; } vlq(Math.max(0,total*tps-last)); out.push(0xFF,0x2F,0x00);
+  const L=out.length; return new Uint8Array([0x4D,0x54,0x68,0x64,0,0,0,6,0,0,0,1,(ppq>>8)&255,ppq&255,0x4D,0x54,0x72,0x6B,(L>>>24)&255,(L>>>16)&255,(L>>>8)&255,L&255,...out]); }
 const CRC=(()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; t[n]=c>>>0; } return t; })();
 function crc32(u){ let c=0xFFFFFFFF; for(let i=0;i<u.length;i++) c=CRC[(c^u[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
 function zipBlob(files){
@@ -4995,9 +4975,11 @@ async function exportLoop(){
     if(dry) files.push({name:base+'-dry.wav',data:wavBytes(dry[0],dry[1],sr)});
     stems.forEach(x=>files.push({name:'stems/'+base+'-'+x.id+'.wav',data:wavBytes(x.ch[0],x.ch[1],sr)}));
     files.push({name:base+'.mid',data:midiBytes(total)},{name:base+'.json',data:json});
+    if(chOn()) files.push({name:base+'-chords.mid',data:chordMidiBytes(total)});   /* v164 */
     status('Ready to save…');
     const where=await deliver(files,base);
-    status('Saved'+(where==='folder'?' in '+OUT.dir.name+': '+base+'.wav':': '+base+'.zip')+' with '+(dry?'WAV with effects, dry WAV, ':'WAV, ')+(stems.length?stems.length+' stems, ':'')+'MIDI'+(where==='folder'?'':' and pattern file')+'. 24-bit, 48 kHz, '+(isFinite(outLu)?Math.round(outLu)+' LUFS':'silent')+', peaks under -1 dBTP.');
+    const chW=chOn()&&chLen()>total?' The chord scheme is '+(chLen()/(4*S.res))+' bars long and this loop '+(total/(4*S.res))+': set Loop to '+(chLen()/(4*S.res))+' bars to get all of it.':'';   /* v164 */
+    status('Saved'+(where==='folder'?' in '+OUT.dir.name+': '+base+'.wav':': '+base+'.zip')+' with '+(dry?'WAV with effects, dry WAV, ':'WAV, ')+(stems.length?stems.length+' stems, ':'')+'MIDI'+(where==='folder'?'':' and pattern file')+'. 24-bit, 48 kHz, '+(isFinite(outLu)?Math.round(outLu)+' LUFS':'silent')+', peaks under -1 dBTP.'+chW);
   }catch(err){
     const code=err&&err.code;
     status(code==='declined'?'Save cancelled.':code==='rate_limited'?'A save dialog is already open.':'Export failed: '+((err&&err.message)||err));

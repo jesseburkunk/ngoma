@@ -170,10 +170,11 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       const si = INSTR.findIndex(x => x.id === 'surdo'), L0 = S.lanes[si], t0 = L0.tune; { const r0 = ((INSTR[si].base + (S.fx.kitPitch || 0) - S.key) % 12 + 12) % 12; L0.tune = r0 > 6 ? 12 - r0 : -r0; }   /* the surdo on the root */
       const sm = INSTR[si].base + L0.tune + (S.fx.kitPitch || 0), sc = SCALES[S.scale].iv;
       const drum = [0, 16, 32, 48].map(g => { const d = chordAt(g), pc = (((sm + chTn(si, g) - S.key) % 12) + 12) % 12; return { ok: pc === (sc[((d % sc.length) + sc.length) % sc.length] + ((sm - S.key) % 12 + 12) % 12 - sc[0]) % 12 || d === 0, mv: chTn(si, g) }; });
-      const shk = chTn(INSTR.findIndex(x => x.id === 'shaker'), 16); S.fx.chDrums = false; const off = chTn(si, 16); S.fx.chDrums = true; L0.tune = t0;
+      const shk = chTn(INSTR.findIndex(x => x.id === 'shaker'), 16); S.fx.chDrums = false; const off = chTn(si, 16); S.fx.chDrums = true; L0.tune = t0; S.fx.chProg = 'montuno'; const cm = chordMidiBytes(64).length, cl = chLen();
       S.fx.chProg = 'wander'; const w1 = [0, 1, 2, 3, 4, 5].map(k => chordAt(k * 16)), w2 = [0, 1, 2, 3, 4, 5].map(k => chordAt(k * 16));
       let diff = 0; for (let i = 0; i < a[0].length; i += 7) diff += Math.abs(a[0][i] - b[0][i]);
-      S.renderOnly = null; Object.assign(S.fx, JSON.parse(keep)); return { d0, d1, names, ra: rms(a[0]), rb: rms(b[0]), diff, w: w1.join() === w2.join() && new Set(w1).size > 1, drum, shk, off }; }, rmsJS);
+      S.renderOnly = null; Object.assign(S.fx, JSON.parse(keep)); return { d0, d1, names, ra: rms(a[0]), rb: rms(b[0]), diff, w: w1.join() === w2.join() && new Set(w1).size > 1, drum, shk, off, cm, cl }; }, rmsJS);
+    assert(r.cm > 60 && r.cl === 64, 'chord MIDI ' + r.cm + ' bytes, scheme ' + r.cl + ' steps');
     assert(r.drum.every(x => x.ok) && r.drum.some(x => x.mv), 'surdo does not follow the root ' + JSON.stringify(r.drum)); assert(r.shk === 0 && r.off === 0, 'shaker moved or Drums too ignored');
     assert(r.d0.every(x => x === 0), 'drone moved ' + r.d0); assert(new Set(r.d1).size >= 3, 'scheme flat ' + r.d1); assert(r.ra > .0005 && r.rb > .0005, 'silent');
     assert(r.diff > 1, 'the pad did not follow'); assert(r.w, 'wander not seeded'); return r.names.join(' ') + ', surdo ' + r.drum.map(x => x.mv).join('/') + ' st, wander seeded'; });
