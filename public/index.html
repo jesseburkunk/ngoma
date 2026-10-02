@@ -809,6 +809,11 @@ input,select{accent-color:var(--accent)}
 .zlayers #fldU .mgw{grid-template-columns:repeat(7,84px)!important}
 @media (max-width:900px){.zlayers #fldU .mgw{grid-template-columns:repeat(7,68px)!important}}
 @media (max-width:560px){.zlayers #fldU .mgw{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+/* v179 layers layout: strip on top, sound knobs, small mix knobs, the melody folded */
+.zlayers .wstrip.wtop{margin:0 0 12px}.zlayers .lsound{margin-bottom:6px}.zlayers .lmix{gap:6px 18px;margin:6px 0 4px;padding-left:18px;border-left:1px solid rgba(236,230,218,.08)}
+.zlayers .lmix .knob{width:56px}.lvfold{margin-top:10px;border-top:1px solid rgba(236,230,218,.07);padding-top:8px}.lvfold>summary{cursor:pointer;list-style:none;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute,#a59f92);user-select:none}
+.lvfold>summary::-webkit-details-marker{display:none}.lvfold>summary::before{content:'▸ ';color:#ff6a2b}.lvfold[open]>summary::before{content:'▾ '}.lvfold>summary span{text-transform:none;letter-spacing:0;color:#cfc8ba;margin-left:6px}
+.ft-credits{font-size:13px}.ft-lic summary{cursor:pointer;margin-top:6px}.ft-lic pre{white-space:pre-wrap;font-size:11px;line-height:1.5;opacity:.8;max-width:680px}
 /* v173 Lead v2 row */
 .lvrow{margin-top:10px}.lvw{display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px 22px}.lvw .knob.dim{opacity:.38}
 .lvw .knob.segk,.lvw .knob.selk{width:auto}.lvw .selk select{min-width:128px;height:30px}
@@ -1044,6 +1049,28 @@ input,select{accent-color:var(--accent)}
     </div>
     <div class="ft-about">
       The rhythms are inspired by living traditions from Cuba, West Africa, Brazil, the Middle East, the Caribbean, South Africa, North India and Southern Europe. They are simplified readings for a loop, not transcriptions: <button class="ft-link" id="ftorigins" type="button">read about the origins and sources</button>, and learn from players in those traditions. The <a id="ftref" href="reference.html">rhythm reference</a> lets you hear every rhythm and see how it is written.
+    </div>
+    <div class="ft-about ft-credits">
+      Sounds from others: the Lead plays <a href="https://github.com/pichenettes/eurorack/tree/master/plaits" target="_blank" rel="noopener">Plaits</a> by Emilie Gillet (Mutable Instruments), MIT licence; Texture plays field recordings by Félix Blume (freesound.org), CC0.
+      <details class="ft-lic"><summary>Licence text of Plaits</summary><pre>Copyright 2012-2021 Emilie Gillet.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</pre></details>
     </div>
     <div class="ft-me">
       <span>Made by <b>Jesse Burkunk</b></span>
@@ -4679,6 +4706,25 @@ function bindMacro(id,key,fmt,after){
   const el=$(id), out=$(id+'v'); const u=()=>{ el.value=Math.round(S[key]*100); out.textContent=fmt(S[key]); }; u(); UPD.push(u);
   el.oninput=()=>{ S[key]=el.value/100; out.textContent=fmt(S[key]); after&&after(); invalidate(); };
 }
+/* v179 (Jesse: Layers had many knobs of the same kind, the order should follow what matters): every layer reads top to bottom as the
+   strip (New sound, New pattern, the display), the sound knobs, then the mix knobs, small (Filter, Reverb, Echo, Pitch). The Lead's
+   melody controls fold away under Melody, with its settings in the summary. Elements are only moved: every knob keeps its handler. */
+function layersLayout(){ const lab=k=>{ const e=k.querySelector('.kl'); return e?e.textContent.trim():''; };
+  const unit=(id,sound,mix,into)=>{ const U=$(id); if(!U) return; const C=U.querySelector('.fxc'), mg=U.querySelector('.mgw'), st=U.querySelector('.wstrip'); if(!C||!mg) return;
+    const all=[...mg.querySelectorAll('.knob')], by=l=>all.find(k=>lab(k)===l);
+    if(st){ st.classList.add('wtop'); C.prepend(st); }
+    let SR=into; if(!SR){ SR=document.createElement('div'); SR.className='lvw lsound'; mg.parentNode.before(SR); }
+    sound.slice().reverse().forEach(l=>{ const k=by(l); if(k) SR.prepend(k); });
+    const MR=document.createElement('div'); MR.className='lvw lmix'; mix.forEach(l=>{ const k=by(l); if(k){ k.classList.remove('big','mgk'); MR.append(k); } });
+    (into?into.closest('.knrow'):SR).after(MR); const kr=mg.closest('.knrow'); if(kr&&!kr.querySelector('.knob')) kr.remove(); return MR; };
+  unit('padU',['Level','Move'],['Filter','Reverb','Echo','Pitch']);
+  unit('fldU',['Level','Distance','Drift','Tune'],['Filter','Reverb','Echo']);
+  const pl=document.querySelector('#plRow .lvw'), mg=document.querySelector('#leadU .mgw'), vary=mg&&[...mg.querySelectorAll('.knob')].find(k=>lab(k)==='Vary'), mel=document.querySelector('#lvRow .lvw');
+  if(vary&&mel){ vary.classList.remove('big','mgk'); vary.classList.add('big','mgk'); mel.append(vary); }
+  unit('leadU',['Level'],['Filter','Reverb','Echo','Pitch'],pl);
+  const lv=$('lvRow'); if(lv&&!lv.closest('details')){ const d=document.createElement('details'); d.className='lvfold'; const sm=document.createElement('summary'); sm.innerHTML='Melody <span id="lvSum"></span>'; lv.before(d); d.append(sm,lv);
+    const su=()=>{ const F=S.fx, f=F.leadForm||'qa', fn=f==='free'?'Free':(window.WorpEngine&&WorpEngine.LV_FORMS[f])||f, rl=F.leadRl??16, pl2=F.leadPl??5; $('lvSum').textContent=f==='free'?'· Free':'· '+fn+' · rhythm '+(rl>=16?'bar':rl)+' · notes '+(pl2||'all')+' · vary '+Math.round((F.leadCx??.3)*100)+'%'; }; su(); UPD.push(su);
+    d.addEventListener('input',su); d.addEventListener('click',()=>setTimeout(su,0)); } }
 function initControls(){
   const key=$('key'); NOTE.forEach((n,j)=>{ const o=document.createElement('option'); o.value=j; o.textContent=n; key.append(o); });
   const scs=$('scale'); Object.entries(SCALES).forEach(([k,v])=>{ const o=document.createElement('option'); o.value=k; o.textContent=v.name; scs.append(o); });
@@ -5342,7 +5388,7 @@ async function exportLoop(){
   }finally{ btn.disabled=false; }
 }
 
-initControls(); onbInit();
+initControls(); layersLayout(); onbInit();
   document.addEventListener('click',e=>{ if(e.target.closest('.chip,.roll,.tab,#reseed,[data-rnd]')) onbActed(); },true);
 
 /* ---------- Max for Live bridge (v77). Inside the Ngoma device (jweb~ in Live) Live's transport drives the loop:

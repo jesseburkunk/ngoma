@@ -39,7 +39,25 @@ footer{margin-top:26px;color:var(--mute);font-size:12px}
 </div>
 <h2>Plaits</h2><div class="grid" id="gp"></div>
 <h2>Huidig (Worp-mallets)</h2><div class="grid" id="gn"></div>
-<footer>Plaits: © Emilie Gillet (Mutable Instruments), MIT-licentie. Hier naar WebAssembly gecompileerd (tools/plaits). Deze pagina is een proef, Ngoma zelf is niet veranderd.</footer>
+<footer>Plaits: © Emilie Gillet (Mutable Instruments), MIT-licentie. Hier naar WebAssembly gecompileerd (tools/plaits). Deze pagina is een proef, Ngoma zelf is niet veranderd. <details class="ft-lic"><summary>Licence text of Plaits</summary><pre>Copyright 2012-2021 Emilie Gillet.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</pre></details></footer>
 </main>
 <script>/* Worp engine for Ngoma: a copy of the sound engine of Worp (public/worp), pad only.
    Generated from public/worp/index.html by tools/sync_worp.py (deploy.sh runs it), so a seed sounds the same in both. Keep them in sync: rebuild, do not edit by hand.
@@ -208,7 +226,17 @@ function genPatch(seed,kind){
      a little less than a lead's, and leads no longer drop an octave. */
   if(!pad){P.filter.cut=Math.min(16000,Math.max(6000,P.filter.cut*3));P.layers.forEach(L=>{if(L.oct<0)L.oct=0})}
   else P.filter.cut=Math.min(12000,Math.max(2000,P.filter.cut*2.2));
+  /* v1.29 (Jesse: pads too often hard, noisy or distorted; he wants warm, glowing pads): no wavefolder on a pad, the noise layer only as a
+     soft ringing tone, little drive, no square waves, gentle detune, a mild FM index on harmonic ratios, a filter that stays open but
+     never whistles or screams, and no bit-crush, ring-mod-like shifter or crushing sonar in the effects. The dice are unchanged; only the
+     outcome is tamed, so a seed keeps its character. */
+  if(pad){P.drive=Math.min(P.drive,.12);P.filter.type='lowpass';P.filter.q=Math.min(P.filter.q,2);P.filter.cut=Math.min(P.filter.cut,6000);
+    P.layers.forEach(L=>{L.fold=0;if(L.engine==='air'){L.level*=.45;L.q=Math.max(L.q,80);L.breath=0}
+      if(L.engine==='saw'){if(L.wave==='square')L.wave='sawtooth';L.detune=Math.min(L.detune,16)}
+      if(L.engine==='fm'){L.index=Math.min(L.index,1.1);if(L.ratio===1.414||L.ratio===2.76||L.ratio===3.5||L.ratio===7)L.ratio=2}});
+    P.fxs.chain=P.fxs.chain.filter(f=>f.type!=='bitplane'&&!(f.type==='shifter'&&f.hz>2));P.fxs.chain.forEach(f=>{if(f.type==='sonar'&&(f.chroma==='crush'||f.chroma==='fold'))f.chroma='lowpass';if(f.type==='rotor')f.q=Math.min(f.q,60)})}
   genMods(r,P);
+  if(pad&&P.xmod){P.xmod.kind='am';P.xmod.depth=Math.min(P.xmod.depth,.45)}
   P.mix=[1,1,1,1];P.mute=[false,false,false,false];
   return P;
 }
@@ -927,7 +955,8 @@ function releaseAll(t){for(const v of poly.values())v.release(t);poly.clear();[l
   };
 }
 function lineAt(P,i,h){const o=PH_HOST;PH_HOST=h;try{return phraseOut(P,i)}finally{PH_HOST=o}}   /* v173: the line as the host would hear it, for tests and for picking candidates */
-window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt,LV_FORMS,lineAt};
+function setHostScale(iv){SCALES.__host=iv.slice()}   /* v175: the scale lineAt reads for '__host', when Ngoma plays the line itself (Plaits lead) */
+window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt,LV_FORMS,lineAt,setHostScale};
 })();
 </script>
 <script>
