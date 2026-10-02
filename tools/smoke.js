@@ -216,6 +216,24 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     { const g = String(r.grid || '').split(',').map(x => x.split(':').map(Number)); assert(r.arm === 'arm' && r.n === 2 && g[1][0] - g[0][0] === 8 && g[0][0] <= 1 && g[0][1] >= 1 && g[1][1] >= 1, 'take ' + JSON.stringify(r)); }   /* a busy test browser can play a hair late */ assert(!r.lrec, 'lead left resting');
     assert(r.ra > .001 && r.rc > .001, 'pad silent ' + JSON.stringify(r)); assert(r.dab > 1 && r.dac > 1, 'pattern or chords did not change the pad ' + JSON.stringify(r)); return 'take ' + r.grid + ', pad pattern and chords sound'; });
 
+  await check('Lead v2: Form, Rhythm and Notes shape the line, Vary changes it, Drums thins it, the lead sounds', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), o = {}, keep = JSON.stringify(S.fx);
+      const P = WorpEngine.genPatch(424242, 'lead'), n = 5, base = { res: 4, cx: .3, anchor: null, cdv: 0, deg: 0 };
+      const sig = (lv, N, h) => { const a = []; for (let i = 0; i < N; i++) a.push(WorpEngine.lineAt(P, i, Object.assign({}, base, h || {}, { lv })).filter(e => !e.v).map(e => e.deg).join('.')); return a; };
+      const L0 = { form: 'aaaa', rl: 16, pl: 5, rg: .35, dr: 0, vary: 0, pn: null }, A = sig(L0, 128), bar = k => A.slice(k * 16, k * 16 + 16).join(',');
+      o.notes = A.filter(Boolean).length; o.aaaa = bar(0) === bar(1) && bar(1) === bar(3) && A.slice(0, 64).join() === A.slice(64, 128).join();
+      const B3 = sig(Object.assign({}, L0, { rl: 3 }), 16).map(x => !!x); o.r3 = B3.slice(0, 13).every((x, i) => x === B3[i + 3]);
+      const Q = sig(Object.assign({}, L0, { form: 'qa' }), 64), last = Q.slice(48, 64).filter(Boolean).pop() || ''; o.qaEnd = last.split('.').map(Number).some(d => ((d % n) + n) % n === 0);
+      const V = sig(Object.assign({}, L0, { vary: 1 }), 64 * 24), ph = k => V.slice(k * 64, k * 64 + 64).join(','); o.varied = new Set([...Array(24)].map((_, k) => ph(k))).size;
+      const beats = a => a.filter((x, i) => x && i % 4 === 0).length, loud = { drum: i => i % 4 === 0 ? 1 : 0 };
+      o.onBeats = beats(sig(L0, 64, loud)); o.gaps = beats(sig(Object.assign({}, L0, { dr: -1 }), 64, loud));
+      o.newBtns = !!(document.getElementById('leadRhy') && document.getElementById('leadNts') && document.querySelector('#lvRow select'));
+      document.getElementById('leadRhy').click(); document.getElementById('leadNts').click(); o.pn = S.fx.wlead.pn != null;
+      S.bars = 1; Object.assign(S.fx, { leadOn: true, leadLvl: .6, leadForm: 'qa', padOn: false }); S.renderOnly = -2; const b = await renderLoop(false, 22050); S.renderOnly = null; o.rms = rms(b[0]);
+      Object.assign(S.fx, JSON.parse(keep)); return o; }, rmsJS);
+    assert(r.notes > 8 && r.aaaa, 'AAAA does not repeat ' + JSON.stringify(r)); assert(r.r3, 'Rhythm 3 does not loop'); assert(r.qaEnd, 'the answer does not land on the root');
+    assert(r.varied > 2, 'Vary changes nothing: ' + r.varied); assert(r.gaps < r.onBeats, 'Drums gaps did not thin the beats ' + r.gaps + '/' + r.onBeats); assert(r.newBtns && r.pn, 'New rhythm / New notes'); assert(r.rms > .002, 'lead silent ' + r.rms);
+    return r.notes + ' notes in 8 bars, ' + r.varied + ' different phrases with Vary, beats ' + r.onBeats + ' > ' + r.gaps + ' in the gaps'; });
+
   await check('Bloom: renders, the tail sings and stays in bounds', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
       Object.assign(S.fx, { rvOn: true, rvType: 'hall', rvLevel: .5 }); const a = await renderLoop(false, 22050); S.fx.rvType = 'bloom'; const b = await renderLoop(false, 22050);
       let pk = 0; for (const v of b[0]) pk = Math.max(pk, Math.abs(v)); const hz = bloomHz(0); Object.assign(S.fx, JSON.parse(keep)); return { ra: rms(a[0]), rb: rms(b[0]), pk, hz }; }, rmsJS);

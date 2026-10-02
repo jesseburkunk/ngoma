@@ -719,6 +719,48 @@ function phraseCore(P,i){const ph=P.phrase,Z=phZ(),CX=phCx();
       if(!s.on)return[];const nx=ph.steps[(k+1)%len];return[{v:0,deg:s.deg,acc:s.acc,gate:s.gate,tie:s.tie&&nx.on}]}
   }}
 function phraseDesc(P){const ph=P.phrase;return`${PH_STYLES[ph.style]||'Loop'}: ${PH_AFTER[ph.style]||PH_AFTER.loop}`}
+/* v1.27: a line with a memory (Ngoma's Lead v2, after Marbles' deja vu, the Turing Machine and the Torso T-1). Only when the host asks
+   for it (phCtx().lv); Worp on its own plays as before. One bar of the style is the motif: its rhythm loops every Rhythm steps, its notes
+   run through a row of Notes pitches, taken from a second phrase seed (lv.pn) so rhythm and notes can be redrawn apart. Four bars make a
+   phrase in a Form (X: A with a new ending, Q: ends open on the fifth, R: a new ending that lands on the root). Strong beats lean to chord
+   tones, Range keeps the line stepwise or lets it leap, Drums thins the line where the drums play (gaps) or rest (accents), and at the end
+   of each phrase Vary may change the motif for good: a step up or down, a new ending, mirrored, shifted, or the next bar of the style. */
+const LV_FORMS={qa:'Call · answer',aaba:'AABA',aaab:'AA′AB',aaaa:'AAAA'};
+const LV_LET={aaaa:'AAAA',aaba:'AABA',aaab:'AXAB',qa:'AQAR'};
+function lvSd(P){return((P._ps!=null?P._ps:P.seed)>>>0)}
+function lvMem(P,lv,b,R){const ph=P.phrase,K=ph._lvm||(ph._lvm={}),vy=Math.max(0,Math.min(1,+lv.vary||0)),key=vy.toFixed(2)+'|'+R,sd=lvSd(P);let C=K[key];if(!C)C=K[key]=[{m:0,tr:0,inv:0,rot:0,end:0}];
+  while(C.length<=b){const k=C.length,q={...C[k-1]};if(rnd01((sd^0x7A11E)>>>0,k)<vy*.85){const u=rnd01((sd^0x7A11F)>>>0,k),w=rnd01((sd^0x7A120)>>>0,k);
+      if(u<.28)q.tr=Math.max(-3,Math.min(4,q.tr+(w<.5?1:-1)*(w<.2||w>.8?2:1)));else if(u<.48)q.end++;else if(u<.62)q.inv^=1;else if(u<.76)q.rot=(q.rot+(w<.5?2:R))%(4*R);else{q.m++;q.end=0;q.rot=0;q.inv=0;q.tr=0}}
+    C.push(q)}return C[b]}
+const LV_P2=new Map();
+function lvP2(P,pn){const q=pn>>>0;let ph=LV_P2.get(q);if(!ph){ph=genPatch(q,'lead').phrase;LV_P2.set(q,ph);if(LV_P2.size>24)LV_P2.delete(LV_P2.keys().next().value)}return{...P,phrase:ph,_ps:q}}
+function lvCt(P,c){const n=SCALES[P.scale].length,o=[];for(let k=0;k<n;k++){const iv=((semis(P.scale,c+k)-semis(P.scale,c))%12+12)%12;if(iv===0||iv===3||iv===4||iv===7)o.push(k)}return o.length>1?o:[0,2%n,4%n]}   // root, third, fifth of the chord on scale step c, in the scale
+function lvSnap(P,d,dg,c){const n=SCALES[P.scale].length,ct=lvCt(P,c);for(const o of[0,-1,1,-2,2,-3,3])if(ct.includes(mod(d+dg+o,n)))return d+o;return d}
+function lvBar(P,lv,M,L,R){const ph=P.phrase,B=4*R,sc=SCALES[P.scale],n=sc.length,i5=Math.max(1,sc.indexOf(7)),sd=lvSd(P),rg=Math.max(0,Math.min(1,+lv.rg||0));
+  const C=ph._lvb||(ph._lvb=new Map()),key=[M.m,M.tr,M.inv,M.rot,M.end,L,R,lv.rl,lv.pl,lv.pn==null?'':lv.pn>>>0,rg.toFixed(2),sc.join(',')].join('|');let bar=C.get(key);if(bar)return bar;
+  const rl=lv.rl>0&&lv.rl<B?lv.rl|0:B,P2=lv.pn!=null&&(lv.pn>>>0)!==sd?lvP2(P,lv.pn):P,rot=L==='B'?(M.rot+2*R)%B:M.rot,newEnd=L==='X'||L==='Q'||L==='R';
+  const row=[],pl=lv.pl|0,lim=pl?4*B:B;for(let j=0;j<lim&&(!pl||row.length<pl);j++)for(const e of phraseAt0(P2,M.m*B+j))if(!e.v)row.push(e.deg);
+  if(!row.length)row.push(0);const r0=row[0],lmax=2+Math.round(rg*2*n);let k=0,prev=null;bar=[];
+  for(let s=0;s<B;s++){const s1=((s-rot)%B+B)%B,tail=s1>=B-R&&(newEnd||M.end>0),src=tail?phraseAt0(P,(M.m+M.end+(newEnd?1:0))*B+s1):phraseAt0(P,M.m*B+s1%rl),out=[];
+    for(const e0 of src){const e={...e0};if(e.v){e.deg+=M.tr;out.push(e);continue}
+      let d=row[k%row.length];if(M.inv)d=2*r0-d;if(L==='B')d=2*r0-d+(n>5?2:1);d+=M.tr;
+      if(prev!=null){let g=0;while(d-prev>lmax&&g++<4)d-=n;g=0;while(prev-d>lmax&&g++<4)d+=n}   // Range: a leap wider than allowed folds to the nearer octave
+      if(rg>.6&&e.acc&&rnd01((sd^0x1EA9)>>>0,k)<(rg-.6)*1.2)d+=n;
+      {let g=0;while(d<-n&&g++<4)d+=n;g=0;while(d>2*n+2&&g++<4)d-=n}
+      e.deg=d;e.st=s%R===0;if(k===0)e.keep=true;k++;prev=d;out.push(e)}
+    bar.push(out)}
+  if(L==='Q'||L==='R'){for(let s=B-1;s>=0;s--){const e=bar[s].find(x=>!x.v);if(e){let d=L==='R'?0:i5;const p=e.deg;let g=0;while(d-p>n/2&&g++<4)d-=n;g=0;while(p-d>n/2&&g++<4)d+=n;
+      Object.assign(e,{deg:d,acc:true,keep:true,st:false,tie:false,gate:Math.max(e.gate||.5,.8)});break}}}
+  C.set(key,bar);if(C.size>48)C.delete(C.keys().next().value);return bar}
+function phraseV2(P,i){const H=phCtx(),lv=H.lv,ph=P.phrase;if(!ph||i<0)return[];const R=H.res||4,B=4*R,PL=4*B,b=Math.floor(i/PL),s=i%B;
+  const M=lvMem(P,lv,b,R),L=(LV_LET[lv.form]||'AAAA')[Math.floor(i/B)%4],ev=lvBar(P,lv,M,L,R)[s];if(!ev||!ev.length)return[];
+  const sd=lvSd(P),dr=Math.max(-1,Math.min(1,+lv.dr||0)),x=dr&&H.drum?Math.max(0,Math.min(1,+H.drum(i)||0)):0,out=[];
+  for(const e0 of ev){let e=e0;
+    if(!e.v&&e.st&&(s%(2*R)===0||rnd01((sd^0xC4D7)>>>0,i%PL)<.6)){const d=lvSnap(P,e.deg,H.deg|0,H.cdv|0);if(d!==e.deg)e={...e,deg:d}}   // strong beats lean to the chord
+    if(dr&&!e.keep){const p=dr<0?-dr*x*.85:dr*(1-x)*.85;if(rnd01((sd^0xD7A3)>>>0,i%PL+(e.v?977:0))<p)continue}
+    out.push(e)}
+  return out}
+function phraseOut(P,i){const lv=phCtx().lv;return lv&&LV_LET[lv.form]?phraseV2(P,i):phraseAt(P,i)}
 
 /* ---------- the modular part: sources, cables, re-patching ---------- */
 const FOLDMAX=6;
@@ -1326,7 +1368,7 @@ function playRec(R,i,t,spb,res){if(!R||!R.notes||!R.notes.length)return;const r=
   let M=RECM.get(R);if(!M){M={};RECM.set(R,M)}let map=M[r];
   if(!map){map=M[r]={};R.notes.forEach((n,k)=>{const p=n.s*r/4,st=Math.floor(p);(map[st]||(map[st]=[])).push({k,off:p-st,d:n.d*r/4,r:n.r,v:n.v})})}
   const ev=map[pos];if(!ev)return;for(const e of ev){const tt=t+e.off*spb,midi=state.key+48+e.r;if(!isFinite(midi))continue;const key='rec'+e.k;polyOn(key,midi,e.v,tt);polyOff(key,tt+Math.max(.06,e.d*spb))}}
-function playPhrase(P,i,t0,spb){for(const e of phraseAt(P,i)){const t=t0+(e.off||0)*spb,c=e.v?seqLead2:seqLead,midi=state.key+48+semis(P.scale,e.deg+(state.deg|0)+(state.cdv|0)),vel=e.vel!=null?e.vel:(e.acc?1:.62);if(!isFinite(midi))continue;   // a guard: a line never takes the voice down
+function playPhrase(P,i,t0,spb){for(const e of phraseOut(P,i)){const t=t0+(e.off||0)*spb,c=e.v?seqLead2:seqLead,midi=state.key+48+semis(P.scale,e.deg+(state.deg|0)+(state.cdv|0)),vel=e.vel!=null?e.vel:(e.acc?1:.62);if(!isFinite(midi))continue;   // a guard: a line never takes the voice down
   if(c.tied&&c.voice&&!c.voice.rel)c.voice.setFreq(mtof(midi),t,P.glide||.03);else{if(c.voice)c.voice.release(t);c.voice=new Voice(P,mtof(midi),vel,t)}
   const tie=!!e.tie&&!P.mallet;c.tied=tie;if(!tie)c.voice.release(t+spb*(P.mallet?Math.max(e.gate||.6,1.5):(e.gate||.6)))}}
 function releaseAll(t){for(const v of poly.values())v.release(t);poly.clear();[liveLead,seqLead,seqLead2].forEach(c=>{if(c.voice){c.voice.release(t);c.voice=null}c.tied=false})}
