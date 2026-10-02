@@ -59,6 +59,9 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     assert(r.sec > .5, 'empty WAV'); assert(Math.abs(r.lu + 16) < 1.5 || r.tp > .85, 'loudness ' + r.lu.toFixed(1)); assert(r.tp <= Math.pow(10, -1 / 20) + .01, 'true peak ' + r.tp.toFixed(3));
     return r.sec.toFixed(2) + ' s, ' + r.lu.toFixed(1) + ' LUFS, peak ' + (20 * Math.log10(r.tp)).toFixed(1) + ' dBTP'; });
 
+  await check('Jam files are bytes, so the zip lists their sizes', async () => { const r = await p.evaluate(() => { const sr0 = JAM.sr; JAM.sr = 8000; const tr = on => ({ any: on, b: on ? [new Float32Array(16000).fill(.1)] : [] });
+      const f = jamFiles({ mix: tr(true), drums: tr(false), pad: tr(false), lead: tr(true), worp: tr(false) }, 8000); JAM.sr = sr0; return f.map(x => [x.name, x.data instanceof Uint8Array, x.data.length]); });
+    assert(r.length === 2 && r.every(x => x[1] && x[2] === 44 + 8000 * 6), JSON.stringify(r)); });   /* v189: a Blob gave a zip with sizes of 0 (Archive Utility error 79) */
   await check('MIDI file export', async () => { const n = await p.evaluate(() => midiBytes(S.bars * 4 * S.res).length); assert(n > 40, 'MIDI too small: ' + n); });
 
   await check('Live play makes sound', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj); S.lanes.forEach(L => L.mute = false); start(); await new Promise(r => setTimeout(r, 1000)); let v = 0;

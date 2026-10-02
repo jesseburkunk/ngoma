@@ -51,7 +51,7 @@ backup > build (python read-modify-write on the Mac, assert each replace matches
 
 <!-- AUTO: below this line tools/map.py writes; do not edit by hand -->
 
-## Ngoma: public/index.html (5647 lines)
+## Ngoma: public/index.html (5648 lines)
 
 - **script starts** (line 13): (no functions)
 - **Knobs with character (v71): a ribbed skirt that turns (after the Rogan knobs of the Prophe** (line 431): (no functions)
@@ -79,15 +79,15 @@ backup > build (python read-modify-write on the Mac, assert each replace matches
 - **Scope: a quiet oscilloscope in the house colours** (line 4481): scopeInit 4485, scopeCalm 4489, scopeCols 4490, scopeHit 4491, scopeWake 4492, scopeGrid 4493, scopeTrace 4496, scopeIdle 4498, scopeFrame 4499, draw 4518, makeSegK 4549, makeSelK 4553, makeKnob 4557, editX 4583, kfoldSeen 4593, kfoldHint 4594, laneRow 4598, paintPending 4678, paintCell 4680, editCell 4696, euRow 4708, renderLanes 4723, renderStyles 4735, initTips 4764, initValues 4779, bindMacro 4780, layersLayout 4787, initControls 4807, status 5160, afterLoad 5161, updHist 5162, renderFavs 5163, inflate 5174, loadShared 5175, fileBase 5180
 - **EXPORT: WAV** (line 5185): wavBytes 5187, kCoefs 5199, loudness 5204, truePeak 5214, midiBytes 5220, midiBytesX 5221, chLen 5248, chordMidiBytes 5249, CRC 5256, crc32 5257, zipBlob 5260, loopLen 5280, renderLoop 5282, renderLoopX 5283
 - **Capture: keep what you just heard** (line 5292): capAttach 5297, capStart 5305, capLog 5306, capWindow 5307, capAudio 5313, capMidi 5317, capture 5327
-- **Delivery: a folder you picked (no zip), or a zip download** (line 5340): idb 5342, kvSet 5343, kvGet 5344, outUI 5345, outPick 5346, outReady 5347, writeFiles 5348, deliver 5350, resampleTo 5356
-- **Drag WAV: the mix is rendered while you hover, so it is ready when you drag** (line 5358): dwKey 5360, dwPrepare 5361
-- **Jam recording (v101): press ● Rec, play for up to 12 minutes, press again. It starts on th** (line 5366): jamTrack 5373, jamPut 5374, jamRec 5376, jamStart 5378, jamWorp 5387, jamUI 5390, jamStop 5394, jamWav 5404, jamFiles 5409
-- **Blackbox (v95): its own folder and names made for a small screen. Tempo (three digits, so ** (line 5416): bbUI 5420, bbPick 5421, bbName 5422, bbSend 5426, exportLoop 5446
-- **Max for Live bridge (v77). Inside the Ngoma device (jweb~ in Live) Live's transport drives** (line 5487): m4lAlign 5490, m4lInit 5494
-- **Changes on the next bar (v88). While playing, a new rhythm, Surprise, Reset, New variant, ** (line 5526): onBar 5530, qRun 5534, qMark 5536, qDraw 5539
-- **Scenes (v91): eight slots that keep the whole state (the same snapshot as ← →: pattern, ki** (line 5544): scenesRender 5546, sceneStore 5557, sceneClear 5558, sceneRecall 5559
-- **Morph (v104): a scene grows out of what plays now over 1, 2, 4 or 8 bars. The scene is app** (line 5562): morphCap 5571, morphStart 5573, morphSet 5582, morphInd 5599, morphSnap 5601, scBase 5605, scEdited 5606, morphStep 5609, morphEnd 5611, morphUI 5619, setView 5631
-- **script starts** (line 5644): (no functions)
+- **Delivery: a folder you picked (no zip), or a zip download** (line 5340): idb 5342, kvSet 5343, kvGet 5344, outUI 5345, outPick 5346, outReady 5347, writeFiles 5348, deliver 5350, resampleTo 5357
+- **Drag WAV: the mix is rendered while you hover, so it is ready when you drag** (line 5359): dwKey 5361, dwPrepare 5362
+- **Jam recording (v101): press ● Rec, play for up to 12 minutes, press again. It starts on th** (line 5367): jamTrack 5374, jamPut 5375, jamRec 5377, jamStart 5379, jamWorp 5388, jamUI 5391, jamStop 5395, jamWav 5405, jamFiles 5410
+- **Blackbox (v95): its own folder and names made for a small screen. Tempo (three digits, so ** (line 5417): bbUI 5421, bbPick 5422, bbName 5423, bbSend 5427, exportLoop 5447
+- **Max for Live bridge (v77). Inside the Ngoma device (jweb~ in Live) Live's transport drives** (line 5488): m4lAlign 5491, m4lInit 5495
+- **Changes on the next bar (v88). While playing, a new rhythm, Surprise, Reset, New variant, ** (line 5527): onBar 5531, qRun 5535, qMark 5537, qDraw 5540
+- **Scenes (v91): eight slots that keep the whole state (the same snapshot as ← →: pattern, ki** (line 5545): scenesRender 5547, sceneStore 5558, sceneClear 5559, sceneRecall 5560
+- **Morph (v104): a scene grows out of what plays now over 1, 2, 4 or 8 bars. The scene is app** (line 5563): morphCap 5572, morphStart 5574, morphSet 5583, morphInd 5600, morphSnap 5602, scBase 5606, scEdited 5607, morphStep 5610, morphEnd 5612, morphUI 5620, setView 5632
+- **script starts** (line 5645): (no functions)
 
 ## Worp: public/worp/index.html (1905 lines)
 

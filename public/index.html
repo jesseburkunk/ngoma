@@ -5348,6 +5348,7 @@ async function outReady(){ if(!OUT.dir) return false; try{ let p=await OUT.dir.q
 async function writeFiles(files){ for(const f of files){ const parts=f.name.split('/'); let d=OUT.dir; for(const q of parts.slice(0,-1)) d=await d.getDirectoryHandle(q,{create:true});
     const fh=await d.getFileHandle(parts[parts.length-1],{create:true}), w=await fh.createWritable(); await w.write(f.data); await w.close(); } }
 async function deliver(files,base){   // returns where it went
+  for(const f of files) if(f.data instanceof Blob) f.data=new Uint8Array(await f.data.arrayBuffer());   /* v189: the zip needs bytes */
   if(await outReady()){ await writeFiles(files.filter(f=>!/\.json$/.test(f.name))); return 'folder'; }
   const blob=zipBlob(files);
   if(downloadsNS) await downloadsNS.save({filename:base+'.zip',data:blob});
@@ -5405,7 +5406,7 @@ function jamWav(get,n,sr,gain){ const ba=6, b=new ArrayBuffer(44+n*ba), v=new Da
   w(0,'RIFF'); v.setUint32(4,36+n*ba,true); w(8,'WAVE'); w(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,2,true); v.setUint32(24,sr,true); v.setUint32(28,sr*ba,true); v.setUint16(32,ba,true); v.setUint16(34,24,true); w(36,'data'); v.setUint32(40,n*ba,true);
   const u=new Uint8Array(b); let o=44;
   for(let f=0;f<n;f++){ for(let c=0;c<2;c++){ let x=Math.round(get(f,c)*gain*256); x=Math.max(-8388607,Math.min(8388607,x)); if(x<0) x+=16777216; u[o++]=x&255; u[o++]=(x>>8)&255; u[o++]=(x>>16)&255; } }
-  return new Blob([b],{type:'audio/wav'}); }
+  return u; }   /* v189: bytes, like every other file the zip gets (a Blob made the zip list sizes of 0: Archive Utility error 79) */
 function jamFiles(T,n){ const sr=JAM.sr, at=(tr,f,c)=>{ const k=Math.floor(f/sr), b=tr.b[k]; return b?b[(f-k*sr)*2+c]:0; }, out=[];
   // mix: Ngoma's output plus Worp, kept under 0 dBFS
   let pk=1; if(T.worp.any){ for(let f=0;f<n;f++) for(let c=0;c<2;c++){ const x=Math.abs(at(T.mix,f,c)+at(T.worp,f,c)); if(x>pk) pk=x; } }
