@@ -213,6 +213,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       const L0 = { form: 'aaaa', rl: 16, pl: 5, rg: .35, dr: 0, vary: 0, pn: null }, A = sig(L0, 128), bar = k => A.slice(k * 16, k * 16 + 16).join(',');
       o.notes = A.filter(Boolean).length; o.aaaa = bar(0) === bar(1) && bar(1) === bar(3) && A.slice(0, 64).join() === A.slice(64, 128).join();
       const B3 = sig(Object.assign({}, L0, { rl: 3 }), 16).map(x => !!x); o.r3 = B3.slice(0, 13).every((x, i) => x === B3[i + 3]);
+      const P7 = sig(Object.assign({}, L0, { len: 7 }), 70); o.len7 = P7.slice(0, 63).every((x, i) => x === P7[i + 7]) && P7.slice(0, 16).join() !== P7.slice(16, 32).join();   /* v184 Length: a 7-step line runs across the bar line */
       const Q = sig(Object.assign({}, L0, { form: 'qa' }), 64), last = Q.slice(48, 64).filter(Boolean).pop() || ''; o.qaEnd = last.split('.').map(Number).some(d => ((d % n) + n) % n === 0);
       const V = sig(Object.assign({}, L0, { vary: 1 }), 64 * 24), ph = k => V.slice(k * 64, k * 64 + 64).join(','); o.varied = new Set([...Array(24)].map((_, k) => ph(k))).size;
       const beats = a => a.filter((x, i) => x && i % 4 === 0).length, loud = { drum: i => i % 4 === 0 ? 1 : 0 };
@@ -221,7 +222,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       document.getElementById('leadRhy').click(); document.getElementById('leadNts').click(); o.pn = S.fx.wlead.pn != null;
       S.bars = 1; Object.assign(S.fx, { leadOn: true, leadLvl: .6, leadForm: 'qa', padOn: false }); S.renderOnly = -2; const b = await renderLoop(false, 22050); S.renderOnly = null; o.rms = rms(b[0]);
       Object.assign(S.fx, JSON.parse(keep)); return o; }, rmsJS);
-    assert(r.notes > 8 && r.aaaa, 'AAAA does not repeat ' + JSON.stringify(r)); assert(r.r3, 'Rhythm 3 does not loop'); assert(r.qaEnd, 'the answer does not land on the root');
+    assert(r.notes > 8 && r.aaaa, 'AAAA does not repeat ' + JSON.stringify(r)); assert(r.r3, 'Rhythm 3 does not loop'); assert(r.qaEnd, 'the answer does not land on the root'); assert(r.len7, 'Length 7 does not run on across the bar');
     assert(r.varied > 2, 'Vary changes nothing: ' + r.varied); assert(r.gaps < r.onBeats, 'Drums gaps did not thin the beats ' + r.gaps + '/' + r.onBeats); assert(r.newBtns && r.pn, 'New rhythm / New notes'); assert(r.rms > .002, 'lead silent ' + r.rms);
     return r.notes + ' notes in 8 bars, ' + r.varied + ' different phrases with Vary, beats ' + r.onBeats + ' > ' + r.gaps + ' in the gaps'; });
 

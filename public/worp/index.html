@@ -768,15 +768,20 @@ function lvBar(P,lv,M,L,R){const ph=P.phrase,B=4*R,sc=SCALES[P.scale],n=sc.lengt
   if(L==='Q'||L==='R'){for(let s=B-1;s>=0;s--){const e=bar[s].find(x=>!x.v);if(e){let d=L==='R'?0:i5;const p=e.deg;let g=0;while(d-p>n/2&&g++<4)d-=n;g=0;while(p-d>n/2&&g++<4)d+=n;
       Object.assign(e,{deg:d,acc:true,keep:true,st:false,tie:false,gate:Math.max(e.gate||.5,.8)});break}}}
   C.set(key,bar);if(C.size>48)C.delete(C.keys().next().value);return bar}
-function phraseV2(P,i){const H=phCtx(),lv=H.lv,ph=P.phrase;if(!ph||i<0)return[];const R=H.res||4,B=4*R,PL=4*B,b=Math.floor(i/PL),s=i%B;
+function phraseV2(P,i,ir){const H=phCtx(),lv=H.lv,ph=P.phrase;if(!ph||i<0)return[];if(ir==null)ir=i;const R=H.res||4,B=4*R,PL=4*B,b=Math.floor(i/PL),s=i%B;
   const M=lvMem(P,lv,b,R),L=(LV_LET[lv.form]||'AAAA')[Math.floor(i/B)%4],ev=lvBar(P,lv,M,L,R)[s];if(!ev||!ev.length)return[];
-  const sd=lvSd(P),dr=Math.max(-1,Math.min(1,+lv.dr||0)),x=dr&&H.drum?Math.max(0,Math.min(1,+H.drum(i)||0)):0,out=[];
+  const sd=lvSd(P),dr=Math.max(-1,Math.min(1,+lv.dr||0)),x=dr&&H.drum?Math.max(0,Math.min(1,+H.drum(ir)||0)):0,out=[];
   for(const e0 of ev){let e=e0;
     if(!e.v&&e.st&&(s%(2*R)===0||rnd01((sd^0xC4D7)>>>0,i%PL)<.6)){const d=lvSnap(P,e.deg,H.deg|0,H.cdv|0);if(d!==e.deg)e={...e,deg:d}}   // strong beats lean to the chord
     if(dr&&!e.keep){const p=dr<0?-dr*x*.85:dr*(1-x)*.85;if(rnd01((sd^0xD7A3)>>>0,i%PL+(e.v?977:0))<p)continue}
     out.push(e)}
   return out}
-function phraseOut(P,i){const lv=phCtx().lv;return lv&&LV_LET[lv.form]?phraseV2(P,i):phraseAt(P,i)}
+/* v1.31 Length (Jesse: a polymeter for the lead, after Reich and Fripp): the line gets a length of its own (lv.len steps, 0 = the bar as
+   before) and runs on across the bar line, so every bar it starts somewhere else against the drums. Each pass is read from the start of
+   a phrase block of its own, so Vary still changes the motif from pass to pass. */
+function lvMap(i,L,PL){const k=Math.floor(i/L),j=i-k*L;return k*Math.ceil(L/PL)*PL+j}
+function phraseOut(P,i){const H=phCtx(),lv=H.lv,L=lv&&lv.len|0;if(L>0&&i>=0){const PL=4*4*(H.res||4),i2=lvMap(i,L,PL);return LV_LET[lv.form]?phraseV2(P,i2,i):phraseAt(P,i2)}
+  return lv&&LV_LET[lv.form]?phraseV2(P,i):phraseAt(P,i)}
 
 /* ---------- the modular part: sources, cables, re-patching ---------- */
 const FOLDMAX=6;

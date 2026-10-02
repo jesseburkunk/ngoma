@@ -213,6 +213,7 @@ Open: save/load own patterns, MIDI import, test in real tracks.
 - v181: Melody bij de Lead is beter te vinden (Jesse miste de pattern-opties): de kop is een oranje omrande knop met de uitleg 'patterns: form, rhythm, notes, range, drums, vary', en onthoudt of je hem open laat (localStorage ngoma.melody).
 - v182: Melody bij de Lead staat altijd open, onder een klein kopje (Jesse: het inklappen zag hij niet). Skins-preview: drie looks (Ngoma, Lijst + donker aluminium, Subtiel: elke layer alleen een eigen kleur, Pad amber, Lead blauw, Candy groen, Texture zand).
 - v183: skin Subtiel in index.html (Jesse: 'veeel beter'): elke layer hetzelfde paneel met een eigen kleur (--ua: Pad amber, Lead blauw, Candy groen, Texture zand) in paneelzweem, lampje, knopbogen, display en New-knop. Strook in groepen: New sound (opvallend, in de layerkleur) en New pattern vooraan, display, en Rec / Mine | Auto / Lock apart aan het eind. Smoke 34/34. public/skins-preview.html is nu een oude proef.
+- v184 (plakje 1 van polymeter, Jesse: verschuiven a la Reich en Fripp): Length in de Melody-rij (Bar, 5 tot 15 zestienden, 3 of 5 maten; S.fx.leadLen, leadLen()). De lijn loopt over de maatstreep door; elke doorgang leest vanaf een eigen frase-blok (lvMap), dus Vary werkt per doorgang. Werkt ook bij Form Free. Smoke: Length 7 loopt door.
 - v172: Rec telt af (Jesse: met de maat, niet in procenten; twee maten lead-in): vanaf de volgende maatstreep twee maten klik op elke tel (hoger op de één), de knop telt de tellen af (In 8 ... In 1), daarna maat en tel van de opname (● 1·1 tot 2·4).
 - v168: de Worp-helft van de app-switch, de Worp-stip en Open in Worp in koper en Federo (was mint en Michroma), passend bij het nieuwe uiterlijk van Worp v1.26.
 
@@ -256,3 +257,4 @@ Worp changelog:
 - v1.28 (2026-10-02): patchfilter open (lead min 6 kHz, pad x2,2 min 2 kHz), leads zonder octaaf lager; in het paneel komen MIDI-toetsen van Ngoma (onMidi met fwd).
 - v1.29 (2026-10-02): warme pads, zie Ngoma v177.
 - v1.30 (2026-10-02): Worp maakt alleen pads (Jesse): Pad | Lead-keuze verborgen, setMode('lead') geweigerd, lead-tokens en oude lead-chips genegeerd.
+- v1.31 (2026-10-02): engine: lv.len (lengte van de lijn in stappen) in phraseOut via lvMap; phraseV2 neemt de echte stap mee voor de drums.
