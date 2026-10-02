@@ -232,8 +232,9 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
         if (prev) { let d = 0; for (let i = 0; i < b[0].length; i += 7) d += Math.abs(b[0][i] - prev[i]); o.diff += d; } prev = b[0]; }
       ensureCtx(); await loadFilter(actx); plKeys(AG).noteOn(64, .8, actx.currentTime + .05); o.keys = !!AG.plaits; o.ok = true;
       S.fx.wlead.pl = { e: 13, t: .2 }; o.ovr = plPatch(303).nm === 'Wavetable' && plPatch(303).t === .2; S.fx.leadMove = 1; S.renderOnly = -2; const mvb = await renderLoop(false, 22050); S.renderOnly = null; o.mv = rms(mvb[0]); o.row = !!document.querySelector('#plRow select') && !document.getElementById('plRow').hidden;   /* v176: knobs and Move */
+      S.bars = 4; S.fx.leadMove = 0; S.fx.leadPh = 0; S.renderOnly = -2; const p0 = await renderLoop(false, 22050); S.fx.leadPh = 2; const p2 = await renderLoop(false, 22050); S.renderOnly = null; let pd = 0; const h = p0[0].length >> 1; for (let i = h; i < p0[0].length; i += 5) pd += Math.abs(p0[0][i] - p2[0][i]); o.phase = pd;   /* v187: the phase voice joins from bar 3 */
       Object.assign(S.fx, JSON.parse(keep)); return o; }, rmsJS);
-    assert(r.ok && r.rms.every(x => x > .002), 'Plaits lead silent ' + JSON.stringify(r)); assert(r.diff > 1, 'seeds sound the same'); assert(r.keys, 'keys made no Plaits voice'); assert(r.ovr && r.row && r.mv > .002, 'Plaits knobs ' + JSON.stringify(r));
+    assert(r.ok && r.rms.every(x => x > .002), 'Plaits lead silent ' + JSON.stringify(r)); assert(r.diff > 1, 'seeds sound the same'); assert(r.keys, 'keys made no Plaits voice'); assert(r.ovr && r.row && r.mv > .002, 'Plaits knobs ' + JSON.stringify(r)); assert(r.phase > 1, 'Phase adds no second voice ' + r.phase);
     return r.pre.join(', ') + ' · rms ' + r.rms.join(' / '); });
 
   await check('Candy: tiny sounds render, seeded, grains from the recording', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx), o = {};
