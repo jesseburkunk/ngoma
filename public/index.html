@@ -811,15 +811,15 @@ input,select{accent-color:var(--accent)}
 @media (max-width:560px){.zlayers #fldU .mgw{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
 /* v183 Subtle (Jesse chose it): every layer the same Ngoma panel, only its own colour: a faint tint of the panel, the LED, the knob arcs,
    the display and the New button. Pad warm amber, Lead cool blue, Candy green, Texture sand, after the group colours low/mid/high. */
-#padU{--ua:#e6ae2c}#leadU{--ua:#76a6d6}#cdU{--ua:#5fbf8e}#fldU{--ua:#c9b48a}
-:is(#padU,#leadU,#cdU,#fldU){background:linear-gradient(180deg,color-mix(in srgb,var(--ua) 7%,#181715),color-mix(in srgb,var(--ua) 4%,#161513))!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ua) 14%,transparent),inset 0 1px 3px rgba(0,0,0,.5)!important}
-:is(#padU,#leadU,#cdU,#fldU) .fxh .lbl{color:color-mix(in srgb,var(--ua) 70%,#ece6da)!important}
-:is(#padU,#leadU,#cdU,#fldU) .fxh .lbl::before{background:var(--ua)!important;box-shadow:0 0 6px var(--ua)!important}
-:is(#padU,#leadU,#cdU,#fldU) .kn{--kc:var(--ua)}
-:is(#padU,#leadU,#cdU,#fldU) .wname.lcd{--lcd:color-mix(in srgb,var(--ua) 75%,#fff)}
-:is(#padU,#leadU,#cdU,#fldU) .wname.lcd b,:is(#padU,#leadU,#cdU,#fldU) .wname.lcd small{color:var(--lcd)!important;text-shadow:0 0 6px color-mix(in srgb,var(--ua) 45%,transparent)!important}
-:is(#padU,#leadU,#cdU,#fldU) .seg button[aria-pressed="true"],:is(#padU,#leadU,#cdU,#fldU) .kseg button[aria-pressed="true"]{box-shadow:inset 0 -2px 0 var(--ua)!important}
-:is(#padU,#leadU,#cdU,#fldU) .lmix{border-left-color:color-mix(in srgb,var(--ua) 22%,transparent)!important}
+#padU{--ua:#e6ae2c}#leadU{--ua:#76a6d6}#cdU{--ua:#5fbf8e}#fldU{--ua:#c9b48a}#tlU{--ua:#b48ccf}
+:is(#padU,#leadU,#cdU,#fldU,#tlU){background:linear-gradient(180deg,color-mix(in srgb,var(--ua) 7%,#181715),color-mix(in srgb,var(--ua) 4%,#161513))!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ua) 14%,transparent),inset 0 1px 3px rgba(0,0,0,.5)!important}
+:is(#padU,#leadU,#cdU,#fldU,#tlU) .fxh .lbl{color:color-mix(in srgb,var(--ua) 70%,#ece6da)!important}
+:is(#padU,#leadU,#cdU,#fldU,#tlU) .fxh .lbl::before{background:var(--ua)!important;box-shadow:0 0 6px var(--ua)!important}
+:is(#padU,#leadU,#cdU,#fldU,#tlU) .kn{--kc:var(--ua)}
+:is(#padU,#leadU,#cdU,#fldU,#tlU) .wname.lcd{--lcd:color-mix(in srgb,var(--ua) 75%,#fff)}
+:is(#padU,#leadU,#cdU,#fldU,#tlU) .wname.lcd b,:is(#padU,#leadU,#cdU,#fldU,#tlU) .wname.lcd small{color:var(--lcd)!important;text-shadow:0 0 6px color-mix(in srgb,var(--ua) 45%,transparent)!important}
+:is(#padU,#leadU,#cdU,#fldU,#tlU) .seg button[aria-pressed="true"],:is(#padU,#leadU,#cdU,#fldU,#tlU) .kseg button[aria-pressed="true"]{box-shadow:inset 0 -2px 0 var(--ua)!important}
+:is(#padU,#leadU,#cdU,#fldU,#tlU) .lmix{border-left-color:color-mix(in srgb,var(--ua) 22%,transparent)!important}
 .zlayers .wstrip .sgrp{display:inline-flex;align-items:center;gap:6px;flex-wrap:nowrap}.zlayers .wstrip.wtop{padding-right:34px;flex-wrap:wrap;row-gap:8px}
 .zlayers .wstrip .srec{margin-left:auto;padding-left:14px;border-left:1px solid color-mix(in srgb,var(--ua,#a59f92) 22%,transparent)}
 .zlayers .wstrip .btn.primary{background:var(--ua,#ff6a2b)!important;border-color:var(--ua,#ff6a2b)!important;color:#141310!important;font-weight:650;box-shadow:0 0 14px -4px var(--ua,#ff6a2b)!important}
@@ -936,6 +936,11 @@ input,select{accent-color:var(--accent)}
       <div class="fxh"><span class="lbl" title="Texture: a field recording far under the drums, a place rather than an instrument. With Tune it sings your chords">Texture</span><label class="chk"><input id="fldOn" type="checkbox"> On</label></div>
       <div class="fxc"><div class="knrow"><div id="fldSlot"></div></div>
         <div class="wstrip" id="fldStrip"><select id="fldSel" aria-label="Recording" title="Which recording plays"></select><button class="btn" id="fldFile" type="button" title="Play your own recording (wav, mp3, m4a, ogg). It stays in this browser">Your file…</button><input type="file" id="fldIn" accept="audio/*" hidden><span class="wname lcd" data-lcd="TEXTURE"><b id="fldName"></b><small id="fldCred"></small></span></div></div>
+    </div>
+    <div class="fxg magic tlu" id="tlU">
+      <div class="fxh"><span class="lbl" title="Tape loop, after Frippertronics (Robert Fripp and Brian Eno, two tape machines): a long loop that keeps what you send into it and plays it back on every pass, a little darker each time, so layers pile up and drift against the bars. Live and in Rec only; a loop export leaves it out">Tape loop</span><label class="chk"><input id="tlOn" type="checkbox"> On</label></div>
+      <div class="fxc"><div class="wstrip wtop" id="tlStrip"><span class="seg" id="tlLen" role="group" aria-label="Loop length" title="Length of the loop in bars. Not a whole number, so each pass lands somewhere else in the bar. Changing it while it plays bends the tape like a slowing machine"></span><button class="btn" id="tlClear" type="button" title="Erase the tape: the loop goes quiet, the sends stay as they are">Clear</button></div>
+        <div class="knrow"><div id="tlSlot"></div></div></div>
     </div>
     <div class="fxg magic" id="spaceU">
       <div class="fxh"><span class="lbl" title="How much room is around the drums: reverb and echo together">Space</span></div>
@@ -4033,6 +4038,24 @@ function buildFDel(ctx,master,rvIn){ const inp=ctx.createGain(), hp=bq(ctx,'high
 function fdSync(G){ const F=G&&G.fdl; if(!F) return; const live=!(G.ctx instanceof OfflineAudioContext), set=(p,v)=>{ if(live) p.setTargetAtTime(v,G.ctx.currentTime,.1); else p.value=v; }, q=60/S.bpm;
   const any=(S.fx.leadOn&&(S.fx.leadFd??0)>0)||(S.fx.cdOn&&(S.fx.cdFd??0)>0);
   F.taps.forEach(t=>{ set(t.d.delayTime,Math.min(2.9,q*t.bt)); set(t.fb.gain,any?.62:0); }); }
+/* v197 Tape loop (Jesse: Frippertronics, a long tape loop with much feedback on Lead and Pad, as an effect). Two machines become one
+   long delay: the playback head is what you hear and it goes back to the record head with the new input, a little darker, a little
+   saturated and with a slow wow. Hold sets how many passes a layer lives. Live only: a loop export cannot hold a minute of build-up. */
+const TL_LEN=[2.5,3.5,5.5,7.5];
+function tlBars(){ const v=+S.fx.tlLen; return TL_LEN.includes(v)?v:3.5; }
+function buildTape(ctx,master,rvIn){ const inp=ctx.createGain(), d=ctx.createDelay(60), lp=bq(ctx,'lowpass',6000,.5), hp=bq(ctx,'highpass',120,.6), sh=ctx.createWaveShaper(), fb=ctx.createGain(), out=ctx.createGain(), rs=ctx.createGain(), w=ctx.createOscillator(), wg=ctx.createGain();
+  const c=new Float32Array(1024); for(let i=0;i<1024;i++){ const x=i/511.5-1; c[i]=Math.tanh(1.3*x)/1.3; } sh.curve=c; fb.gain.value=0; out.gain.value=0; rs.gain.value=.3; w.frequency.value=.37; wg.gain.value=.0007; w.connect(wg).connect(d.delayTime); w.start();
+  inp.connect(d); d.connect(lp).connect(hp).connect(sh).connect(fb).connect(d); d.connect(out).connect(master); out.connect(rs).connect(rvIn); d.delayTime.value=tlBars()*4*60/S.bpm;
+  return {inp,d,lp,fb,out,clr:0}; }
+function tlLive(G){ return !!S.fx.tlOn && G && !(G.ctx instanceof OfflineAudioContext); }
+function tlSync(G){ const T=G&&G.tl; if(!T) return; const on=tlLive(G), now=G.ctx.currentTime, set=(p,v,tc)=>p.setTargetAtTime(v,now,tc||.08), F=S.fx;
+  if(!(G.ctx instanceof OfflineAudioContext)) set(T.d.delayTime,Math.min(59,tlBars()*4*60/S.bpm),.35); else T.d.delayTime.value=Math.min(59,tlBars()*4*60/S.bpm);
+  if(now<T.clr) return;   // Clear is running
+  set(T.fb.gain,on?.6+.37*(F.tlHold??.6):0,.2); set(T.out.gain,on?.9:0,.1); set(T.lp.frequency,1800*Math.pow(2,3*(F.tlTone??.5)));
+  [['lead',G.lead],['pad',G.pad],['cd',G.cd]].forEach(([k,u])=>{ if(u&&u.tl) set(u.tl.gain,on?(F['tl'+k[0].toUpperCase()+k.slice(1)]??0):0); }); }
+function tlClear(G){ const T=G&&G.tl; if(!T) return; const now=G.ctx.currentTime, L=Math.min(59,tlBars()*4*60/S.bpm)+.3; T.clr=now+L;
+  T.out.gain.cancelScheduledValues(now); T.out.gain.setTargetAtTime(0,now,.05); T.fb.gain.cancelScheduledValues(now); T.fb.gain.setTargetAtTime(0,now,.02);
+  setTimeout(()=>{ T.clr=0; tlSync(G); },L*1000+30); }
 function fltQ(v){ return {lq:v<-.005?.7+4.2*Math.pow(-v,1.4):.5, hq:v>.005?.8+3.4*Math.pow(v,1.4):.6}; }   /* v142: the layer filter resonates more the further you turn it (Jesse: it sounded dry) */
 function buildLead(ctx,master,rvIn){ const bus=ctx.createGain(), cut=bq(ctx,'lowpass',20000,.5), hpf=bq(ctx,'highpass',10,.6), out=ctx.createGain(), send=ctx.createGain(); out.gain.value=0; send.gain.value=0; const pk=ctx.createDynamicsCompressor(); pk.threshold.value=-14; pk.knee.value=6; pk.ratio.value=4; pk.attack.value=.003; pk.release.value=.12; const lc=bq(ctx,'highpass',170,.7), pres=bq(ctx,'peaking',2800,.9); pres.gain.value=2.5; bus.connect(cut).connect(hpf).connect(lc).connect(pres).connect(out).connect(pk).connect(master); out.connect(send).connect(rvIn);
   /* v165 (Jesse: the lead should cut through the mix better; is it wide enough?): the low end out below 170 Hz, +2.5 dB presence at 2.8 kHz, and two short
@@ -4274,10 +4297,11 @@ function buildGraph(ctx,opts={}){
     return {in:inp,sh,dg,sc,g,p,rs,ds,rG,eG,mG,reg:I.reg}; });
   const dlAll=ctx.createGain(), dlHp=bq(ctx,'highpass',250,.7); dlAll.gain.value=0; lanes.forEach(l=>l.eG.connect(dlHp)); dlHp.connect(dlAll).connect(dl.in);   // Delay Send: the whole kit, above 250 Hz
   const mg=opts.dry?null:buildMagic(ctx,master,lanes,rv.in); if(mg) mg.duck=duck;
-  const pad=buildPad(ctx,master,rv.in), lead=buildLead(ctx,master,rv.in), fld=buildField(ctx,master,rv.in), cd=buildCandy(ctx,master,rv.in), fdl=buildFDel(ctx,master,rv.in);
+  const pad=buildPad(ctx,master,rv.in), lead=buildLead(ctx,master,rv.in), fld=buildField(ctx,master,rv.in), cd=buildCandy(ctx,master,rv.in), fdl=buildFDel(ctx,master,rv.in), tl=opts.export?null:buildTape(ctx,master,rv.in);
+  if(tl) [lead,pad,cd].forEach(u=>{ u.tl=ctx.createGain(); u.tl.gain.value=0; u.out.connect(u.tl).connect(tl.inp); });
   lead.fd=ctx.createGain(); lead.fd.gain.value=0; lead.out.connect(lead.fd).connect(fdl.inp); cd.fd=ctx.createGain(); cd.fd.gain.value=0; cd.out.connect(cd.fd).connect(fdl.inp);
   let worpTap=null; if(scopeTap){ worpTap={}; [['pad',pad],['lead',lead]].forEach(([k,u])=>{ if(!u||!u.out) return; const a=ctx.createAnalyser(); a.fftSize=2048; u.out.connect(a); worpTap[k]=a; }); }   /* v139: Worp's ring reads these */
-  const G={ctx,master,vol,scopeTap,worpTap,capNode:ceil,dlAll,lanes,fat:-1,rv,dl,dry:!!opts.dry,mg,pad,lead,fld,cd,fdl,vet,room,eq:{eqL,eqM,eqH,eqC,fin,fout,wk:null},scBus}; syncGraph(G); attachFilter(G); return G;
+  const G={ctx,master,vol,scopeTap,worpTap,capNode:ceil,dlAll,lanes,fat:-1,rv,dl,dry:!!opts.dry,mg,pad,lead,fld,cd,fdl,tl,vet,room,eq:{eqL,eqM,eqH,eqC,fin,fout,wk:null},scBus}; syncGraph(G); attachFilter(G); return G;
 }
 /* v148 Room (Jesse: softly on by default): early reflections of a small wooden room, 5 to 29 ms, the left and right taps
    different and fed partly from the other side, so every drum stands in a space instead of as a dry point in the middle. Low end
@@ -4357,7 +4381,7 @@ function pv(G,prm,v,tc){ if(G.ctx instanceof OfflineAudioContext||!G.ctx.current
 function syncGraph(G){ if(!G) return;
   if(G.fat!==S.fat){ const c=shaperCurve(S.fat); G.lanes.forEach(l=>l.sh.curve=c); G.fat=S.fat; }
   S.lanes.forEach((L,i)=>{ const l=G.lanes[i]; pv(G,l.g.gain,L.level*(1-S.fat*.25)); pv(G,l.p.pan,Math.max(-1,Math.min(1,L.pan*(S.fx.width??1))));   /* v148 Width scales every pan */ pv(G,l.rs.gain,L.rev||0); pv(G,l.ds.gain,L.dly||0); l.sc.gain.value=(S.fx.fEnvSrc===L.id)?2.5:0; });
-  syncFx(G); magicSync(G); padSync(G); leadSync(G); fldSync(G); vetSync(G); roomSync(G);
+  syncFx(G); magicSync(G); padSync(G); leadSync(G); fldSync(G); vetSync(G); roomSync(G); tlSync(G);
 }
 // Delay animation: feedback, tone and wow drift along smooth curves whose cycle is the loop length, so exports stay seamless
 function animCurve(t){ const C=Math.max(1,S.bars)*4*60/S.bpm, w=2*Math.PI*t/C;
@@ -4965,6 +4989,17 @@ function initControls(){
     cb.onchange=()=>{ S.fx.cdOn=cb.checked; u(); cdSync(AG); save(); };
     document.querySelectorAll('#cdSrc button').forEach(b=>b.onclick=()=>{ S.fx.cdSrc=b.dataset.s; cdSync(AG); save(); cdUI(); status(b.dataset.s==='synth'?'Candy: synthesized sounds only.':b.dataset.s==='field'?'Candy: grains of the field recording.':'Candy: synthesized sounds and grains.'); });
     $('cdNew').onclick=()=>{ hRecord(()=>{ S.fx.cdSeed=worpSeed(); S.fx.cdOn=true; }); updHist(); save(); u(); cdSync(AG); status('New candy: '+WorpEngine.genName(cdSeed(),0)+'.'); };
+  }
+  { const cb=$('tlOn'), U=$('tlU');   /* v197 Tape loop */
+    const mk=(label,key,def,tt)=>{ const k=makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; tlSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)}); k.title=tt+' · drag, double-click resets'; return k; };
+    const ks=[mk('Lead','tlLead',0,'How much of the Lead goes onto the tape'), mk('Pad','tlPad',0,'How much of the Pad goes onto the tape'), mk('Candy','tlCd',0,'How much of the Candy goes onto the tape'),
+      mk('Hold','tlHold',.6,'How long a layer lives on the tape: left a few passes, right it hardly fades (watch the build-up)'), mk('Tone','tlTone',.5,'How much darker each pass gets: left it fades into a murmur, right it stays bright')];
+    ks.forEach(k=>k.classList.add('big','mgk')); const wr=document.createElement('div'); wr.className='mgw'; wr.append(...ks); $('tlSlot').replaceWith(wr);
+    const seg=$('tlLen'); seg.innerHTML=TL_LEN.map(v=>'<button data-v="'+v+'">'+String(v).replace('.',',')+' bars</button>').join('');
+    const u=()=>{ cb.checked=!!S.fx.tlOn; U.classList.toggle('off',!S.fx.tlOn); ks.forEach(k=>k.upd()); seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.v===tlBars()))); }; u(); UPD.push(u);
+    cb.onchange=()=>{ S.fx.tlOn=cb.checked; if(cb.checked&&!['tlLead','tlPad','tlCd'].some(k=>(S.fx[k]??0)>0)){ if(S.fx.leadOn) S.fx.tlLead=.5; else if(S.fx.padOn) S.fx.tlPad=.5; } u(); tlSync(AG); save(); };   // on with nothing going in: start with the lead (or the pad)
+    seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{ S.fx.tlLen=+b.dataset.v; u(); tlSync(AG); save(); });
+    $('tlClear').onclick=()=>{ tlClear(AG); status('Tape erased.'); };
   }
   { const cb=$('fldOn'), U=$('fldU'), sel=$('fldSel');   /* v168 Field */
     const mk=(label,key,def,sync=true)=>makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; if(sync) fldSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)});
@@ -5625,7 +5660,7 @@ function sceneRecall(k){ const sc=S.scenes[k]; if(!sc) return; onBar('scene:'+k,
    model, Magic mode, pad type or Worp pad, tuning) changes halfway. A rhythm on another grid (16ths against triplets) or a
    track whose length differs changes halfway too. The export always renders the scene as stored. */
 const MORPH={on:false};
-const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx','leadRg','leadDr','leadMove','cdLvl','cdAmt','cdSize','cdGap','cdSpace','leadFd','cdFd','fldLvl','fldDist','fldDrift','fldTune','fldRv','fldEc','fldFlt'];
+const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx','leadRg','leadDr','leadMove','cdLvl','cdAmt','cdSize','cdGap','cdSpace','leadFd','cdFd','tlLead','tlPad','tlCd','tlHold','tlTone','fldLvl','fldDist','fldDrift','fldTune','fldRv','fldEc','fldFlt'];
 function morphCap(){ return {lanes:S.lanes.map(L=>{ const o={steps:L.steps.slice(),len:L.len,tpl:L.tpl,btpl:L.btpl,blen:L.blen,eu:L.eu,mute:L.mute,solo:L.solo,tune:L.tune,col:L.col,choke:L.choke};
       MLANE.forEach(f=>o[f]=L[f]); return o; }), fx:JSON.parse(JSON.stringify(S.fx)), fat:S.fat, swing:S.swing, humanize:S.humanize, res:S.res}; }
 function morphStart(sc,k){ const A=morphCap(); hRecord(()=>hApply(sc)); S.sceneCur=k; updHist();

@@ -67,9 +67,9 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     assert(r.on > .001 && r.off < .0002, JSON.stringify(r)); return 'candy stem rms ' + r.on.toFixed(4) + ', nothing else in it'; });
 
   await check('Whole cycle: polymeter lengths add up, the export runs the full cycle, the loop stays', async () => { const r = await p.evaluate(async () => { const keep = JSON.stringify(S.fx), b0 = S.bars, L = S.lanes.find(x => hasHits(x) && !x.mute), l0 = L.len;
-      S.bars = 1; L.len = 12; S.fx.leadOn = false; const c = cycleBars(); EXP_BARS = Math.min(c.bars, CYC_MAX); const w = await renderLoop(false, 8000); const nb = EXP_BARS; EXP_BARS = 0; const one = await renderLoop(false, 8000);
-      const out = { bars: c.bars, ratio: w[0].length / one[0].length, live: S.bars, nb }; L.len = l0; S.bars = b0; Object.assign(S.fx, JSON.parse(keep)); return out; });
-    assert(r.bars === 3 && Math.abs(r.ratio - 3) < .01 && r.live === 1, JSON.stringify(r)); return 'lane of 12 steps in a 1-bar loop: ' + r.bars + ' bars'; });
+      const lens = S.lanes.map(x => x.len); S.lanes.forEach(x => x.len = 4 * S.res); S.bars = 1; L.len = 3 * S.res; S.fx.leadOn = false; S.fx.chProg = 'drone'; const c = cycleBars(); EXP_BARS = Math.min(c.bars, CYC_MAX); const w = await renderLoop(false, 8000); const nb = EXP_BARS; EXP_BARS = 0; const one = await renderLoop(false, 8000);
+      const out = { bars: c.bars, ratio: w[0].length / one[0].length, live: S.bars, nb }; S.lanes.forEach((x, i) => x.len = lens[i]); L.len = l0; S.bars = b0; Object.assign(S.fx, JSON.parse(keep)); return out; });
+    assert(r.bars === 3 && Math.abs(r.ratio - 3) < .01 && r.live === 1, JSON.stringify(r)); return 'a lane of 3 beats in a 1-bar loop: ' + r.bars + ' bars'; });
 
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
       for (let i = 0; i < MG_MODES.length; i++) { S.fx.mgMode = i; const w = await renderLoop(false, 22050), v = rms(w[0]); if (!(v > .002)) bad.push(MG_NAMES[i] + ':' + (v < 0 ? 'NaN' : v.toFixed(4))); }
@@ -88,6 +88,13 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
 
   await check('Live play makes sound', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj); S.lanes.forEach(L => L.mute = false); start(); await new Promise(r => setTimeout(r, 1000)); let v = 0;
       for (let k = 0; k < 10; k++) { await new Promise(r => setTimeout(r, 80)); const a = new Float32Array(2048); AG.scopeTap.aL.getFloatTimeDomainData(a); v = Math.max(v, rms(a)); } return { v, playing }; }, rmsJS); assert(r.playing && r.v > .005, 'live rms ' + r.v); });
+
+  await check('Tape loop: the lead comes back a loop later, Clear erases it, exports leave it out', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), w = ms => new Promise(r => setTimeout(r, ms)), keep = JSON.stringify(S.fx), bpm0 = S.bpm;
+      S.bpm = 180; S.fx.leadOn = true; S.fx.tlLen = 2.5; syncGraph(AG); if (!playing) start(); await w(300); document.getElementById('tlOn').click(); const A = AG.ctx.createAnalyser(); A.fftSize = 2048; AG.tl.out.connect(A);
+      const lv = async n => { let m = 0; for (let k = 0; k < n; k++) { await w(100); const a = new Float32Array(2048); A.getFloatTimeDomainData(a); m = Math.max(m, rms(a)); } return m; };
+      const L = tlBars() * 4 * 60 / S.bpm; await w(L * 1000 + 600); const on = await lv(8); tlClear(AG); await w(400); const clr = await lv(4); A.disconnect();
+      document.getElementById('tlOn').click(); S.bpm = bpm0; Object.assign(S.fx, JSON.parse(keep)); syncGraph(AG); return { on, clr, L }; }, rmsJS);
+    assert(r.on > .005 && r.clr < r.on * .1, JSON.stringify(r)); return 'loop ' + r.L.toFixed(2) + ' s, back at rms ' + r.on.toFixed(3) + ', after Clear ' + r.clr.toFixed(4); });
 
   await check('Drums off silences every drum, M toggles it', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), w = ms => new Promise(r => setTimeout(r, ms)), lvl = () => { const a = new Float32Array(2048); AG.scopeTap.aL.getFloatTimeDomainData(a); return rms(a); };
       const lo = S.fx.leadOn, po = S.fx.padOn; S.fx.leadOn = false; S.fx.padOn = false; syncGraph(AG); leadSync(AG); padSync(AG); await w(600); let on = 0; for (let k = 0; k < 6; k++) { await w(80); on = Math.max(on, lvl()); }   /* v167: the loudest of a few looks, one look can fall between two hits */

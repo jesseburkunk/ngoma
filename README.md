@@ -226,6 +226,7 @@ Open: save/load own patterns, MIDI import, test in real tracks.
 - v194: Candy in de stems: Export zet stems/...-candy.wav erbij, net als de andere stems, en Rec (jam) neemt een candy-spoor op. Smoke: check Candy has its own stem.
 - v195: Cavacha: de surdo op elke tel zachter (mix 55%) en korter (gedempte slagen).
 - v196: Export: vinkje Whole cycle. Exporteert tot alles weer gelijk loopt: kleinste gemene veelvoud van de loop, elke spelende track met eigen lengte, Length en een hele Phase-ronde van de lead, en het akkoordschema; max 32 maten. De bestandsnaam noemt het aantal maten. Live spelen merkt er niets van. Smoke: check Whole cycle.
+- v197: Tape loop (Frippertronics): nieuwe unit na Texture. Lange lus van 2,5 / 3,5 / 5,5 / 7,5 maten (geen hele maten, dus elke ronde valt anders), sends Lead, Pad, Candy, Hold (hoe lang een laag leeft), Tone (hoeveel donkerder per ronde), Clear. Zachte verzadiging en lichte wow in de lus; lengte wisselen tijdens spelen buigt de band. Alleen live en in Rec, de loop-export laat hem weg. Smoke: 40 checks (Tape loop; Whole cycle nu los van eerdere checks).
 - v172: Rec telt af (Jesse: met de maat, niet in procenten; twee maten lead-in): vanaf de volgende maatstreep twee maten klik op elke tel (hoger op de één), de knop telt de tellen af (In 8 ... In 1), daarna maat en tel van de opname (● 1·1 tot 2·4).
 - v168: de Worp-helft van de app-switch, de Worp-stip en Open in Worp in koper en Federo (was mint en Michroma), passend bij het nieuwe uiterlijk van Worp v1.26.
 
