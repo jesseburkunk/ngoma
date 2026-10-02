@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ngoma lab: Plaits-leads</title>
+<style>
+:root{--bg:#1d1c1a;--panel:#262522;--panel2:#2f2d29;--text:#ece6da;--mute:#a59f92;--line:#3a3833;--or:#ff6a2b;--low:#47a37c;--mid:#e6ae2c;--high:#76a6d6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1180px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:20px;margin:0 0 4px;letter-spacing:.02em}p.sub{margin:0 0 16px;color:var(--mute);max-width:760px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:18px}
+button{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 12px;cursor:pointer}
+button:hover{border-color:#57534b}button[aria-pressed=true]{background:var(--text);color:#1d1c1a;border-color:var(--text)}
+button.play{background:var(--or);border-color:var(--or);color:#fff;min-width:84px;font-weight:600}
+label.k{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+label.k input{width:100%;accent-color:var(--or)}
+.lvl{display:flex;align-items:center;gap:6px;color:var(--mute);font-size:12px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute);margin:20px 0 8px;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;cursor:pointer;position:relative}
+.card.on{border-color:var(--or);box-shadow:inset 0 0 0 1px var(--or)}
+.card .nm{font-weight:600}.card .ds{font-size:12px;color:var(--mute);min-height:34px}
+.card .ks{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+.card .row{display:flex;gap:6px;flex-wrap:wrap}
+.card.now .nm::before{content:'';display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--mid);margin-right:7px;vertical-align:1px}
+.card.pl .nm::before{content:'';display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--high);margin-right:7px;vertical-align:1px}
+.st{color:var(--mute);font-size:12px;margin-left:auto}
+footer{margin-top:26px;color:var(--mute);font-size:12px}
+</style></head><body><main>
+<h1>Lab: Plaits-leads naast de huidige leads</h1>
+<p class="sub">Dezelfde melodie (Lead v2, Call · answer) op twee soorten klank. Klik een kaart om die klank te horen. Bovenste rij: Plaits van Mutable Instruments, met de knoppen zoals op de module. Onderste rij: acht huidige Worp-leads (v1.28, filter al open). Alles droog, zonder galm, zodat je alleen de klank hoort.</p>
+<div class="bar">
+  <button class="play" id="play">Play</button>
+  <button id="drums" aria-pressed="true">Drums</button>
+  <button id="mel">Andere melodie</button>
+  <label class="lvl">Tempo <input id="bpm" type="range" min="90" max="140" value="122"><span id="bpmv">122</span></label>
+  <label class="lvl">Octaaf <select id="oct"><option value="-12">−1</option><option value="0" selected>0</option><option value="12">+1</option></select></label>
+  <span class="st" id="st">Klaar om te laden</span>
+</div>
+<h2>Plaits</h2><div class="grid" id="gp"></div>
+<h2>Huidig (Worp-mallets)</h2><div class="grid" id="gn"></div>
+<footer>Plaits: © Emilie Gillet (Mutable Instruments), MIT-licentie. Hier naar WebAssembly gecompileerd (tools/plaits). Deze pagina is een proef, Ngoma zelf is niet veranderd.</footer>
+</main>
+<script>/*ENGINE*/</script>
+<script>
+const WASM_B64="%%WASM%%";
+const WORKLET=`
+class PlaitsProc extends AudioWorkletProcessor{
+  constructor(){super();this.E=null;this.q=[];this.buf=null;this.bi=12;this.vel=.8;this.g=1;
+    this.p={note:60,h:.5,t:.5,m:.5,e:8,d:.5,c:.5,fm:0,tm:.2,mm:0};
+    this.port.onmessage=e=>{const d=e.data;
+      if(d.t==='mod'){try{const m=d.mod instanceof WebAssembly.Module?d.mod:new WebAssembly.Module(d.mod),inst=new WebAssembly.Instance(m,{}),E=inst.exports;if(E._initialize)E._initialize();E.pl_init(0);this.E=E;this.port.postMessage({t:'ready'})}catch(err){this.port.postMessage({t:'err',m:String(err)})}}
+      else if(d.t==='set'){Object.assign(this.p,d.p)}
+      else if(d.t==='note'){this.q.push(d)}
+      else if(d.t==='clear'){this.q.length=0}
+      else if(d.t==='gain'){this.g=d.g}}}
+  view(){const E=this.E;if(!this.buf||this.buf.buffer!==E.memory.buffer||this.buf.byteLength===0)this.buf=new Float32Array(E.memory.buffer,E.pl_out(0),12);return this.buf}
+  process(_,outs){const o=outs[0],L=o[0],R=o[1];if(!this.E)return true;const E=this.E,p=this.p;
+    for(let i=0;i<L.length;i++){
+      if(this.bi>=12){const t=currentTime+(i+12)/sampleRate;let trig=0;
+        for(let k=0;k<this.q.length;){if(this.q[k].at<=t){const ev=this.q.splice(k,1)[0];p.note=ev.note;this.vel=ev.vel;trig=1}else k++}
+        E.pl_set(0,p.note,p.h,p.t,p.m,p.e,p.d,p.c);E.pl_mod(0,p.fm,p.tm,p.mm);E.pl_trig(0,trig,1,this.vel);E.pl_render(0,12);this.bi=0}
+      const v=this.view()[this.bi++]*this.g*(.55+.45*this.vel);L[i]=v;if(R)R[i]=v}
+    return true}}
+registerProcessor('plaits',PlaitsProc);`;
+/* Plaits engines (voice.cc order): 0 VA+VCF, 1 phase distortion, 5 wave terrain, 7 chiptune, 8 VA, 9 waveshaping, 10 FM, 11 formant, 12 additive, 13 wavetable, 14 chords, 19 string, 20 modal */
+const PL=[
+ {nm:'Analoog',e:8,h:.3,t:.8,m:.5,d:.5,c:.6,tm:.3,g:.55,ds:'Twee analoge oscillatoren (zaag, puls), helder en direct.'},
+ {nm:'Phase distortion',e:1,h:.4,t:.5,m:.35,d:.5,c:.6,tm:.3,g:.39,ds:'Casio CZ-achtig: van zacht naar nasaal en scherp.'},
+ {nm:'Waveshaper',e:9,h:.3,t:.45,m:.6,d:.45,c:.6,tm:.25,g:.58,ds:'Een driehoek door een vouwer: hol tot glazig.'},
+ {nm:'FM',e:10,h:.25,t:.62,m:.3,d:.5,c:.6,tm:.35,g:.41,ds:'Twee operatoren: bel, elektrische piano, metaal.'},
+ {nm:'Additief',e:12,h:.4,t:.22,m:.3,d:.5,c:.6,tm:.2,g:.66,ds:'Boventonen naar keuze: Timbre kiest welke, Harmonics hoeveel.'},
+ {nm:'Wavetable',e:13,h:.5,t:.65,m:.5,d:.5,c:.6,tm:.2,g:.9,ds:'Door golfvormen bladeren, digitaal en levendig.'},
+ {nm:'Snaar',e:19,h:.45,t:.85,m:.5,d:.55,c:.6,tm:0,g:.74,ds:'Getokkelde snaar (Karplus-Strong), met eigen uitklank.'},
+ {nm:'Modaal',e:20,h:.4,t:.45,m:.5,d:.55,c:.6,tm:0,g:.45,ds:'Aangeslagen resonator zoals Rings: bel, staaf, plaat.'}];
+const NOW=[4242,12163,20084,28005,35926,43847,51768,59689];
+const SC=[0,3,5,7,10],KEY=57;
+const semis=d=>{const n=SC.length;return SC[((d%n)+n)%n]+12*Math.floor(d/n)};
+let ctx=null,node=null,gP=null,gN=null,master=null,ENG=null,ready=false,playing=false,sel={kind:'pl',i:0},ps=777,timer=0,g=0,nextT=0;
+const $=id=>document.getElementById(id), st=t=>$('st').textContent=t;
+const lv={form:'qa',rl:16,pl:5,rg:.35,dr:0,vary:.3,pn:null};
+const host={res:4,cx:.3,anchor:null,cdv:0,deg:0,lv};
+function melP(){const P=WorpEngine.genPatch(ps,'lead');P._ps=ps;P.scale='__host';return P}
+let MP=null;
+async function init(){if(ctx)return;ctx=new AudioContext({sampleRate:48000,latencyHint:'interactive'});master=ctx.createGain();master.gain.value=.8;
+  const comp=ctx.createDynamicsCompressor();comp.threshold.value=-10;comp.ratio.value=3;master.connect(comp).connect(ctx.destination);
+  gP=ctx.createGain();gP.gain.value=1;gN=ctx.createGain();gN.gain.value=1;gP.connect(master);gN.connect(master);
+  st('Plaits laden…');try{await ctx.audioWorklet.addModule(URL.createObjectURL(new Blob([WORKLET],{type:'application/javascript'})))}catch(e){await ctx.audioWorklet.addModule('data:application/javascript;base64,'+btoa(WORKLET))}   /* file:// refuses a blob worklet, a data: URL works */
+  node=new AudioWorkletNode(ctx,'plaits',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2]});node.connect(gP);
+  const bin=Uint8Array.from(atob(WASM_B64),c=>c.charCodeAt(0));
+  node.port.onmessage=e=>{if(e.data.t==='ready'){ready=true;st('Klaar');applyPl()}else if(e.data.t==='err'){st('Plaits laadt niet: '+e.data.m);console.error(e.data.m)}};node.port.postMessage({t:'mod',mod:bin.buffer},[bin.buffer]);
+  ENG=WorpEngine.create(ctx,gN,{kind:'lead',cd:()=>0,anchor:null,cx:()=>.3,lv:()=>lv,drum:()=>0,key:()=>KEY,deg:()=>0,scale:()=>SC,bpm:()=>+$('bpm').value,res:()=>4,t0:()=>0});
+  ENG.setPatch(NOW[0],0,[1,1,1,1],[false,false,false,false]);ENG.setPhrase(ps);MP=melP();}
+function applyPl(){if(!node)return;const P=PL[sel.kind==='pl'?sel.i:0];node.port.postMessage({t:'set',p:{h:P.h,t:P.t,m:P.m,e:P.e,d:P.d,c:P.c,tm:P.tm}});node.port.postMessage({t:'gain',g:P.g})}
+/* both rows at one loudness: a Plaits preset has a measured gain, a Worp lead is measured once like Ngoma does (two bars offline, to the same RMS) */
+const NGN=new Map();
+async function nowGain(sd){if(NGN.has(sd))return NGN.get(sd);const sr=48000,sdur=60/+$('bpm').value/4,steps=32,oc=new OfflineAudioContext(1,Math.ceil((steps*sdur+.5)*sr),sr),b=oc.createGain();b.connect(oc.destination);
+  const E=WorpEngine.create(oc,b,{kind:'lead',cd:()=>0,anchor:null,cx:()=>.3,lv:()=>lv,drum:()=>0,key:()=>KEY,deg:()=>0,scale:()=>SC,bpm:()=>+$('bpm').value,res:()=>4,t0:()=>0});
+  E.setPatch(sd,0,[1,1,1,1],[false,false,false,false]);E.setPhrase(ps);for(let k=0;k<steps;k++)E.step(k,.02+k*sdur,16,0);E.stop(.02+steps*sdur);const buf=await oc.startRendering(),d=buf.getChannelData(0);let e=0;for(const v of d)e+=v*v;
+  const g=Math.max(.25,Math.min(8,.1/Math.sqrt(e/d.length+1e-12)));NGN.set(sd,g);return g}
+function hit(t,kind){const o=ctx.createOscillator(),gg=ctx.createGain();if(kind==='k'){o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(42,t+.12);gg.gain.setValueAtTime(.9,t);gg.gain.exponentialRampToValueAtTime(.001,t+.35);o.connect(gg).connect(master);o.start(t);o.stop(t+.4);return}
+  const b=ctx.createBuffer(1,2400,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/300);const s=ctx.createBufferSource(),hp=ctx.createBiquadFilter();s.buffer=b;hp.type='highpass';hp.frequency.value=7000;gg.gain.value=kind==='h'?.25:.45;s.connect(hp).connect(gg).connect(master);s.start(t)}
+function tick(){const sd=60/+$('bpm').value/4;while(nextT<ctx.currentTime+.12){const t=nextT;
+    if($('drums').getAttribute('aria-pressed')==='true'){if(g%4===0)hit(t,'k');if(g%4===2)hit(t,'h');if(g%16===3||g%16===10)hit(t,'c')}
+    const oc=+$('oct').value;
+    if(sel.kind==='pl'){for(const e of WorpEngine.lineAt(MP,g,host))if(!e.v)node.port.postMessage({t:'note',at:t+(e.off||0)*sd,note:KEY+oc+semis(e.deg),vel:e.vel!=null?e.vel:(e.acc?1:.7)})}
+    else{ENG.step(g,t,16,0)}
+    g++;nextT+=sd}}
+async function play(){await init();if(ctx.state!=='running')await ctx.resume();if(playing){stop();return}playing=true;g=0;nextT=ctx.currentTime+.08;timer=setInterval(tick,25);$('play').textContent='Stop'}
+function stop(){playing=false;clearInterval(timer);if(node)node.port.postMessage({t:'clear'});if(ENG)ENG.stop(ctx.currentTime);$('play').textContent='Play'}
+function pick(kind,i){sel={kind,i};document.querySelectorAll('.card').forEach(c=>c.classList.toggle('on',c.dataset.k===kind&&+c.dataset.i===i));
+  if(!ctx)return;if(kind==='pl'){ENG.stop(ctx.currentTime);applyPl()}else{node.port.postMessage({t:'clear'});ENG.setPatch(NOW[i],ctx.currentTime,[1,1,1,1],[false,false,false,false]);ENG.setPhrase(ps);nowGain(NOW[i]).then(g=>{if(sel.kind==='now'&&sel.i===i)gN.gain.setTargetAtTime(g,ctx.currentTime,.05)})}
+  if(!playing)play()}
+function card(kind,i,nm,ds){const c=document.createElement('div');c.className='card '+(kind==='pl'?'pl':'now');c.dataset.k=kind;c.dataset.i=i;c.innerHTML=`<div class="nm">${nm}</div><div class="ds">${ds}</div>`;
+  c.addEventListener('click',e=>{if(e.target.closest('input,button,select'))return;pick(kind,i)});return c}
+PL.forEach((P,i)=>{const c=card('pl',i,P.nm,P.ds),ks=document.createElement('div');ks.className='ks';
+  [['h','Harmonics'],['t','Timbre'],['m','Morph'],['d','Decay'],['c','Colour'],['tm','Env → timbre']].forEach(([k,lab])=>{const l=document.createElement('label');l.className='k';l.innerHTML=`${lab}<input type="range" min="0" max="1" step=".01" value="${P[k]}">`;
+    l.querySelector('input').addEventListener('input',e=>{P[k]=+e.target.value;if(sel.kind==='pl'&&sel.i===i)applyPl()});ks.append(l)});
+  const r=document.createElement('div');r.className='row';const b=document.createElement('button');b.textContent='Dobbel';b.onclick=()=>{['h','t','m'].forEach(k=>P[k]=+(.15+Math.random()*.7).toFixed(2));P.d=+(.35+Math.random()*.3).toFixed(2);P.c=+(.35+Math.random()*.4).toFixed(2);ks.querySelectorAll('input').forEach((x,j)=>x.value=P[['h','t','m','d','c','tm'][j]]);pick('pl',i)};r.append(b);
+  c.append(ks,r);$('gp').append(c)});
+NOW.forEach((sd,i)=>{const P=WorpEngine.genPatch(sd,'lead');$('gn').append(card('now',i,P.name,(P.mallet||'')+' · seed '+sd))});
+$('play').onclick=play;$('drums').onclick=e=>{const b=e.currentTarget;b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true')};
+$('mel').onclick=()=>{ps=(Math.random()*1e9)>>>0;if(ENG){ENG.setPhrase(ps);MP=melP()}st('Melodie '+ps.toString(36))};
+$('bpm').oninput=e=>$('bpmv').textContent=e.target.value;
+document.querySelector('.card').classList.add('on');
+</script></body></html>
