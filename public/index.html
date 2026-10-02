@@ -883,7 +883,7 @@ input,select{accent-color:var(--accent)}
       <button class="btn" id="tuneall" title="Low drums to the root, mid drums to the fifth and seventh, inside the scale">Tune to key</button>
       <label class="chk" title="Lock tuning to scale: Tune knobs only land on notes of the scale"><input id="keylock" type="checkbox"> Lock to scale</label></div>
       <div class="tgrp tmidi" role="group" aria-label="MIDI keyboard"><button class="btn midibtn" id="midibtn" aria-pressed="false" title="Play along from a MIDI keyboard. Click to connect; after the first time Ngoma connects by itself">MIDI: connect</button><span class="seg midiseg" id="midiseg" role="group" aria-label="Your keys play"><button data-to="lead" title="Your keys play the Lead sound (when the Lead is off: the Worp pad)">Lead</button><button data-to="pad" title="Your keys play the Worp pad (when the pad is off or Classic: the Lead)">Pad</button></span><button class="btn midiq" id="midiq" aria-pressed="false" title="Tight: while Ngoma plays, every key you press waits for the next sixteenth, so it lands on the grid (a key just after the line plays at once). Off: your keys sound the moment you press them">Tight</button></div>
-      <div class="tgrp tmix"><button class="tg" id="stablebtn" type="button" aria-pressed="false" title="Stable playback: a bigger audio buffer and a longer look-ahead, for a laptop where the sound stutters. MIDI keys get a little more delay. Kept on this computer">Stable</button><label class="field mvol" title="Master volume for listening. Double-click for full. Exports are not affected: they are always normalised to -16 LUFS."><span class="lbl">Volume</span><input id="mvol" type="range" min="0" max="100" step="1" aria-label="Master volume"></label></div>
+      <div class="tgrp tmix"><button class="tg" id="stablebtn" type="button" aria-pressed="false" title="Stable playback: a bigger audio buffer and a longer look-ahead, for a laptop where the sound stutters. MIDI keys get a little more delay. Kept on this computer">Stable</button><label class="field mvol" title="Master volume for listening. Double-click for full. Exports are not affected: they land at the Level chosen at Export (-16, -14 or -18 LUFS)."><span class="lbl">Volume</span><input id="mvol" type="range" min="0" max="100" step="1" aria-label="Master volume"></label></div>
     </div>
   </header>
 
@@ -1070,6 +1070,7 @@ input,select{accent-color:var(--accent)}
         <option value="arts">Drum rack: one pad per stroke</option>
         <option value="gm">General MIDI percussion</option>
       </select></label>
+    <label class="field" title="How loud the exported files are. Loop -16 LUFS: a building block for your DAW. SoundCloud -14 LUFS: what SoundCloud advises, with a transparent limiter so the peaks stay under -1 dB. Mix room -18 LUFS: more room under your own mix. Capture, Take, Drag, Blackbox and the Rec mix follow it too"><span class="lbl">Level</span><select id="lufsT"><option value="loop">Loop −16 LUFS</option><option value="sc">SoundCloud −14 LUFS</option><option value="room">Mix room −18 LUFS</option></select></label>
     <label class="chk"><input id="stems" type="checkbox"> Stems</label>
     <label class="chk" title="Export until everything lines up again: tracks with their own length (polymeter), the lead's Length and Phase, and the chord scheme. Up to 32 bars. Off: the loop as set."><input id="wholecyc" type="checkbox"> Whole cycle</label>
     <label class="chk" title="In the exported WAV, stems and MIDI, low strokes on the beat are left out, so your kick sits alone there. You always hear everything while playing; striped steps are the ones the export leaves out."><input id="kickroom" type="checkbox"> Leave room for kick</label>
@@ -1274,7 +1275,7 @@ THE SOFTWARE.</pre></details>
   <h2>Export</h2>
   <h3>A loop</h3>
   <dl>
-    <dt>Export loop</dt><dd>A seamless WAV of 1, 2, 4 or 8 bars, plus MIDI and the pattern. Every export lands at -16 LUFS, peaks at least 1 dB under full scale.<details class="g-more"><summary>More</summary>Reverb and delay tails fold back to the start, so the loop sounds as if it has been running forever. With effects on you also get a dry WAV. <i>JSON</i> keeps the full pattern and settings.</details></dd>
+    <dt>Export loop</dt><dd>A seamless WAV of 1, 2, 4 or 8 bars, plus MIDI and the pattern. Every export lands at the chosen <i>Level</i>: Loop -16 LUFS (default), SoundCloud -14 LUFS or Mix room -18 LUFS, peaks at least 1 dB under full scale.<details class="g-more"><summary>More</summary>Reverb and delay tails fold back to the start, so the loop sounds as if it has been running forever. With effects on you also get a dry WAV. <i>JSON</i> keeps the full pattern and settings.</details></dd>
     <dt>Stems</dt><dd>Every playing drum and layer (pad, bass, lead, texture, candy) as its own WAV as well, aligned with the mix, so they add up to it.</dd>
     <dt>Whole cycle</dt><dd>Exports until everything lines up again: tracks with their own length, the lead's Length and Phase and the chord scheme, up to 32 bars. Off: the loop as set.</dd>
     <dt>Leave room for kick</dt><dd>Leaves low strokes on the beat out of the export, so your own kick stays alone there. You still hear everything while you play.</dd>
@@ -5383,6 +5384,7 @@ $('resetkit').onclick=()=>{ hRecord(resetKit); syncGraph(AG); renderLanes(); upd
   $('compact').onclick=()=>{ S.compact=!S.compact; save(); renderLanes(); };
   // --- export extras
   $('stems').checked=S.stems; $('stems').onchange=()=>{ S.stems=$('stems').checked; save(); };
+  $('lufsT').value=LUFS_T[S.lufsT]!=null?S.lufsT:'loop'; $('lufsT').onchange=()=>{ S.lufsT=$('lufsT').value; DW.key=null; save(); status('Exports now land at '+expLufs()+' LUFS'+(S.lufsT==='sc'?', ready for SoundCloud.':'.')); };
   $('wholecyc').checked=!!S.wholeCyc; $('wholecyc').onchange=()=>{ S.wholeCyc=$('wholecyc').checked; save(); const c=cycleBars(); status(S.wholeCyc?(c.bars>S.bars?'Export runs '+Math.min(c.bars,CYC_MAX)+' bars, until everything lines up again'+(c.bars>CYC_MAX?' (the full cycle is '+c.bars+' bars; capped at '+CYC_MAX+')':'')+'.':'Everything already lines up within the loop.'):'Export runs the loop as set.'); };
   { const dw=$('dragwav'), dt=$('dragtake'), ob=$('outdir'), ox=$('outclr');
     if(IN_CLAUDE){ dw.hidden=true; dt.hidden=true; }
@@ -5460,6 +5462,31 @@ function truePeak(chs){ const T=12, H=[]; for(let ph=1;ph<4;ph++){ const f=ph/4,
       for(const h of H){ let s=0; for(let k=0;k<2*T;k++) s+=h[k]*c[((i-T+1+k)%n+n)%n]; const a=Math.abs(s); if(a>pk) pk=a; } } });
   return pk; }
 const EXPORT_LUFS=-16, EXPORT_TP=Math.pow(10,-1/20);   // every loop lands at the same loudness, with peaks at least 1 dB under full scale
+/* v207 (Jesse: what we make here should fit SoundCloud well). Three export levels: Loop -16 LUFS (a building block for a DAW, the default),
+   SoundCloud -14 LUFS (SoundCloud's own advice, peaks under -1 dBTP) and Mix room -18. Loop and Mix room only turn the level; SoundCloud
+   gets there with a transparent look-ahead limiter on the mix when the peaks would pass the ceiling. Stems and dry files get the same
+   static gain, so they keep their balance. Rec's mix follows the same choice. */
+const LUFS_T={loop:-16,sc:-14,room:-18};
+function expLufs(){ return LUFS_T[S.lufsT]??-16; }
+/* gain curve of a peak limiter, on blocks of 16 frames: min over +-W blocks, instant down, ~90 ms release, then a +-W/2 box average,
+   so the gain at every peak is at or under what the ceiling asks. absMax(b) gives the loudest sample of block b. */
+function limCurve(nb,absMax,ceil,sr,circ){ const B=16, W=Math.max(2,Math.round(.003*sr/B)), r=new Float32Array(nb);
+  for(let b=0;b<nb;b++){ const a=absMax(b); r[b]=a>ceil?ceil/a:1; }
+  const at=i=>circ?r[((i%nb)+nb)%nb]:r[Math.max(0,Math.min(nb-1,i))], m=new Float32Array(nb);
+  for(let b=0;b<nb;b++){ let v=1; for(let k=-W;k<=W;k++){ const x=at(b+k); if(x<v) v=x; } m[b]=v; }
+  const k=1-Math.exp(-B/(.09*sr)); let g=1; const gg=new Float32Array(nb); for(let pass=0;pass<(circ?2:1);pass++) for(let b=0;b<nb;b++){ g=Math.min(m[b],g+(1-g)*k); gg[b]=g; }
+  const H=Math.max(1,W>>1), o=new Float32Array(nb); for(let b=0;b<nb;b++){ let sm=0; for(let k2=-H;k2<=H;k2++){ const j=b+k2; sm+=circ?gg[((j%nb)+nb)%nb]:gg[Math.max(0,Math.min(nb-1,j))]; } o[b]=sm/(2*H+1); }
+  return o; }
+function limApply(chs,ceil,sr,circ){ const n=chs[0].length, B=16, nb=Math.ceil(n/B);
+  const G=limCurve(nb,b=>{ let a=0; for(const c of chs) for(let i=b*B,e=Math.min(n,i+B);i<e;i++){ const v=Math.abs(c[i]); if(v>a) a=v; } return a; },ceil,sr,circ);
+  for(const c of chs) for(let i=0;i<n;i++){ const b=Math.floor(i/B), g1=G[b], g2=circ?G[(b+1)%nb]:G[Math.min(nb-1,b+1)]; c[i]*=Math.min(g1,g2); } }
+/* level a rendered mix (in place) to the chosen target; extra arrays (stems, dry) get the same static gain. Returns the output LUFS. */
+function levelSet(mix,sr,extra,circ){ const T=expLufs(), lu=loudness(mix,sr); if(!isFinite(lu)) return -Infinity; let gain=Math.pow(10,(T-lu)/20); const n=mix[0].length, tp=truePeak(mix);
+  const all=[mix,...(extra||[])].filter(Boolean), mul=(chs,g)=>chs.forEach(c=>{ for(let i=0;i<c.length;i++) c[i]*=g; });
+  if(S.lufsT==='sc'&&tp*gain>EXPORT_TP){ all.forEach(ch=>mul(ch,gain)); const sCeil=Math.pow(10,-1.6/20); for(let it=0;it<2;it++){ limApply(mix,sCeil,sr,circ!==false); const t2=truePeak(mix); if(t2>EXPORT_TP) mul(mix,EXPORT_TP/t2*.995); const l2=loudness(mix,sr); if(!(l2<T-.3)) break; const up=Math.pow(10,(T-l2)/20); mul(mix,up); (extra||[]).filter(Boolean).forEach(ch=>mul(ch,up)); }
+    const t3=truePeak(mix); if(t3>EXPORT_TP) mul(mix,EXPORT_TP/t3*.995); }
+  else { if(tp*gain>EXPORT_TP) gain=EXPORT_TP/tp; all.forEach(ch=>mul(ch,gain)); }
+  return loudness(mix,sr); }
 function midiBytes(total){ S.exporting=true; try{ return midiBytesX(total); } finally{ S.exporting=false; } }
 function midiBytesX(total){
   const ppq=480, tps=ppq/S.res, ev=[];
@@ -5571,8 +5598,8 @@ async function capture(take=false){ const btn=take?$('take'):$('capture');
   if(IN_CLAUDE && !downloadsNS){ mstatus('Downloads are not available in this view. Open the page in the Claude app or a browser.'); return; }
   const w=take?capWindow(999,true):capWindow(8); if(!w){ mstatus(CAP.sp?'Nothing to capture yet: play at least one whole bar first.':'Capture is not available in this browser.'); return; }
   btn.disabled=true;
-  try{ const sr=EXPORT_SR, raw=capAudio(w), n=Math.round((w.tE-w.tS)*sr), ch=await resampleTo(raw,CAP.sr,sr,n), lu=loudness(ch,sr), tp=truePeak(ch);   // 48 kHz like Export
-    let gain=isFinite(lu)?Math.pow(10,(EXPORT_LUFS-lu)/20):1; if(tp*gain>EXPORT_TP) gain=EXPORT_TP/tp; ch.forEach(c=>{ for(let i=0;i<n;i++) c[i]*=gain; });
+  try{ const sr=EXPORT_SR, raw=capAudio(w), n=Math.round((w.tE-w.tS)*sr), ch=await resampleTo(raw,CAP.sr,sr,n);   // 48 kHz like Export
+    levelSet(ch,sr,null,true);
     const mid=capMidi(w), stamp=new Date().toTimeString().slice(0,8).replace(/:/g,''), base=`ngoma-${take?'take':'capture'}-${S.preset}-${S.bpm}bpm-${NOTE[S.key].replace('#','s')}m-${w.bars}bar-${stamp}`;
     const wav=wavBytes(ch[0],ch[1],sr); if(TAKE.url) URL.revokeObjectURL(TAKE.url); TAKE.url=URL.createObjectURL(new Blob([wav],{type:'audio/wav'})); TAKE.name=base+'.wav'; $('dragtake').hidden=IN_CLAUDE;
     const where=await deliver([{name:base+'.wav',data:wav},{name:base+'.mid',data:mid.bytes}],base);
@@ -5603,8 +5630,7 @@ async function resampleTo(ch,from,to,n){ if(from===to) return ch; const oc=new O
 const DW={key:'',url:null,name:'',busy:null};
 const dwKey=()=>JSON.stringify([patternData(),kitData(),S.fx,S.bars,S.bpm,S.key,S.scale,S.kickroom,S.seed,S.lanes.map(L=>[L.btpl,L.mute,L.solo,L.level,L.rev,L.dly,L.tune,L.decay,L.pan])]);
 async function dwPrepare(){ const k=dwKey(); if(DW.key===k&&DW.url) return; if(DW.busy&&DW.busy.k===k) return DW.busy.p; const el=$('dragwav'); el.classList.add('busy');
-  const p=(async()=>{ const sr=EXPORT_SR, n=loopLen(sr), wet=await renderLoop(false,sr), lu=loudness(wet,sr), tp=truePeak(wet); let gain=isFinite(lu)?Math.pow(10,(EXPORT_LUFS-lu)/20):1; if(tp*gain>EXPORT_TP) gain=EXPORT_TP/tp;
-    wet.forEach(c=>{ for(let i=0;i<n;i++) c[i]*=gain; }); if(DW.url) URL.revokeObjectURL(DW.url); DW.url=URL.createObjectURL(new Blob([wavBytes(wet[0],wet[1],sr)],{type:'audio/wav'})); DW.name=fileBase()+'.wav'; DW.key=k; })();
+  const p=(async()=>{ const sr=EXPORT_SR, n=loopLen(sr), wet=await renderLoop(false,sr); levelSet(wet,sr,null,true); if(DW.url) URL.revokeObjectURL(DW.url); DW.url=URL.createObjectURL(new Blob([wavBytes(wet[0],wet[1],sr)],{type:'audio/wav'})); DW.name=fileBase()+'.wav'; DW.key=k; })();
   DW.busy={k,p}; try{ await p; } finally{ if(DW.busy&&DW.busy.p===p) DW.busy=null; el.classList.toggle('busy',DW.key!==dwKey()); } }
 const TAKE={url:null,name:''};
 /* ---------- Jam recording (v101): press ● Rec, play for up to 12 minutes, press again. It starts on the next bar line while
@@ -5655,6 +5681,18 @@ async function jamFinish(nBars,tf){ if(!JAM.on) return; JAM.on=false; JAM.ending
     const where=await deliver(files.map(x=>({name:base+' '+x.name+'.wav',data:x.data})),base);
     status(`Jam saved (${Math.floor(n/JAM.sr/60)}:${String(Math.floor(n/JAM.sr%60)).padStart(2,'0')}, ${files.map(x=>x.name).join(', ')})${where==='folder'?' in '+OUT.dir.name:' as a zip'}.`); }
   catch(e){ console.error(e); status('The jam could not be written: '+(e&&e.message||e)); } }
+/* v207: a long take at the chosen level, without holding it all in memory: K-weighted loudness streamed in 100 ms hops (400 ms blocks,
+   gated as in BS.1770), then a gain, and for SoundCloud the limiter curve on blocks of 16 frames. get(f,c) is in 16-bit units. */
+function jamLevel(get,n,sr){ const T=expLufs(), F=kCoefs(sr), hop=Math.round(.1*sr), nh=Math.floor(n/hop), E=new Float64Array(nh);
+  for(let c=0;c<2;c++){ let x1=0,x2=0,y1=0,y2=0,u1=0,u2=0,z1=0,z2=0; const f0=F[0], f1=F[1];
+    for(let f=0;f<nh*hop;f++){ const x=get(f,c)/32768; const a=f0.b[0]*x+f0.b[1]*x1+f0.b[2]*x2-f0.a[1]*y1-f0.a[2]*y2; x2=x1; x1=x; y2=y1; y1=a; const o=f1.b[0]*a+f1.b[1]*u1+f1.b[2]*u2-f1.a[1]*z1-f1.a[2]*z2; u2=u1; u1=a; z2=z1; z1=o; E[Math.floor(f/hop)]+=o*o; } }
+  const L=p=>-.691+10*Math.log10(p), bp=[]; for(let k=0;k+3<nh;k++) bp.push((E[k]+E[k+1]+E[k+2]+E[k+3])/(4*hop));
+  let g=bp.filter(p=>L(p)>-70), lu=-Infinity; if(g.length){ const rel=L(g.reduce((a,b)=>a+b,0)/g.length)-10; g=g.filter(p=>L(p)>rel); lu=L(g.reduce((a,b)=>a+b,0)/g.length); }
+  let gain=isFinite(lu)?Math.pow(10,(T-lu)/20):1; const B=16, nb=Math.ceil(n/B), bm=new Float32Array(nb); let pk=0;
+  for(let b=0;b<nb;b++){ let a=0; for(let f=b*B,e=Math.min(n,f+B);f<e;f++) for(let c=0;c<2;c++){ const v=Math.abs(get(f,c))/32768; if(v>a) a=v; } bm[b]=a; if(a>pk) pk=a; }
+  const ceil=Math.pow(10,-2/20);   // a little more margin than the loops get: no true-peak check over a whole take
+  if(S.lufsT==='sc'&&pk*gain>ceil){ const G=limCurve(nb,b=>bm[b]*gain,ceil,sr,false); return (f,c)=>{ const b=Math.floor(f/B); return get(f,c)*gain*Math.min(G[b],G[Math.min(nb-1,b+1)]); }; }
+  if(pk*gain>ceil) gain=ceil/pk; return (f,c)=>get(f,c)*gain; }
 function jamWav(get,n,sr,gain){ const ba=6, b=new ArrayBuffer(44+n*ba), v=new DataView(b), w=(o,x)=>{ for(let i=0;i<x.length;i++) v.setUint8(o+i,x.charCodeAt(i)); };
   w(0,'RIFF'); v.setUint32(4,36+n*ba,true); w(8,'WAVE'); w(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,2,true); v.setUint32(24,sr,true); v.setUint32(28,sr*ba,true); v.setUint16(32,ba,true); v.setUint16(34,24,true); w(36,'data'); v.setUint32(40,n*ba,true);
   const u=new Uint8Array(b); let o=44;
@@ -5663,9 +5701,8 @@ function jamWav(get,n,sr,gain){ const ba=6, b=new ArrayBuffer(44+n*ba), v=new Da
 function jamFiles(T,n){ const sr=JAM.sr, raw=(tr,f,c)=>{ const k=Math.floor(f/sr), b=tr.b[k]; return b?b[(f-k*sr)*2+c]:0; }, out=[], TF=Math.min(JAM.fold|0,n), X=Math.min(TF,Math.round(.05*sr));
   const at=TF>0?(tr,f,c)=>{ if(f>=TF) return raw(tr,f,c); const post=raw(tr,n+f,c); if(f<TF-X) return post; const x=(f-(TF-X))/X; return post*Math.cos(x*Math.PI/2)+raw(tr,f,c)*Math.sin(x*Math.PI/2); }:raw;   /* v191: the folded start */
   // mix: Ngoma's output plus Worp, kept under 0 dBFS
-  let pk=1; if(T.worp.any){ for(let f=0;f<n;f++) for(let c=0;c<2;c++){ const x=Math.abs(at(T.mix,f,c)+at(T.worp,f,c)); if(x>pk) pk=x; } }
-  const mg=Math.min(1,32000/pk);
-  out.push({name:'mix',data:jamWav((f,c)=>at(T.mix,f,c)+at(T.worp,f,c),n,sr,mg)});
+  const LV=jamLevel((f,c)=>at(T.mix,f,c)+at(T.worp,f,c),n,sr);   /* v207: the mix at the chosen export level (SoundCloud: -14 LUFS with the limiter) */
+  out.push({name:'mix',data:jamWav(LV,n,sr,1)});
   [['drums',T.drums],['pad',T.pad],['lead',T.lead],['candy',T.candy],['bass',T.bass],['worp',T.worp]].forEach(([nm,tr])=>{ if(tr&&tr.any) out.push({name:nm,data:jamWav((f,c)=>at(tr,f,c),n,sr,1)}); });
   return out; }
 /* ---------- Blackbox (v95): its own folder and names made for a small screen. Tempo (three digits, so the list sorts by tempo),
@@ -5685,7 +5722,7 @@ async function bbSend(){
     const w=playing?capWindow(8):null;
     if(w){ const raw=capAudio(w), n=Math.round((w.tE-w.tS)*sr); ch=await resampleTo(raw,CAP.sr,sr,n); bars=w.bars; }
     else { ch=await renderLoop(false,sr); bars=S.bars; }
-    const n=ch[0].length, lu=loudness(ch,sr), tp=truePeak(ch); let gain=isFinite(lu)?Math.pow(10,(EXPORT_LUFS-lu)/20):1; if(tp*gain>EXPORT_TP) gain=EXPORT_TP/tp; ch.forEach(c=>{ for(let i=0;i<n;i++) c[i]*=gain; });
+    levelSet(ch,sr,null,true);
     const wav=wavBytes(ch[0],ch[1],sr);
     if(window.showDirectoryPicker && (BB.dir || await bbPick())){
       let ok=false; try{ let p=await BB.dir.queryPermission({mode:'readwrite'}); if(p!=='granted') p=await BB.dir.requestPermission({mode:'readwrite'}); ok=p==='granted'; }catch(e){}
@@ -5727,10 +5764,8 @@ async function exportLoopX(cy){
       if(S.fx.bsOn && (S.fx.bsLvl??.5)>.005){ status('Rendering stem Bass…'); S.renderOnly=-5; try{ stems.push({id:'bass',ch:await render(false)}); } finally{ S.renderOnly=null; } }   /* v194 (Jesse: Candy in the stems too) */ }
     for(let k=stems.length-1;k>=0;k--){ let pk=0; stems[k].ch.forEach(c=>{ for(let i=0;i<n;i++) pk=Math.max(pk,Math.abs(c[i])); }); if(pk<1e-5) stems.splice(k,1); }   // a track that ends up silent (e.g. every stroke on the beat with Leave room for kick) gets no empty file
     status('Setting the level…');
-    const lu=loudness(wet,sr), tp=Math.max(...[wet,dry,...stems.map(x=>x.ch)].filter(Boolean).map(truePeak));
-    let gain=isFinite(lu)?Math.pow(10,(EXPORT_LUFS-lu)/20):1; if(tp*gain>EXPORT_TP) gain=EXPORT_TP/tp;   // loudness target, unless a peak would pass -1 dBTP
-    [wet,dry,...stems.map(x=>x.ch)].filter(Boolean).forEach(ch=>ch.forEach(c=>{ for(let i=0;i<n;i++) c[i]*=gain; }));   // one gain for all, so dry and stems keep their balance to the mix
-    const outLu=isFinite(lu)?lu+20*Math.log10(gain):-Infinity;
+    const outLu=levelSet(wet,sr,[dry,...stems.map(x=>x.ch)],true);   /* v207: the chosen level; dry and stems get the same gain, a file whose peak would still pass -1 dBTP is turned down on its own */
+    [dry,...stems.map(x=>x.ch)].filter(Boolean).forEach(ch=>{ const t=truePeak(ch); if(t>EXPORT_TP) ch.forEach(c=>{ for(let i=0;i<n;i++) c[i]*=EXPORT_TP/t; }); });
     const base=fileBase();
     const json=new TextEncoder().encode(JSON.stringify({ngoma:2,name:base,pattern:patternData(),kit:kitData()},null,1));
     const files=[{name:base+'.wav',data:wavBytes(wet[0],wet[1],sr)}];
