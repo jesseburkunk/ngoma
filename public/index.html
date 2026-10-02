@@ -809,6 +809,21 @@ input,select{accent-color:var(--accent)}
 .zlayers #fldU .mgw{grid-template-columns:repeat(7,84px)!important}
 @media (max-width:900px){.zlayers #fldU .mgw{grid-template-columns:repeat(7,68px)!important}}
 @media (max-width:560px){.zlayers #fldU .mgw{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+/* v183 Subtle (Jesse chose it): every layer the same Ngoma panel, only its own colour: a faint tint of the panel, the LED, the knob arcs,
+   the display and the New button. Pad warm amber, Lead cool blue, Candy green, Texture sand, after the group colours low/mid/high. */
+#padU{--ua:#e6ae2c}#leadU{--ua:#76a6d6}#cdU{--ua:#5fbf8e}#fldU{--ua:#c9b48a}
+:is(#padU,#leadU,#cdU,#fldU){background:linear-gradient(180deg,color-mix(in srgb,var(--ua) 7%,#181715),color-mix(in srgb,var(--ua) 4%,#161513))!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ua) 14%,transparent),inset 0 1px 3px rgba(0,0,0,.5)!important}
+:is(#padU,#leadU,#cdU,#fldU) .fxh .lbl{color:color-mix(in srgb,var(--ua) 70%,#ece6da)!important}
+:is(#padU,#leadU,#cdU,#fldU) .fxh .lbl::before{background:var(--ua)!important;box-shadow:0 0 6px var(--ua)!important}
+:is(#padU,#leadU,#cdU,#fldU) .kn{--kc:var(--ua)}
+:is(#padU,#leadU,#cdU,#fldU) .wname.lcd{--lcd:color-mix(in srgb,var(--ua) 75%,#fff)}
+:is(#padU,#leadU,#cdU,#fldU) .wname.lcd b,:is(#padU,#leadU,#cdU,#fldU) .wname.lcd small{color:var(--lcd)!important;text-shadow:0 0 6px color-mix(in srgb,var(--ua) 45%,transparent)!important}
+:is(#padU,#leadU,#cdU,#fldU) .seg button[aria-pressed="true"],:is(#padU,#leadU,#cdU,#fldU) .kseg button[aria-pressed="true"]{box-shadow:inset 0 -2px 0 var(--ua)!important}
+:is(#padU,#leadU,#cdU,#fldU) .lmix{border-left-color:color-mix(in srgb,var(--ua) 22%,transparent)!important}
+.zlayers .wstrip .sgrp{display:inline-flex;align-items:center;gap:6px;flex-wrap:nowrap}.zlayers .wstrip.wtop{padding-right:34px;flex-wrap:wrap;row-gap:8px}
+.zlayers .wstrip .srec{margin-left:auto;padding-left:14px;border-left:1px solid color-mix(in srgb,var(--ua,#a59f92) 22%,transparent)}
+.zlayers .wstrip .btn.primary{background:var(--ua,#ff6a2b)!important;border-color:var(--ua,#ff6a2b)!important;color:#141310!important;font-weight:650;box-shadow:0 0 14px -4px var(--ua,#ff6a2b)!important}
+.zlayers .wstrip .btn.primary:hover{filter:brightness(1.08)}
 /* v179 layers layout: strip on top, sound knobs, small mix knobs, the melody folded */
 .zlayers .wstrip.wtop{margin:0 0 12px}.zlayers .lsound{margin-bottom:6px}.zlayers .lmix{gap:6px 18px;margin:6px 0 4px;padding-left:18px;border-left:1px solid rgba(236,230,218,.08)}
 .zlayers .lmix .knob{width:56px}.lvhd{flex-basis:100%;width:100%;margin-top:12px;padding-top:8px;border-top:1px solid rgba(236,230,218,.07);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted,#a59f92)}.lvfold{margin-top:10px;border-top:1px solid rgba(236,230,218,.07);padding-top:8px}.lvfold>summary{cursor:pointer;list-style:none;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text,#ece6da);user-select:none;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid rgba(255,106,43,.55);border-radius:7px;background:rgba(255,106,43,.06)}.lvfold>summary:hover{background:rgba(255,106,43,.14)}.lvfold[open]>summary{border-color:rgba(236,230,218,.18);background:none}.lvfold .lvhint{font-style:normal;text-transform:none;letter-spacing:0;opacity:.6;margin-left:6px}.lvfold[open] .lvhint{display:none}
@@ -4761,6 +4776,11 @@ function layersLayout(){ const lab=k=>{ const e=k.querySelector('.kl'); return e
     sound.slice().reverse().forEach(l=>{ const k=by(l); if(k) SR.prepend(k); });
     const MR=document.createElement('div'); MR.className='lvw lmix'; mix.forEach(l=>{ const k=by(l); if(k){ k.classList.remove('big','mgk'); MR.append(k); } });
     (into?into.closest('.knrow'):SR).after(MR); const kr=mg.closest('.knrow'); if(kr&&!kr.querySelector('.knob')) kr.remove(); return MR; };
+  /* v183 (Jesse: the record buttons apart from New sound, which should stand out, and New pattern): the strip starts with what you throw,
+     the display after it, and the playing tools (Rec, Mine | Auto, Lock) in their own group at the end */
+  const grp=(stripId,gen,rec)=>{ const st=$(stripId); if(!st) return; const G=document.createElement('span'), R=document.createElement('span'); G.className='sgrp sgen'; R.className='sgrp srec';
+    gen.forEach((id,i)=>{ const e=$(id); if(e){ G.append(e); if(i===0) e.classList.add('primary'); } }); rec.forEach(id=>{ const e=$(id); if(e) R.append(e); }); st.prepend(G); if(R.children.length) st.append(R); };
+  grp('leadStrip',['leadNew','leadPat'],['leadRec','leadLine','leadLock']); grp('worpStrip',['worpNew','worpPat'],['padRec','padLine']); grp('cdStrip',['cdNew','cdSrc'],[]);
   unit('padU',['Level','Move'],['Filter','Reverb','Echo','Pitch']);
   unit('fldU',['Level','Distance','Drift','Tune'],['Filter','Reverb','Echo']);
   const pl=document.querySelector('#plRow .lvw'), mg=document.querySelector('#leadU .mgw'), vary=mg&&[...mg.querySelectorAll('.knob')].find(k=>lab(k)==='Vary'), mel=document.querySelector('#lvRow .lvw');
