@@ -4112,7 +4112,7 @@ function fldUI(){ const sel=$('fldSel'), nm=$('fldName'), cr=$('fldCred'); if(!s
    the gaps of the drums. Everything is seeded by the step, so the export sounds as you hear it. ---------- */
 const CD_TRIM=1.6, CD_KINDS=['click','blip','tick','crackle','squelch','ping'], CD_NORM={click:3.5,blip:.92,tick:3.3,crackle:1.7,squelch:2.25,ping:.75,grain:11};   /* measured: each kind at about the same loudness */
 function buildCandy(ctx,master,rvIn){ const bus=ctx.createGain(), hp=bq(ctx,'highpass',160,.7), out=ctx.createGain(), send=ctx.createGain(); out.gain.value=0; send.gain.value=0; bus.connect(hp).connect(out).connect(master); out.connect(send).connect(rvIn); const dub=buildDub(ctx,out,master); return {bus,out,send,dub}; }
-function cdLive(){ const F=S.fx; return !!F.cdOn && S.renderOnly==null && (F.cdLvl??.5)>.005; }
+function cdLive(){ const F=S.fx; return !!F.cdOn && (S.renderOnly==null||S.renderOnly===-4) && (F.cdLvl??.5)>.005; }
 function cdSeed(){ return (S.fx.cdSeed??1)>>>0; }
 function cdSrc(){ const v=S.fx.cdSrc; return v==='synth'||v==='field'?v:'both'; }
 function cdFid(){ const id=S.fx.fldSrc; return id&&id!=='own'&&FLD_SRC.some(x=>x[0]===id)?id:'ice'; }
@@ -5412,10 +5412,10 @@ function jamRec(node,tr){ const r=new AudioWorkletNode(actx,'ngoma-rec',{numberO
 async function jamStart(){ ensureCtx(); if(!actx._fok){ status('Recording needs AudioWorklet, which this browser does not allow here.'); return; }
   const sr=actx.sampleRate, BL=4*S.res, sd=stepDur(S);
   let t=actx.currentTime+.05; if(playing){ const k=(BL-gStep%BL)%BL; t=nextT+k*sd; }   // the next bar line
-  Object.assign(JAM,{on:true,ending:false,wait:playing,sr,f0:Math.round(t*sr),tr:{mix:jamTrack(),drums:jamTrack(),pad:jamTrack(),lead:jamTrack(),worp:jamTrack()},nodes:[],t,stopF:0,wsr:0});
+  Object.assign(JAM,{on:true,ending:false,wait:playing,sr,f0:Math.round(t*sr),tr:{mix:jamTrack(),drums:jamTrack(),pad:jamTrack(),lead:jamTrack(),candy:jamTrack(),worp:jamTrack()},nodes:[],t,stopF:0,wsr:0});
   jamRec(AG.capNode,JAM.tr.mix);
   const dt=actx.createGain(); AG.lanes.forEach(l=>l.p.connect(dt)); JAM.dTap=dt; jamRec(dt,JAM.tr.drums);
-  if(AG.pad) jamRec(AG.pad.out,JAM.tr.pad); if(AG.lead) jamRec(AG.lead.out,JAM.tr.lead);
+  if(AG.pad) jamRec(AG.pad.out,JAM.tr.pad); if(AG.lead) jamRec(AG.lead.out,JAM.tr.lead); if(AG.cd) jamRec(AG.cd.out,JAM.tr.candy);
   const msg={t:'rec',on:true,epoch:ctxEpoch(actx,t)}; if(WBC) WBC.postMessage(msg); const f=$('worpFrame'); if(f&&f.src&&f.contentWindow) f.contentWindow.postMessage(msg,'*');
   clearInterval(JAM.ui); JAM.ui=setInterval(jamUI,250); jamUI(); status(playing?'Recording starts on the next bar.':'Recording.'); }
 function jamWorp(m){ if(!JAM.on||!JAM.tr) return; if(m.sr&&m.sr!==JAM.sr){ // another rate: stretch to ours (linear)
@@ -5456,7 +5456,7 @@ function jamFiles(T,n){ const sr=JAM.sr, raw=(tr,f,c)=>{ const k=Math.floor(f/sr
   let pk=1; if(T.worp.any){ for(let f=0;f<n;f++) for(let c=0;c<2;c++){ const x=Math.abs(at(T.mix,f,c)+at(T.worp,f,c)); if(x>pk) pk=x; } }
   const mg=Math.min(1,32000/pk);
   out.push({name:'mix',data:jamWav((f,c)=>at(T.mix,f,c)+at(T.worp,f,c),n,sr,mg)});
-  [['drums',T.drums],['pad',T.pad],['lead',T.lead],['worp',T.worp]].forEach(([nm,tr])=>{ if(tr.any) out.push({name:nm,data:jamWav((f,c)=>at(tr,f,c),n,sr,1)}); });
+  [['drums',T.drums],['pad',T.pad],['lead',T.lead],['candy',T.candy],['worp',T.worp]].forEach(([nm,tr])=>{ if(tr&&tr.any) out.push({name:nm,data:jamWav((f,c)=>at(tr,f,c),n,sr,1)}); });
   return out; }
 /* ---------- Blackbox (v95): its own folder and names made for a small screen. Tempo (three digits, so the list sorts by tempo),
    key, rhythm, bars and a number: "110 Am SonClave 4b 01.wav". WAV only, 48 kHz 24-bit at -16 LUFS. Playing: the last 1, 2, 4 or 8
@@ -5502,7 +5502,8 @@ async function exportLoop(){
         status('Rendering stem '+INSTR[i].name+'…'); S.renderOnly=i; try{ stems.push({id:INSTR[i].id,ch:await render(false)}); } finally{ S.renderOnly=null; } }
       if(S.fx.padOn && (S.fx.padLvl??.35)>.005){ status('Rendering stem Pad…'); S.renderOnly=-1; try{ stems.push({id:'pad',ch:await render(false)}); } finally{ S.renderOnly=null; } }
       if(S.fx.leadOn && (S.fx.leadLvl??.5)>.005){ status('Rendering stem Lead…'); S.renderOnly=-2; try{ stems.push({id:'lead',ch:await render(false)}); } finally{ S.renderOnly=null; } }
-      if(S.fx.fldOn && (S.fx.fldLvl??.4)>.005){ status('Rendering stem Texture…'); S.renderOnly=-3; try{ stems.push({id:'field',ch:await render(false)}); } finally{ S.renderOnly=null; } } }
+      if(S.fx.fldOn && (S.fx.fldLvl??.4)>.005){ status('Rendering stem Texture…'); S.renderOnly=-3; try{ stems.push({id:'field',ch:await render(false)}); } finally{ S.renderOnly=null; } }
+      if(S.fx.cdOn && (S.fx.cdLvl??.5)>.005){ status('Rendering stem Candy…'); S.renderOnly=-4; try{ stems.push({id:'candy',ch:await render(false)}); } finally{ S.renderOnly=null; } }   /* v194 (Jesse: Candy in the stems too) */ }
     for(let k=stems.length-1;k>=0;k--){ let pk=0; stems[k].ch.forEach(c=>{ for(let i=0;i<n;i++) pk=Math.max(pk,Math.abs(c[i])); }); if(pk<1e-5) stems.splice(k,1); }   // a track that ends up silent (e.g. every stroke on the beat with Leave room for kick) gets no empty file
     status('Setting the level…');
     const lu=loudness(wet,sr), tp=Math.max(...[wet,dry,...stems.map(x=>x.ch)].filter(Boolean).map(truePeak));

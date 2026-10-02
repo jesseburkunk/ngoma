@@ -62,6 +62,10 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       const kn = [...document.querySelectorAll('.knob .kl')].filter(e => e.textContent === 'F.Delay').length; Object.assign(S.fx, JSON.parse(keep)); return { wet, pk, kn }; }, rmsJS);
     assert(r.kn === 2, 'F.Delay knobs ' + r.kn); assert(r.wet > .15 && r.wet < 1.5, 'wet/dry ' + r.wet.toFixed(2)); assert(r.pk < 1, 'peak ' + r.pk.toFixed(3)); return 'wet ' + (20 * Math.log10(r.wet)).toFixed(1) + ' dB vs dry at 100%'; });
 
+  await check('Candy has its own stem', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 1; Object.assign(S.fx, { cdOn: true, cdSrc: 'synth', cdLvl: .6, cdAmt: .6 });
+      S.renderOnly = -4; const a = await renderLoop(false, 22050); S.fx.cdOn = false; const b = await renderLoop(false, 22050); S.renderOnly = null; Object.assign(S.fx, JSON.parse(keep)); return { on: rms(a[0]), off: rms(b[0]) }; }, rmsJS);
+    assert(r.on > .001 && r.off < .0002, JSON.stringify(r)); return 'candy stem rms ' + r.on.toFixed(4) + ', nothing else in it'; });
+
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
       for (let i = 0; i < MG_MODES.length; i++) { S.fx.mgMode = i; const w = await renderLoop(false, 22050), v = rms(w[0]); if (!(v > .002)) bad.push(MG_NAMES[i] + ':' + (v < 0 ? 'NaN' : v.toFixed(4))); }
       S.fx.mgOn = false; return { n: MG_MODES.length, bad }; }, rmsJS); assert(!r.bad.length, r.bad.join(', ')); return r.n + ' modes'; });
