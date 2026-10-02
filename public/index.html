@@ -4119,13 +4119,13 @@ function tlClear(G){ const T=G&&G.tl; if(!T) return; const now=G.ctx.currentTime
    it opens), a duck that steps aside for the surdo, and the level. Figures are seeded per style and two-bar motif; the notes are the
    chord's root, its fifth and octaves, snapped to your scale. */
 const BS_STY={drop:[[2,2,.6],[6,2,.75],[8,4,.95],[11,1,.35],[12,3,.6],[14,2,.45]], step:[[0,3,1],[4,3,1],[8,3,1],[12,3,1],[2,1,.2],[10,1,.25],[14,1,.3]],
-  off:[[2,2,1],[6,2,1],[10,2,1],[14,2,1],[0,1,.15]], half:[[0,7,1],[8,2,.3],[10,4,.75],[14,2,.3]]}, BS_TRIM=.35;
+  off:[[2,2,1],[6,2,1],[10,2,1],[14,2,1],[0,1,.15]], half:[[0,7,1],[8,2,.3],[10,4,.75],[14,2,.3]]}, BS_TRIM=.2;   /* v208: 5 dB lower (Jesse: the percussion stays the heart; with the bass on, sparse rhythms lost 4.5 dB in the export) */
 function bsSty(){ const v=S.fx.bsSty; return BS_STY[v]?v:'drop'; }
 function bsSeed(){ return (S.fx.bsSeed??7)>>>0; }
 function bsLive(){ const F=S.fx; return !!F.bsOn && (S.renderOnly==null||S.renderOnly===-5) && (F.bsLvl??.5)>.005; }
-function buildBass(ctx,master){ const o1=ctx.createOscillator(), o2=ctx.createOscillator(), g2=ctx.createGain(), env=ctx.createGain(), lp1=bq(ctx,'lowpass',400,.7), lp2=bq(ctx,'lowpass',400,.6), dk=ctx.createGain(), out=ctx.createGain();
+function buildBass(ctx,master){ const o1=ctx.createOscillator(), o2=ctx.createOscillator(), g2=ctx.createGain(), env=ctx.createGain(), hp=bq(ctx,'highpass',28,.6), lp1=bq(ctx,'lowpass',400,.7), lp2=bq(ctx,'lowpass',400,.6), dk=ctx.createGain(), out=ctx.createGain();
   o1.type=o2.type='sine'; o1.frequency.value=55; o2.frequency.value=110; g2.gain.value=0; env.gain.value=0; out.gain.value=0;
-  o1.connect(env); o2.connect(g2).connect(env); env.connect(lp1).connect(lp2).connect(dk).connect(out).connect(master); o1.start(); o2.start();
+  o1.connect(env); o2.connect(g2).connect(env); env.connect(hp).connect(lp1).connect(lp2).connect(dk).connect(out).connect(master); o1.start(); o2.start();
   return {o1,o2,g2,env,lp1,lp2,dk,out,last:-1}; }
 function bsSync(G){ const B=G&&G.bs; if(!B) return; const F=S.fx, on=bsLive(), live=!(G.ctx instanceof OfflineAudioContext), set=(p,v)=>{ if(live) p.setTargetAtTime(v,G.ctx.currentTime,.05); else p.value=v; };
   const fv=F.bsFlt??.4, hz=45*Math.pow(2,fv*7.4); set(B.out.gain,on?Math.pow(F.bsLvl??.5,1.5)*BS_TRIM*2.8:0); set(B.g2.gain,(F.bsBody??.25)*.55);
@@ -4141,10 +4141,11 @@ function bsBar(bar){ const sd=bsSeed(), st=bsSty(), m=Math.floor(bar/2)*0+(bar%2
 function bsSnap(semi){ const iv=(SCALES[S.scale]||SCALES.mpenta).iv; let best=semi, bd=99; for(let o=-2;o<=2;o++) iv.forEach(x=>{ const c=x+12*o; if(Math.abs(c-semi)<bd){ bd=Math.abs(c-semi); best=c; } }); return best; }
 function bsStep(ctx,G,g,t){ const B=G.bs; if(!B||!bsLive()) return; const F=S.fx, R=S.res, BL=4*R, bar=Math.floor(g/BL), s=g%BL, sd=stepDur(S), q=16/BL;
   // duck for the surdo: the sub steps aside for its hit
-  try{ const S2=S.renderOnly==null?S:Object.assign({},S,{renderOnly:null}); for(const e of eventsAt(g,S2)){ if(e.silent||INSTR[e.lane].id!=='surdo') continue; const te=t+grooveOff(g,S,sd)+(e.dt||0); B.dk.gain.setTargetAtTime(.3,Math.max(ctx.currentTime||0,te),.003); B.dk.gain.setTargetAtTime(1,Math.max(ctx.currentTime||0,te)+.035,.07); break; } }catch(err){}
+  try{ const S2=S.renderOnly==null?S:Object.assign({},S,{renderOnly:null}); let best=null; for(const e of eventsAt(g,S2)){ if(e.silent||INSTR[e.lane].reg!=='low') continue; if(!best||(e.v||0)>(best.v||0)) best=e; }   /* v208: every low drum, not only the surdo, and deeper for a harder hit */
+    if(best){ const te=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)+(best.dt||0)), dep=1-.85*Math.min(1,.4+.6*(best.v??.8)); B.dk.gain.setTargetAtTime(dep,te,.003); B.dk.gain.setTargetAtTime(1,te+.04,.08); } }catch(err){}
   const P=bsBar(bar), x=P.find(n=>Math.round(n[0]/q)===s); if(!x) return;
   const nx=P.find(n=>Math.round(n[0]/q)>s), nxt=nx?Math.round(nx[0]/q):BL+Math.round(bsBar(bar+1)[0][0]/q), gap=(nxt-s)*sd;
-  const cd=chordAt(g)|0, root=S.key+24+plSemi(cd)-(plSemi(cd)>=7?12:0), tr=[-12,0,12].includes(F.bsTr|0)?(F.bsTr|0):0, midi=root+(root<29?12:0)+bsSnap(x[3])+tr, f=440*Math.pow(2,(midi-69)/12);
+  const cd=chordAt(g)|0, root=S.key+24+plSemi(cd)-(plSemi(cd)>=7?12:0), tr=[-12,0,12].includes(F.bsTr|0)?(F.bsTr|0):0, midi=root+(root<33?12:0)+bsSnap(x[3])+tr, f=440*Math.pow(2,(midi-69)/12);
   const t0=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)), dec=F.bsDec??.5, len=Math.min(gap-.012,Math.max(.06,Math.round(x[1]/q)*sd*(.4+1.2*dec))), pk=x[2];
   B.o1.frequency.setTargetAtTime(f,t0,.004); B.o2.frequency.setTargetAtTime(2*f,t0,.004);
   B.env.gain.setTargetAtTime(pk,t0,.0035); B.env.gain.setTargetAtTime(pk*(.55+.4*dec),t0+.04,.08+.3*dec); B.env.gain.setTargetAtTime(0,t0+len,.025+.05*dec); }
