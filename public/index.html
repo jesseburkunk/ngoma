@@ -912,6 +912,11 @@ input,select{accent-color:var(--accent)}
       <div class="fxc"><div class="knrow"><div id="leadSlot"></div></div><div class="knrow lvrow plrow" id="plRow"><div id="plSlot"></div></div><div class="knrow lvrow" id="lvRow"><div id="lvSlot"></div></div>
         <div class="wstrip" id="leadStrip"><button class="btn rec" id="leadRec" type="button" aria-pressed="false" title="Record two bars from your MIDI keys, from the next bar line. Your line loops on the lead as Mine">Rec 2 bars</button><button class="btn" id="leadLock" aria-pressed="false" title="Lock the line: the lead keeps playing these bars exactly as they are">Lock</button><span class="seg lineseg" id="leadLine" role="group" aria-label="Which line the lead plays" title="Mine: the line you recorded with Rec 2 bars. Auto: the line the Lead makes itself. Your line stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Auto</button></span><button class="btn" id="leadNew" title="New sound: another Plaits sound, playing the same melody (the old one stays in undo)">New sound</button><button class="btn" id="leadPat" title="New pattern: another melody, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="LEAD"><b id="leadName"></b><small id="leadCode"></small></span></div></div>
     </div>
+    <div class="fxg magic cdu" id="cdU">
+      <div class="fxh"><span class="lbl" title="Candy: tiny sounds without a key (clicks, blips, crackle, grains of a recording) in the gaps of the drums, as in microhouse">Candy</span><label class="chk"><input id="cdOn" type="checkbox"> On</label></div>
+      <div class="fxc"><div class="wstrip wtop" id="cdStrip"><span class="seg" id="cdSrc" role="group" aria-label="Source" title="Where the sounds come from: synthesized, grains of the field recording, or both"><button data-s="synth">Synth</button><button data-s="both">Both</button><button data-s="field">Field</button></span><button class="btn" id="cdNew" type="button" title="New candy: another set of six sounds and another motif (the old one stays in undo)">New candy</button><span class="wname lcd" data-lcd="CANDY"><b id="cdName"></b><small id="cdInfo"></small></span></div>
+        <div class="knrow"><div id="cdSlot"></div></div></div>
+    </div>
     <div class="fxg magic fldu" id="fldU">
       <div class="fxh"><span class="lbl" title="Texture: a field recording far under the drums, a place rather than an instrument. With Tune it sings your chords">Texture</span><label class="chk"><input id="fldOn" type="checkbox"> On</label></div>
       <div class="fxc"><div class="knrow"><div id="fldSlot"></div></div>
@@ -1202,6 +1207,7 @@ THE SOFTWARE.</pre></details>
   <dl>
     <dt>Pad</dt><dd>A soft layer under the drums. On a Worp pad, <i>New sound</i> keeps the chords and movement and <i>New pattern</i> keeps the sound; <i>Rec 2 bars</i> counts in for two bars (clicks, beats counting down) and records two bars of chords from your MIDI keys, and <i>Mine | Worp</i> switches between your take and the pad's own. <i>Worp</i> throws a new patch from Ngoma's sister synth; <i>Classic</i> has six pads of its own.<details class="g-more"><summary>More</summary><p><b>Worp:</b> every throw is a patch of up to four sources with slow modulation that keeps re-patching itself. <i>New</i> throws another, the numbered buttons mute its layers, <i>Open in Worp</i> opens Worp over Ngoma while Ngoma keeps playing (<i>Ngoma</i> or Esc brings you back). Whatever you pick or change there plays here at once; ← undoes a new sound.</p><p><b>Classic types:</b> <i>Bed</i>, one chord per bar. <i>Loops</i>, five tone fragments on their own lengths, like a Buddha Machine. <i>Tides</i>, a four-voice chord whose voices swell on their own cycles. <i>Echoes</i>, two short phrases into a darkening tape echo. <i>Seasons</i> and <i>Cloud</i>, a slow chord walk with shared notes held, as a warm pad or a cloud of grains.</p><p><b>Knobs:</b> <i>Level</i> (0 is really off), <i>Move</i> (how far the filter breathes, or how deep a Worp gate dips), <i>Filter</i> (low-pass to the left, high-pass to the right), <i>Reverb</i> and <i>Echo</i>, and <i>Pitch</i> (up a fourth, a fifth or an octave). Off at the first start.</p></details></dd>
     <dt>Lead</dt><dd>A melody on Plaits (Mutable Instruments), in time and with the swing of the drums. Off by default. <i>Rec 2 bars</i> counts in for two bars and records a line of two bars from your MIDI keys; <i>Mine | Auto</i> switches between yours and the Lead's own.<details class="g-more"><summary>More</summary><p>Every lead has one of nine ways of making its line, shown next to its code: <i>Bounce</i> (after Dillon Bastan's Bouncy Notes), <i>Anchor</i> (the rhythm of the tradition's timeline), <i>Triplets</i>, <i>Loop</i>, <i>Phase</i> (after Steve Reich), <i>Modules</i> (after Terry Riley's In C), <i>Additive</i> (after Philip Glass), <i>Isorhythm</i> and <i>Pulse</i> (after Music for 18 Musicians).</p><p><b>The sound:</b> Plaits by Mutable Instruments. <i>Model</i> picks the engine (analog, phase distortion, waveshaper, FM, additive, wavetable, string, modal and more), <i>Harmonics</i>, <i>Timbre</i> and <i>Morph</i> shape it as on the module, <i>Decay</i> and <i>Colour</i> set the low-pass gate, <i>Move</i> lets two slow movements play with Timbre and Morph. <i>New sound</i> throws a new one.</p><p><b>The line (v173):</b> one bar of that style becomes a motif and four bars a phrase. <i>Form</i>: <i>Call · answer</i> (bar two ends open, bar four lands on the root), <i>AABA</i>, <i>AA′AB</i>, <i>AAAA</i>, or <i>Free</i> (the line as before). <i>Rhythm</i> loops the motif's rhythm every 3 to 8 steps or plays the bar, <i>Notes</i> runs it through a row of 3 to 8 pitches or all of the style's own. Strong beats lean to the notes of the chord. <i>Range</i>: small steps or leaps. <i>Drums</i>: play in the gaps of the drums or on their accents. <i>New rhythm</i> and <i>New notes</i> redraw one and keep the other.</p><p><b>Knobs:</b> <i>Level</i>, <i>Vary</i> (at 0 the phrase repeats exactly; higher, the motif changes now and then at the end of a phrase, and stays changed), <i>Filter</i>, <i>Reverb</i>, <i>Echo</i> and <i>Pitch</i>. <i>New sound</i> throws another sound and keeps the melody, <i>New pattern</i> another melody on the same sound, <i>Lock</i> keeps the current bars exactly as they are.</p><p><b>Your own line:</b> <i>Rec 2 bars</i> records one from your MIDI keys (a count-in, then two bars, quantized with the drums' swing). <b>Mine | Auto</b> switches between your line and the Lead's own.</p></details></dd>
+    <dt>Candy</dt><dd>Tiny sounds without a key, in the gaps of the drums, as in microhouse: clicks, blips, ticks, crackle, squelches, atonal pings, or grains cut from the field recording. Off by default. <i>Amount</i> sets how many, <i>Size</i> how long, <i>Gaps</i> how much they keep out of the drums' way, <i>Space</i> adds reverb and dub echo. Six sounds and a two-bar motif come back with small changes; <i>New candy</i> throws a new set.</dd>
     <dt>Texture</dt><dd>A field recording far under the drums, as a background texture: a place rather than an instrument, in the spirit of Chris Watson and Jake Muir. Off by default.<details class="g-more"><summary>More</summary><p>Seven recordings by Félix Blume, all CC0 (public domain): a castle moat through hydrophones, a forest at night in Mexico, wind in a wire fence, dawn in the Amazon, ice on an alpine lake, a night in Port-au-Prince with the city far away, and a contact microphone on a bat nest. <i>Your file…</i> plays your own recording; it stays in this browser.</p><p><b>Filter</b> darkens it (left) or thins it out of the way of the drums (right). <b>Distance</b> pushes the place away: darker, quieter, more reverb. <b>Drift</b> lets the recording come apart into slow, overlapping grains at lower speeds, so it floats instead of running. <b>Tune</b> sends it through narrow filters on the tones of the current chord, so wind, water or insects start to sing the harmony. The low drums duck it a little. Everything is seeded, so the export sounds as you hear it, and loops without a seam.</p></details></dd>
     <dt>Magic</dt><dd>Seven characters that work on the sound, not the rhythm. <i>Amount</i> says how far; everything stays in tune and in the export.<details class="g-more"><summary>More</summary><p><b>Breath</b>: gentle life in timing and dynamics. <b>Resonate</b>: sympathetic strings on your key that ring with every stroke; <i>Chord</i> picks their notes (and with Chords on they follow the scheme). <b>Comb</b>: a tuned comb that moves to another note every two bars. <b>Air</b>: harmonics and sheen on top. <b>Formant</b>: two vowel filters, as if the kit speaks. <b>Cosmos</b>: a drifting echo after the SOMA Cosmos, two echo lines that drift apart and meet again. <b>Ghosts</b>: a tiny grain of a hit comes back a few steps later, quiet and far left or right.</p><p><b>Decay</b> sets how long Resonate rings and Comb and Cosmos repeat. <b>Every</b> sends only every 2nd to 8th hit into Magic; the rest stays dry. <b>Echo</b> gives Magic its own dub echo. With Ghosts, <b>Chance</b> sets how often and <b>Hard</b> how present.</p></details></dd>
   </dl>
@@ -4039,6 +4045,44 @@ function fldUI(){ const sel=$('fldSel'), nm=$('fldName'), cr=$('fldCred'); if(!s
   if(id==='own'){ a=FLD.own?FLD.ownName:'No file yet'; b=FLD.own?'your recording, kept in this browser':'Your file… picks one'; }
   else { a=I[1]; b=FLD.buf[id]?'Félix Blume · CC0':FLD.err?'could not load the recording (public/field)':S.fx.fldOn?'loading…':'Félix Blume · CC0'; ti=I[2]+' Recorded by Félix Blume, freesound.org/s/'+I[3]+' (CC0, public domain).'; }
   if(nm.textContent!==a) nm.textContent=a; if(cr.textContent!==b) cr.textContent=b; nm.parentNode.title=ti; }
+/* ---------- Candy (v180; Jesse: ear candy instead of a big texture: small sounds without a key that make the rhythm more interesting, as in
+   microhouse, Akufen, Villalobos, Herbert). A palette of six tiny sounds per eight bars (clicks, blips, ticks, crackle, squelch, atonal
+   pings, or grains cut from a field recording), placed on the sixteenths of a two-bar motif that comes back with small changes, mostly in
+   the gaps of the drums. Everything is seeded by the step, so the export sounds as you hear it. ---------- */
+const CD_TRIM=1.6, CD_KINDS=['click','blip','tick','crackle','squelch','ping'], CD_NORM={click:3.5,blip:.92,tick:3.3,crackle:1.7,squelch:2.25,ping:.75,grain:11};   /* measured: each kind at about the same loudness */
+function buildCandy(ctx,master,rvIn){ const bus=ctx.createGain(), hp=bq(ctx,'highpass',160,.7), out=ctx.createGain(), send=ctx.createGain(); out.gain.value=0; send.gain.value=0; bus.connect(hp).connect(out).connect(master); out.connect(send).connect(rvIn); const dub=buildDub(ctx,out,master); return {bus,out,send,dub}; }
+function cdLive(){ const F=S.fx; return !!F.cdOn && S.renderOnly==null && (F.cdLvl??.5)>.005; }
+function cdSeed(){ return (S.fx.cdSeed??1)>>>0; }
+function cdSrc(){ const v=S.fx.cdSrc; return v==='synth'||v==='field'?v:'both'; }
+function cdFid(){ const id=S.fx.fldSrc; return id&&id!=='own'&&FLD_SRC.some(x=>x[0]===id)?id:'ice'; }
+function cdBuf(){ return FLD.buf[cdFid()]||null; }
+function cdSync(G){ const C=G&&G.cd; if(!C) return; const on=cdLive(), live=!(G.ctx instanceof OfflineAudioContext), set=(p,v)=>{ if(live) p.setTargetAtTime(v,G.ctx.currentTime,.05); else p.value=v; }, sp=S.fx.cdSpace??.3;
+  set(C.out.gain,on?Math.pow(S.fx.cdLvl??.5,1.3)*CD_TRIM:0); set(C.send.gain,on?.55*sp:0); dubSync(G,C.dub,.5+.5*Math.max(0,(sp-.25)/.75),on&&sp>.25);
+  if(on&&cdSrc()!=='synth'&&!cdBuf()) fldLoad(cdFid()); }
+const CD_PAL=new Map();
+function cdPalette(b){ const sd=cdSeed(), src=cdSrc(), fb=!!cdBuf(), k=sd+'|'+b+'|'+src+'|'+fb; let P=CD_PAL.get(k); if(P) return P;
+  const r=x=>rnd(sd,b*131+x,0xCA11);
+  P=[0,1,2,3,4,5].map(i=>{ const q=x=>r(i*16+x), grain=fb&&(src==='field'||(src==='both'&&q(1)<.45));
+    return {kind:grain?'grain':CD_KINDS[Math.floor(q(2)*CD_KINDS.length)%CD_KINDS.length], f:300*Math.pow(2,q(3)*5.2), q:1.5+q(4)*9, dur:.012+q(5)*.07, rate:.5*Math.pow(2,q(6)*2.4), pos:q(7), pan:(q(8)*2-1)*.75, g:.55+.45*q(9), n:3+Math.floor(q(10)*4)}; });
+  CD_PAL.set(k,P); if(CD_PAL.size>64) CD_PAL.delete(CD_PAL.keys().next().value); return P; }
+function cdHit(ctx,G,t,x,v,size){ const C=G.cd, sd=cdSeed(), dur=x.dur*(.3+1.7*size), pn=ctx.createStereoPanner(), g=ctx.createGain(); pn.pan.value=x.pan; g.connect(pn).connect(C.bus); const pk=v*x.g*(CD_NORM[x.kind]||1);
+  const nz=(t0,d,f,q)=>{ const s0=ctx.createBufferSource(); s0.buffer=noiseBuf(ctx); const f1=bq(ctx,'bandpass',f,q); s0.connect(f1).connect(g); s0.start(t0,(x.pos*1.7)%1.8,d+.03); return f1; };
+  if(x.kind==='grain'){ const B=cdBuf(); if(!B) return; const s0=ctx.createBufferSource(); s0.buffer=B; s0.playbackRate.value=x.rate; const h=bq(ctx,'highpass',Math.min(4000,x.f*.4),.7); s0.connect(h).connect(g); const off=x.pos*Math.max(0,B.duration-1); s0.start(t,off,dur*x.rate+.02); env(g,t,pk*1.4,dur,.003); return; }
+  if(x.kind==='click'){ nz(t,dur*.5,x.f,x.q); env(g,t,pk*2.2,dur*.5,.001); return; }
+  if(x.kind==='tick'){ const o=ctx.createOscillator(), h=bq(ctx,'highpass',1500,.7); o.type='square'; o.frequency.value=x.f; o.connect(h).connect(g); o.start(t); o.stop(t+.012); env(g,t,pk*.5,.006,.0005); return; }
+  if(x.kind==='blip'){ const o=ctx.createOscillator(); o.frequency.setValueAtTime(Math.min(9000,x.f*.6),t); o.frequency.exponentialRampToValueAtTime(Math.max(60,x.f*.12),t+dur); o.connect(g); o.start(t); o.stop(t+dur+.03); env(g,t,pk*.8,dur,.001); return; }
+  if(x.kind==='ping'){ const o=ctx.createOscillator(), m=ctx.createOscillator(), mg=ctx.createGain(); o.frequency.value=x.f*.5; m.frequency.value=x.f*.5*1.41; mg.gain.value=x.f*.2; m.connect(mg).connect(o.frequency); o.connect(g); o.start(t); m.start(t); o.stop(t+dur*2.5+.05); m.stop(t+dur*2.5+.05); env(g,t,pk*.6,dur*2.5,.001); return; }
+  if(x.kind==='squelch'){ const f1=nz(t,dur*1.5,x.f,Math.max(8,x.q*1.5)); f1.frequency.setValueAtTime(x.f*1.8,t); f1.frequency.exponentialRampToValueAtTime(Math.max(200,x.f*.4),t+dur*1.5); env(g,t,pk*3,dur*1.5,.002); return; }
+  if(x.kind==='crackle'){ g.gain.value=pk*1.6; for(let k=0;k<x.n;k++){ const tk=t+rnd(sd,Math.round(t*1000)+k,0xC7)*dur*1.5, s0=ctx.createBufferSource(), e=ctx.createGain(); s0.buffer=noiseBuf(ctx); const h=bq(ctx,'highpass',2500,.7); s0.connect(h).connect(e).connect(g); e.gain.setValueAtTime(.7,tk); e.gain.exponentialRampToValueAtTime(.001,tk+.004); s0.start(tk,(k*.37)%1.8,.01); } } }
+function cdStep(ctx,G,g,t){ if(!G.cd||!cdLive()) return; const F=S.fx, BL=4*S.res, bar=Math.floor(g/BL), s=g%BL, sd=cdSeed(), amt=F.cdAmt??.35, size=F.cdSize??.35, gap=F.cdGap??.7, motif=Math.floor(bar/4), ph=bar%2;
+  const P=cdPalette(Math.floor(bar/8)), d=gap>0?leadDrum(g):0, w=(s%S.res===0?.55:s%2?1:.8)*(1-gap*.85*d);
+  let u=rnd(sd,motif*977+ph*64+s,0xC1); if(rnd(sd,g,0xC2)<.15) u=rnd(sd,g,0xC5);   /* the motif comes back every two bars, a few steps change */
+  if(u>amt*.7*w) return;
+  const x=P[Math.floor(rnd(sd,motif*977+ph*64+s,0xC3)*6)%6], sdur=stepDur(S), t0=t+grooveOff(g,S,sdur)+(rnd(sd,g,0xC4)-.5)*.12*sdur, v=.55+.45*rnd(sd,g,0xC6);
+  const now=ctx.currentTime||0; cdHit(ctx,G,Math.max(now,t0),x,v,size);
+  if(rnd(sd,g,0xC8)<.12*amt) cdHit(ctx,G,Math.max(now,t0+sdur*.5),x,v*.7,size); }   /* now and then a 32nd repeat, skippy */
+function cdUI(){ const n=$('cdName'), i=$('cdInfo'); if(!n||!window.WorpEngine) return; const P=cdPalette(0), nm=WorpEngine.genName(cdSeed(),0); if(n.textContent!==nm) n.textContent=nm; const k=[...new Set(P.map(x=>x.kind))].join(' · '); if(i.textContent!==k) i.textContent=k;
+  document.querySelectorAll('#cdSrc button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.s===cdSrc()))); }
 function leadLive(){ const F=S.fx; return !!F.leadOn && (S.renderOnly==null||S.renderOnly===-2) && (F.leadLvl??.5)>.005; }   // -2: the lead stem
 function leadSpec(){ const F=S.fx; if(!F.wlead||!F.wlead.seed) F.wlead={seed:worpSeed(),mix:[1,1,1,1],mute:[false,false,false,false]}; return F.wlead; }
 function leadSync(G){ const L=G&&G.lead; if(!L) return; const on=leadLive(), l=S.fx.leadLvl??.5, live=!(G.ctx instanceof OfflineAudioContext), setG=(pr,v)=>{ if(live) pr.setTargetAtTime(v,G.ctx.currentTime,.05); else pr.value=v; };
@@ -4168,9 +4212,9 @@ function buildGraph(ctx,opts={}){
     return {in:inp,sh,dg,sc,g,p,rs,ds,rG,eG,mG,reg:I.reg}; });
   const dlAll=ctx.createGain(), dlHp=bq(ctx,'highpass',250,.7); dlAll.gain.value=0; lanes.forEach(l=>l.eG.connect(dlHp)); dlHp.connect(dlAll).connect(dl.in);   // Delay Send: the whole kit, above 250 Hz
   const mg=opts.dry?null:buildMagic(ctx,master,lanes,rv.in); if(mg) mg.duck=duck;
-  const pad=buildPad(ctx,master,rv.in), lead=buildLead(ctx,master,rv.in), fld=buildField(ctx,master,rv.in);
+  const pad=buildPad(ctx,master,rv.in), lead=buildLead(ctx,master,rv.in), fld=buildField(ctx,master,rv.in), cd=buildCandy(ctx,master,rv.in);
   let worpTap=null; if(scopeTap){ worpTap={}; [['pad',pad],['lead',lead]].forEach(([k,u])=>{ if(!u||!u.out) return; const a=ctx.createAnalyser(); a.fftSize=2048; u.out.connect(a); worpTap[k]=a; }); }   /* v139: Worp's ring reads these */
-  const G={ctx,master,vol,scopeTap,worpTap,capNode:ceil,dlAll,lanes,fat:-1,rv,dl,dry:!!opts.dry,mg,pad,lead,fld,vet,room,eq:{eqL,eqM,eqH,eqC,fin,fout,wk:null},scBus}; syncGraph(G); attachFilter(G); return G;
+  const G={ctx,master,vol,scopeTap,worpTap,capNode:ceil,dlAll,lanes,fat:-1,rv,dl,dry:!!opts.dry,mg,pad,lead,fld,cd,vet,room,eq:{eqL,eqM,eqH,eqC,fin,fout,wk:null},scBus}; syncGraph(G); attachFilter(G); return G;
 }
 /* v148 Room (Jesse: softly on by default): early reflections of a small wooden room, 5 to 29 ms, the left and right taps
    different and fed partly from the other side, so every drum stands in a space instead of as a dry point in the middle. Low end
@@ -4216,7 +4260,7 @@ const lfoHz=x=>.05*Math.pow(240,x);   // free rate: 0.05 to 12 Hz
 function lfoPeriod(){ if(S.fx.fFree) return 1/lfoHz(S.fx.fHz??.4); const loop=S.bars*4*S.res*stepDur(S), r=S.fx.fRate||0, n=[1,S.bars,S.bars*2,S.bars*4][r]||1; return Math.max(.05,loop/n); }
 function cutPos(f){ return Math.max(0,Math.min(1,Math.log(f/150)/Math.log(20000/150))); }
 function cutHz(x){ return x>=.999?20000:Math.round(150*Math.pow(20000/150,x)); }
-function syncFx(G){
+function syncFx(G){ cdSync(G);
   const F=S.fx, c=G.ctx, now=c.currentTime||0;
   if(G.eq){ const E=G.eq, m=Math.max(0,FMODELS.indexOf(F.fModel)), res=F.eqRes||0; pv(G,E.eqL.gain,F.eqLow); pv(G,E.eqM.gain,F.eqMid); pv(G,E.eqH.gain,F.eqHigh);
     if(E.wk){ E.eqC.frequency.value=20000; E.eqC.Q.value=.6; }
@@ -4286,7 +4330,7 @@ function flamGuard(evs,go){ const live=evs.filter(e=>!e.silent); if(live.length<
 const mgQ=(g,i,k)=>{ const LL=S.bars*4*S.res; return rnd(S.seed+k+Math.floor(g/LL)*31,((g%LL)+LL)%LL,i); };   // seeded per loop cycle
 function scheduleStep(ctx,G,g,t,vis){
   if(ctx===actx&&MORPH.on) morphStep(g);   // v104: morph between scenes, live only
-  padBar(ctx,G,g,t); leadBar(ctx,G,g,t); bloomStep(G,g,t); fldStep(ctx,G,g,t);
+  padBar(ctx,G,g,t); leadBar(ctx,G,g,t); bloomStep(G,g,t); fldStep(ctx,G,g,t); cdStep(ctx,G,g,t);
   if(G.mg && g%(S.bars*4*S.res)===0) magicSync(G);
   const cosEr=G.mg?cosmosErase(G,g,t):false; if(G.mg){ combStep(G,g,t,G.ctx instanceof OfflineAudioContext); formantStep(G,g,t); resStep(G,g,t,G.ctx instanceof OfflineAudioContext); }
   const sd=stepDur(S), go=grooveOff(g,S,sd); const evs=eventsAt(g,S);
@@ -4845,6 +4889,16 @@ function initControls(){
     $('worpMutes').onclick=e=>{ const b=e.target.closest('.wm'); if(!b) return; const W=worpSpec(), i=+b.dataset.i; W.mute[i]=!W.mute[i]; save(); worpUI(); };
     cb.onchange=()=>{ S.fx.padOn=cb.checked; u(); padSync(AG); save(); };
   }
+  { const cb=$('cdOn'), U=$('cdU');   /* v180 Candy */
+    const mk=(label,key,def,tt)=>{ const k=makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; cdSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)}); k.title=tt+' · drag, double-click resets'; return k; };
+    const kl=mk('Level','cdLvl',.5,'Volume of the candy'), ka=mk('Amount','cdAmt',.35,'How many little sounds: from now and then to busy'), kz=mk('Size','cdSize',.35,'How long each sound is: a dry click to the left, a longer squelch or grain to the right'),
+      kg=mk('Gaps','cdGap',.7,'How much the candy keeps out of the way of the drums: to the right it plays mostly where the drums rest'), ks=mk('Space','cdSpace',.3,'Reverb, and above a quarter a dub echo');
+    [kl,ka,kz,kg].forEach(k=>k.classList.add('big','mgk')); const sr=document.createElement('div'); sr.className='lvw lsound'; sr.append(kl,ka,kz,kg); const mr=document.createElement('div'); mr.className='lvw lmix'; mr.append(ks); const row=$('cdSlot').parentNode; $('cdSlot').replaceWith(sr); row.after(mr);
+    const u=()=>{ cb.checked=!!S.fx.cdOn; U.classList.toggle('off',!S.fx.cdOn); [kl,ka,kz,kg,ks].forEach(k=>k.upd()); cdUI(); }; u(); UPD.push(u);
+    cb.onchange=()=>{ S.fx.cdOn=cb.checked; u(); cdSync(AG); save(); };
+    document.querySelectorAll('#cdSrc button').forEach(b=>b.onclick=()=>{ S.fx.cdSrc=b.dataset.s; cdSync(AG); save(); cdUI(); status(b.dataset.s==='synth'?'Candy: synthesized sounds only.':b.dataset.s==='field'?'Candy: grains of the field recording.':'Candy: synthesized sounds and grains.'); });
+    $('cdNew').onclick=()=>{ hRecord(()=>{ S.fx.cdSeed=worpSeed(); S.fx.cdOn=true; }); updHist(); save(); u(); cdSync(AG); status('New candy: '+WorpEngine.genName(cdSeed(),0)+'.'); };
+  }
   { const cb=$('fldOn'), U=$('fldU'), sel=$('fldSel');   /* v168 Field */
     const mk=(label,key,def,sync=true)=>makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; if(sync) fldSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)});
     const kl=mk('Level','fldLvl',.4), kd=mk('Distance','fldDist',.35), kr=mk('Drift','fldDrift',0), kt=mk('Tune','fldTune',0);
@@ -5187,7 +5241,7 @@ const EXPORT_SR=48000;   // 48 kHz: Ableton converts to the project rate, the 10
 function loopLen(sr){ return Math.round(S.bars*4*S.res*stepDur(S)*sr); }
 // One seamless loop, exactly as it is exported: rendered offline, tail folded back to the start, pre-roll onto the end.
 async function renderLoop(dry,sr=EXPORT_SR){ S.exporting=true; try{ return await renderLoopX(dry,sr); } finally{ S.exporting=false; varCache.clear(); } }
-async function renderLoopX(dry,sr){ if(S.fx.fldOn) await fldLoad(); const total=S.bars*4*S.res, sd=stepDur(S), dur=total*sd, n=loopLen(sr);
+async function renderLoopX(dry,sr){ if(S.fx.fldOn) await fldLoad(); if(S.fx.cdOn&&cdSrc()!=='synth') await fldLoad(cdFid()); const total=S.bars*4*S.res, sd=stepDur(S), dur=total*sd, n=loopLen(sr);
     const PRE=.05, pn=Math.round(PRE*sr);   // pre-roll: hits pushed early (negative Push, flam grace notes) on step 0 are not lost
   const tail=dry?2:fxTail(); const oc=new OfflineAudioContext(2,pn+Math.ceil((dur+tail)*sr),sr); await loadFilter(oc); const G=buildGraph(oc,{dry,export:true}); G.t0=PRE; magicWorklet(G); syncFx(G); magicSync(G);
       for(let g=0;g<total;g++) scheduleStep(oc,G,g,PRE+g*sd,false);
@@ -5474,7 +5528,7 @@ function sceneRecall(k){ const sc=S.scenes[k]; if(!sc) return; onBar('scene:'+k,
    model, Magic mode, pad type or Worp pad, tuning) changes halfway. A rhythm on another grid (16ths against triplets) or a
    track whose length differs changes halfway too. The export always renders the scene as stored. */
 const MORPH={on:false};
-const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx','leadRg','leadDr','leadMove','fldLvl','fldDist','fldDrift','fldTune','fldRv','fldEc','fldFlt'];
+const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx','leadRg','leadDr','leadMove','cdLvl','cdAmt','cdSize','cdGap','cdSpace','fldLvl','fldDist','fldDrift','fldTune','fldRv','fldEc','fldFlt'];
 function morphCap(){ return {lanes:S.lanes.map(L=>{ const o={steps:L.steps.slice(),len:L.len,tpl:L.tpl,btpl:L.btpl,blen:L.blen,eu:L.eu,mute:L.mute,solo:L.solo,tune:L.tune,col:L.col,choke:L.choke};
       MLANE.forEach(f=>o[f]=L[f]); return o; }), fx:JSON.parse(JSON.stringify(S.fx)), fat:S.fat, swing:S.swing, humanize:S.humanize, res:S.res}; }
 function morphStart(sc,k){ const A=morphCap(); hRecord(()=>hApply(sc)); S.sceneCur=k; updHist();

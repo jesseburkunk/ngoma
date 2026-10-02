@@ -235,6 +235,15 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     assert(r.ok && r.rms.every(x => x > .002), 'Plaits lead silent ' + JSON.stringify(r)); assert(r.diff > 1, 'seeds sound the same'); assert(r.keys, 'keys made no Plaits voice'); assert(r.ovr && r.row && r.mv > .002, 'Plaits knobs ' + JSON.stringify(r));
     return r.pre.join(', ') + ' · rms ' + r.rms.join(' / '); });
 
+  await check('Candy: tiny sounds render, seeded, grains from the recording', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx), o = {};
+      S.bars = 1; Object.assign(S.fx, { leadOn: false, padOn: false, fldOn: false, cdOn: true, cdSrc: 'synth', cdAmt: .6 }); S.lanes.forEach(L => L._m = L.mute); S.lanes.forEach(L => L.mute = true);
+      const a = await renderLoop(false, 22050), b = await renderLoop(false, 22050); let d = 0; for (let i = 0; i < a[0].length; i += 3) d += Math.abs(a[0][i] - b[0][i]); o.synth = rms(a[0]); o.det = d;
+      S.fx.cdSrc = 'field'; await fldLoad(cdFid()); const c = await renderLoop(false, 22050); o.field = rms(c[0]); o.kinds = cdPalette(0).map(x => x.kind).join();
+      S.fx.cdOn = false; const z = await renderLoop(false, 22050); o.off = rms(z[0]);
+      S.lanes.forEach(L => L.mute = L._m); Object.assign(S.fx, JSON.parse(keep)); return o; }, rmsJS);
+    assert(r.synth > .001 && r.field > .0005, 'candy silent ' + JSON.stringify(r)); assert(r.det < .01, 'not seeded: ' + r.det); assert(r.off < .0005, 'candy plays when off'); assert(/grain/.test(r.kinds), 'no grains from the recording');
+    return 'synth ' + r.synth.toFixed(4) + ', field ' + r.field.toFixed(4); });
+
   await check('Bloom: renders, the tail sings and stays in bounds', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
       Object.assign(S.fx, { rvOn: true, rvType: 'hall', rvLevel: .5 }); const a = await renderLoop(false, 22050); S.fx.rvType = 'bloom'; const b = await renderLoop(false, 22050);
       let pk = 0; for (const v of b[0]) pk = Math.max(pk, Math.abs(v)); const hz = bloomHz(0); Object.assign(S.fx, JSON.parse(keep)); return { ra: rms(a[0]), rb: rms(b[0]), pk, hz }; }, rmsJS);
