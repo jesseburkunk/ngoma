@@ -55,6 +55,13 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
         S.fx.padOn = false; const d = await renderLoop(false, 22050); S.fx.padOn = true; S.renderOnly = -1; const pd = await renderLoop(false, 22050); S.renderOnly = null; out.push(+(db(rms(pd[0])) - db(rms(d[0]))).toFixed(1)); }
       S.fx.padOn = false; return out; }, rmsJS); assert(r.every(x => x > -21 && x < -11), 'pad vs drums dB ' + r.join(' ')); return 'pad ' + r.join(' / ') + ' dB under drums'; });
 
+  await check('Filter delay: Lead and Candy send into it, repeats in bounds', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
+      Object.assign(S.fx, { leadOn: true, leadEc: 0, leadRv: 0, leadFd: 0, wlead: { seed: 4242, mix: [1, 1, 1, 1], mute: [false, false, false, false] } });
+      S.renderOnly = -2; const a = await renderLoop(false, 22050); S.fx.leadFd = 1; const c = await renderLoop(false, 22050); S.renderOnly = null;
+      let pk = 0; for (const v of c[0]) pk = Math.max(pk, Math.abs(v)); const wet = rms(c[0].map((x, i) => x - a[0][i])) / rms(a[0]);
+      const kn = [...document.querySelectorAll('.knob .kl')].filter(e => e.textContent === 'F.Delay').length; Object.assign(S.fx, JSON.parse(keep)); return { wet, pk, kn }; }, rmsJS);
+    assert(r.kn === 2, 'F.Delay knobs ' + r.kn); assert(r.wet > .15 && r.wet < 1.5, 'wet/dry ' + r.wet.toFixed(2)); assert(r.pk < 1, 'peak ' + r.pk.toFixed(3)); return 'wet ' + (20 * Math.log10(r.wet)).toFixed(1) + ' dB vs dry at 100%'; });
+
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
       for (let i = 0; i < MG_MODES.length; i++) { S.fx.mgMode = i; const w = await renderLoop(false, 22050), v = rms(w[0]); if (!(v > .002)) bad.push(MG_NAMES[i] + ':' + (v < 0 ? 'NaN' : v.toFixed(4))); }
       S.fx.mgOn = false; return { n: MG_MODES.length, bad }; }, rmsJS); assert(!r.bad.length, r.bad.join(', ')); return r.n + ' modes'; });
