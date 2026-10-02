@@ -2,7 +2,7 @@ import sys
 src,css,out=sys.argv[1:4]
 s=open(src).read(); c=open(css).read()
 i=s.rindex('</style>'); s=s[:i]+c+'\n'+s[i:]
-bar='''<div class="skbar" id="skbar"><b>Proef huiden</b>
+bar='''<div class="skbar" id="skbar"><b>Skins</b>
 <span>Pad:</span><button data-g="pad" data-v="">Ngoma</button><button data-g="pad" data-v="sk-pad">Lijst</button>
 <span>Lead:</span><button data-g="lead" data-v="">Ngoma</button><button data-g="lead" data-v="sk-lead">Aluminium licht</button><button data-g="lead" data-v="sk-lead-d">Aluminium donker</button>
 <button id="skgo">Naar Layers</button></div>
