@@ -225,6 +225,7 @@ Open: save/load own patterns, MIDI import, test in real tracks.
 - v193: Filter delay, naar Ableton's Filter Delay: drie herhalingen op tempo (links gestippelde achtste, midden kwart, rechts achtste), elk door een eigen resonante band-pass die langzaam drijft, soft clip in de lus. Eén gedeelde unit; knop F.Delay bij Lead (mix-rij) en Candy (naast Space), standaard 0. Smoke: check Filter delay.
 - v194: Candy in de stems: Export zet stems/...-candy.wav erbij, net als de andere stems, en Rec (jam) neemt een candy-spoor op. Smoke: check Candy has its own stem.
 - v195: Cavacha: de surdo op elke tel zachter (mix 55%) en korter (gedempte slagen).
+- v196: Export: vinkje Whole cycle. Exporteert tot alles weer gelijk loopt: kleinste gemene veelvoud van de loop, elke spelende track met eigen lengte, Length en een hele Phase-ronde van de lead, en het akkoordschema; max 32 maten. De bestandsnaam noemt het aantal maten. Live spelen merkt er niets van. Smoke: check Whole cycle.
 - v172: Rec telt af (Jesse: met de maat, niet in procenten; twee maten lead-in): vanaf de volgende maatstreep twee maten klik op elke tel (hoger op de één), de knop telt de tellen af (In 8 ... In 1), daarna maat en tel van de opname (● 1·1 tot 2·4).
 - v168: de Worp-helft van de app-switch, de Worp-stip en Open in Worp in koper en Federo (was mint en Michroma), passend bij het nieuwe uiterlijk van Worp v1.26.
 

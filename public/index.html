@@ -1054,6 +1054,7 @@ input,select{accent-color:var(--accent)}
         <option value="gm">General MIDI percussion</option>
       </select></label>
     <label class="chk"><input id="stems" type="checkbox"> Stems</label>
+    <label class="chk" title="Export until everything lines up again: tracks with their own length (polymeter), the lead's Length and Phase, and the chord scheme. Up to 32 bars. Off: the loop as set."><input id="wholecyc" type="checkbox"> Whole cycle</label>
     <label class="chk" title="In the exported WAV, stems and MIDI, low strokes on the beat are left out, so your kick sits alone there. You always hear everything while playing; striped steps are the ones the export leaves out."><input id="kickroom" type="checkbox"> Leave room for kick</label>
     <button class="btn primary" id="export">Export loop (WAV + MIDI)</button>
     <span class="btn drag" id="dragwav" draggable="true" title="Drag the loop straight onto an audio track or a pad in your DAW (Chrome). Same WAV as Export: seamless, 48 kHz, -16 LUFS">Drag WAV</span>
@@ -5174,6 +5175,7 @@ $('resetkit').onclick=()=>{ hRecord(resetKit); syncGraph(AG); renderLanes(); upd
   $('compact').onclick=()=>{ S.compact=!S.compact; save(); renderLanes(); };
   // --- export extras
   $('stems').checked=S.stems; $('stems').onchange=()=>{ S.stems=$('stems').checked; save(); };
+  $('wholecyc').checked=!!S.wholeCyc; $('wholecyc').onchange=()=>{ S.wholeCyc=$('wholecyc').checked; save(); const c=cycleBars(); status(S.wholeCyc?(c.bars>S.bars?'Export runs '+Math.min(c.bars,CYC_MAX)+' bars, until everything lines up again'+(c.bars>CYC_MAX?' (the full cycle is '+c.bars+' bars; capped at '+CYC_MAX+')':'')+'.':'Everything already lines up within the loop.'):'Export runs the loop as set.'); };
   { const dw=$('dragwav'), dt=$('dragtake'), ob=$('outdir'), ox=$('outclr');
     if(IN_CLAUDE){ dw.hidden=true; dt.hidden=true; }
     else { ['pointerenter','focus','pointerdown'].forEach(t=>dw.addEventListener(t,()=>{ dwPrepare(); }));
@@ -5210,7 +5212,7 @@ async function loadShared(){
   try{ const o=JSON.parse(await inflate(b64u.dec(h.slice(3)))); applyPattern(o.pattern); applyKit(o.kit); afterLoad(); status('Loaded the shared pattern.'); history.replaceState(null,'',location.href.split('#')[0]); }
   catch(e){ status('The shared link could not be read.'); }
 }
-function fileBase(){ return `ngoma-${S.preset}-${S.bpm}bpm-${NOTE[S.key].replace('#','s')}m-${S.bars}bar`; }
+function fileBase(){ return `ngoma-${S.preset}-${S.bpm}bpm-${NOTE[S.key].replace('#','s')}m-${EXP_BARS||S.bars}bar`; }
 
 let mT; function mstatus(t){ const el=$('mstatus'); el.textContent=t; clearTimeout(mT); mT=setTimeout(()=>el.textContent='',8000); }
 
@@ -5313,10 +5315,10 @@ const EXPORT_SR=48000;   // 48 kHz: Ableton converts to the project rate, the 10
 function loopLen(sr){ return Math.round(S.bars*4*S.res*stepDur(S)*sr); }
 // One seamless loop, exactly as it is exported: rendered offline, tail folded back to the start, pre-roll onto the end.
 async function renderLoop(dry,sr=EXPORT_SR){ S.exporting=true; try{ return await renderLoopX(dry,sr); } finally{ S.exporting=false; varCache.clear(); } }
-async function renderLoopX(dry,sr){ if(S.fx.padOn&&(S.fx.padType|0)===7) await padMeasure(); if(S.fx.fldOn) await fldLoad(); if(S.fx.cdOn&&cdSrc()!=='synth') await fldLoad(cdFid()); const total=S.bars*4*S.res, sd=stepDur(S), dur=total*sd, n=loopLen(sr);
+async function renderLoopX(dry,sr){ if(S.fx.padOn&&(S.fx.padType|0)===7) await padMeasure(); if(S.fx.fldOn) await fldLoad(); if(S.fx.cdOn&&cdSrc()!=='synth') await fldLoad(cdFid()); const XB=EXP_BARS||S.bars, total=XB*4*S.res, sd=stepDur(S), dur=total*sd, n=Math.round(total*sd*sr);   /* v196: EXP_BARS, the whole cycle */
     const PRE=.05, pn=Math.round(PRE*sr);   // pre-roll: hits pushed early (negative Push, flam grace notes) on step 0 are not lost
-  const tail=dry?2:fxTail(); const oc=new OfflineAudioContext(2,pn+Math.ceil((dur+tail)*sr),sr); await loadFilter(oc); const G=buildGraph(oc,{dry,export:true}); G.t0=PRE; magicWorklet(G); syncFx(G); magicSync(G);
-      for(let g=0;g<total;g++) scheduleStep(oc,G,g,PRE+g*sd,false);
+  const tail=dry?2:fxTail(); const oc=new OfflineAudioContext(2,pn+Math.ceil((dur+tail)*sr),sr); await loadFilter(oc); const b0=S.bars; S.bars=XB; let G; try{ G=buildGraph(oc,{dry,export:true}); G.t0=PRE; magicWorklet(G); syncFx(G); magicSync(G);
+      for(let g=0;g<total;g++) scheduleStep(oc,G,g,PRE+g*sd,false); } finally{ S.bars=b0; }   // synchronous: live play never sees the longer loop
       if(!dry && S.fx.dlOn && S.fx.dlAnim>0) for(let tt=0;tt<dur+tail;tt+=.04) applyAnim(G,PRE+tt,tt,false);
       const buf=await oc.startRendering();
       // fold the tail back to the start and the pre-roll onto the end: the loop sounds as if it has been running forever
@@ -5488,12 +5490,22 @@ async function bbSend(){
   catch(err){ mstatus('Blackbox failed: '+((err&&err.message)||err)); }
   finally{ btns.forEach(b=>b.disabled=false); } }
 
-async function exportLoop(){
+/* v196 (Jesse: an option to export the whole cycle). The steps after which every part is back where it started: the least common
+   multiple of the loop, every playing track's own length, the lead's Length (and a full Phase round) and the chord scheme. */
+const CYC_MAX=32;
+function cycleBars(){ const BL=4*S.res, gcd=(a,b)=>b?gcd(b,a%b):a, lcm=(a,b)=>a/gcd(a,b)*b; let c=S.bars*BL;
+  S.lanes.forEach(L=>{ if(hasHits(L)&&!L.mute&&L.len>0) c=lcm(c,L.len|0); });
+  if(S.fx.leadOn){ const ll=leadLen()|0, PHN=S.fx.leadPh|0; if(ll) c=lcm(c,ll); if(PHN>0){ const PLn=ll||BL; c=lcm(c,PLn*PHN*PLn); } }
+  if(chOn()&&chLen()>0) c=lcm(c,chLen()|0); c=lcm(c,BL); return {steps:c,bars:c/BL}; }
+let EXP_BARS=0;
+async function exportLoop(){ const cy=S.wholeCyc?cycleBars():null; EXP_BARS=cy&&cy.bars>S.bars?Math.min(cy.bars,CYC_MAX):0;
+  try{ await exportLoopX(cy); } finally{ EXP_BARS=0; } }
+async function exportLoopX(cy){
   const btn=$('export');
   if(IN_CLAUDE && !downloadsNS){ status('Downloads are not available in this view. Open the page in the Claude app or a browser.'); return; }
   btn.disabled=true; status('Rendering loop…');
   try{
-    const total=S.bars*4*S.res, sr=EXPORT_SR, n=loopLen(sr), render=dry=>renderLoop(dry,sr);
+    const XB=EXP_BARS||S.bars, total=XB*4*S.res, sr=EXPORT_SR, n=Math.round(total*stepDur(S)*sr), render=dry=>renderLoop(dry,sr);
     const fxOn=(S.fx.rvOn||S.fx.dlOn) && S.lanes.some(L=>L.rev>0||L.dly>0);
     const wet=await render(false), dry=fxOn?await render(true):null;
     const stems=[];
@@ -5520,7 +5532,7 @@ async function exportLoop(){
     status('Ready to save…');
     const where=await deliver(files,base);
     const chW=chOn()&&chLen()>total?' The chord scheme is '+(chLen()/(4*S.res))+' bars long and this loop '+(total/(4*S.res))+': set Loop to '+(chLen()/(4*S.res))+' bars to get all of it.':'';   /* v164 */
-    status('Saved'+(where==='folder'?' in '+OUT.dir.name+': '+base+'.wav':': '+base+'.zip')+' with '+(dry?'WAV with effects, dry WAV, ':'WAV, ')+(stems.length?stems.length+' stems, ':'')+'MIDI'+(where==='folder'?'':' and pattern file')+'. 24-bit, 48 kHz, '+(isFinite(outLu)?Math.round(outLu)+' LUFS':'silent')+', peaks under -1 dBTP.'+chW);
+    status('Saved'+(where==='folder'?' in '+OUT.dir.name+': '+base+'.wav':': '+base+'.zip')+' with '+(dry?'WAV with effects, dry WAV, ':'WAV, ')+(stems.length?stems.length+' stems, ':'')+'MIDI'+(where==='folder'?'':' and pattern file')+'. 24-bit, 48 kHz, '+(isFinite(outLu)?Math.round(outLu)+' LUFS':'silent')+', peaks under -1 dBTP.'+(EXP_BARS?' Whole cycle: '+EXP_BARS+' bars'+(cy.bars>EXP_BARS?' (of '+cy.bars+')':'')+'.':'')+(EXP_BARS?'':chW));
   }catch(err){
     const code=err&&err.code;
     status(code==='declined'?'Save cancelled.':code==='rate_limited'?'A save dialog is already open.':'Export failed: '+((err&&err.message)||err));

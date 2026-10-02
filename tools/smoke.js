@@ -66,6 +66,11 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       S.renderOnly = -4; const a = await renderLoop(false, 22050); S.fx.cdOn = false; const b = await renderLoop(false, 22050); S.renderOnly = null; Object.assign(S.fx, JSON.parse(keep)); return { on: rms(a[0]), off: rms(b[0]) }; }, rmsJS);
     assert(r.on > .001 && r.off < .0002, JSON.stringify(r)); return 'candy stem rms ' + r.on.toFixed(4) + ', nothing else in it'; });
 
+  await check('Whole cycle: polymeter lengths add up, the export runs the full cycle, the loop stays', async () => { const r = await p.evaluate(async () => { const keep = JSON.stringify(S.fx), b0 = S.bars, L = S.lanes.find(x => hasHits(x) && !x.mute), l0 = L.len;
+      S.bars = 1; L.len = 12; S.fx.leadOn = false; const c = cycleBars(); EXP_BARS = Math.min(c.bars, CYC_MAX); const w = await renderLoop(false, 8000); const nb = EXP_BARS; EXP_BARS = 0; const one = await renderLoop(false, 8000);
+      const out = { bars: c.bars, ratio: w[0].length / one[0].length, live: S.bars, nb }; L.len = l0; S.bars = b0; Object.assign(S.fx, JSON.parse(keep)); return out; });
+    assert(r.bars === 3 && Math.abs(r.ratio - 3) < .01 && r.live === 1, JSON.stringify(r)); return 'lane of 12 steps in a 1-bar loop: ' + r.bars + ' bars'; });
+
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
       for (let i = 0; i < MG_MODES.length; i++) { S.fx.mgMode = i; const w = await renderLoop(false, 22050), v = rms(w[0]); if (!(v > .002)) bad.push(MG_NAMES[i] + ':' + (v < 0 ? 'NaN' : v.toFixed(4))); }
       S.fx.mgOn = false; return { n: MG_MODES.length, bad }; }, rmsJS); assert(!r.bad.length, r.bad.join(', ')); return r.n + ' modes'; });
