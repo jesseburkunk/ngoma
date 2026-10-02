@@ -33,6 +33,8 @@ for id in IDS:
     if p > lim: loop = np.tanh(loop / lim * .9) * lim / np.tanh(.9) if p > 2*lim else loop * (lim / p)
     out = 'public/field/%s.mp3' % id
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', str(ch), '-i', '-', '-c:a', 'libmp3lame', '-b:a', '128k' if ch > 1 else '96k', out], input=loop.astype(np.float32).tobytes(), check=True)
+    import base64   # v169: the same mp3 wrapped in a script, so Ngoma also finds it when opened as a file (file://, Max for Live)
+    open('public/field/%s.js' % id, 'w').write("(window.NGOMA_FIELD=window.NGOMA_FIELD||{})['%s']='%s';\n" % (id, base64.b64encode(open(out, 'rb').read()).decode()))
     rep[id] = {'from_s': round(s0 / SR, 1), 'len_s': round(L / SR, 1), 'ch': ch, 'score': round(best, 2), 'kb': os.path.getsize(out) // 1024}
     print(id, rep[id])
 json.dump(rep, open('public/field/cuts.json', 'w'), indent=1)

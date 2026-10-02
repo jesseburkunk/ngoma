@@ -3793,9 +3793,13 @@ function fldNorm(b){ let s=0,n=0; for(let c=0;c<b.numberOfChannels;c++){ const d
 function fldDecode(ab){ return new Promise((res,rej)=>{ const oc=new OfflineAudioContext(2,1,48000); const p=oc.decodeAudioData(ab,res,rej); if(p&&p.then) p.then(res,rej); }); }
 function fldLoad(id){ id=id||fldId(); if(id==='own') return FLD.own?Promise.resolve(FLD.own):fldOwnLoad();
   if(FLD.buf[id]) return Promise.resolve(FLD.buf[id]); if(FLD.load[id]) return FLD.load[id];
-  return FLD.load[id]=fetch('field/'+id+'.mp3').then(r=>{ if(!r.ok) throw new Error(r.status); return r.arrayBuffer(); }).then(fldDecode)
+  const viaScript=()=>new Promise((res,rej)=>{ const W=window.NGOMA_FIELD; if(W&&W[id]) return res(W[id]); const sc=document.createElement('script'); sc.src='field/'+id+'.js';
+      sc.onload=()=>{ const v=window.NGOMA_FIELD&&window.NGOMA_FIELD[id]; v?res(v):rej(new Error('empty')); }; sc.onerror=()=>rej(new Error('no script')); document.head.append(sc); })
+    .then(b64=>{ const bin=atob(b64), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); delete window.NGOMA_FIELD[id]; return u.buffer; });   /* v169: opened as a file (file://, Max for Live) fetch is not allowed, a script tag is */
+  const get=location.protocol==='file:'?viaScript():fetch('field/'+id+'.mp3').then(r=>{ if(!r.ok) throw new Error(r.status); return r.arrayBuffer(); }).catch(viaScript);
+  return FLD.load[id]=get.then(fldDecode)
     .then(b=>{ FLD.buf[id]=fldNorm(b); FLD.err=''; if(AG) fldSync(AG); fldUI(); return b; })
-    .catch(e=>{ delete FLD.load[id]; FLD.err=location.protocol==='file:'?'file':'net'; fldUI(); return null; }); }
+    .catch(e=>{ delete FLD.load[id]; FLD.err='net'; fldUI(); return null; }); }
 function fldOwnLoad(){ if(FLD.ownP) return FLD.ownP; return FLD.ownP=(async()=>{ const o=await kvGet('fldOwn'); if(!o||!o.ab) return null;
     try{ FLD.own=fldNorm(await fldDecode(o.ab.slice(0))); FLD.ownName=o.name||'Your file'; fldUI(); if(AG) fldSync(AG); return FLD.own; }catch(e){ return null; } })(); }
 async function fldOwnSet(file){ try{ const ab=await file.arrayBuffer(), b=await fldDecode(ab.slice(0)); FLD.own=fldNorm(b); FLD.ownName=file.name.replace(/\.[^.]+$/,'').slice(0,60); FLD.ownP=Promise.resolve(FLD.own); kvSet('fldOwn',{name:FLD.ownName,ab}); return true; }catch(e){ return false; } }
@@ -3828,7 +3832,7 @@ function fldStep(ctx,G,g,t){ const P=G&&G.fld; if(!P||!P.on) return; const b=fld
 function fldDuck(G,t,v){ const P=G&&G.fld; if(!P||!P.on) return; const d=P.duck.gain, k=.3*Math.min(1,v); d.cancelScheduledValues(t); d.setTargetAtTime(1-k,t,.008); d.setTargetAtTime(1,t+.07,.22); }   /* the low drums push the place back a little */
 function fldUI(){ const sel=$('fldSel'), nm=$('fldName'), cr=$('fldCred'); if(!sel||!nm) return; const id=fldId(), I=fldInfo(id); if(sel.value!==id) sel.value=id; let a, b, ti='';
   if(id==='own'){ a=FLD.own?FLD.ownName:'No file yet'; b=FLD.own?'your recording, kept in this browser':'Your file… picks one'; }
-  else { a=I[1]; b=FLD.buf[id]?'Félix Blume · CC0':FLD.err==='file'?'open Ngoma from a web address':FLD.err?'could not load the recording':S.fx.fldOn?'loading…':'Félix Blume · CC0'; ti=I[2]+' Recorded by Félix Blume, freesound.org/s/'+I[3]+' (CC0, public domain).'; }
+  else { a=I[1]; b=FLD.buf[id]?'Félix Blume · CC0':FLD.err?'could not load the recording (public/field)':S.fx.fldOn?'loading…':'Félix Blume · CC0'; ti=I[2]+' Recorded by Félix Blume, freesound.org/s/'+I[3]+' (CC0, public domain).'; }
   if(nm.textContent!==a) nm.textContent=a; if(cr.textContent!==b) cr.textContent=b; nm.parentNode.title=ti; }
 function leadLive(){ const F=S.fx; return !!F.leadOn && (S.renderOnly==null||S.renderOnly===-2) && (F.leadLvl??.5)>.005; }   // -2: the lead stem
 function leadSpec(){ const F=S.fx; if(!F.wlead||!F.wlead.seed) F.wlead={seed:worpSeed(),mix:[1,1,1,1],mute:[false,false,false,false]}; return F.wlead; }

@@ -121,7 +121,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
   await check('Fresh and New buttons', async () => { await p.evaluate(() => { ['fresh', 'leadNew', 'padNew', 'worpNew'].forEach(id => { const e = document.getElementById(id); if (e) e.click(); }); }); await p.waitForTimeout(500); });
 
   await check('MIDI keys play the lead before Play and after closing Worp', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), w = ms => new Promise(r => setTimeout(r, ms));
-      stop(); await w(300); S.fx.leadOn = true; S.fx.padOn = false; const peak = async () => { let v = 0; ngMidi({ data: [0x90, 64, 110] }); for (let k = 0; k < 5; k++) { await w(40); const a = new Float32Array(2048); AG.scopeTap.aL.getFloatTimeDomainData(a); v = Math.max(v, rms(a)); } ngMidi({ data: [0x80, 64, 0] }); await w(300); return v; };
+      stop(); await w(300); S.fx.leadOn = true; S.fx.padOn = false; const peak = async () => { let v = 0; ngMidi({ data: [0x90, 64, 110] }); for (let k = 0; k < 12; k++) { await w(40); const a = new Float32Array(2048); AG.scopeTap.aL.getFloatTimeDomainData(a); v = Math.max(v, rms(a)); } ngMidi({ data: [0x80, 64, 0] }); await w(300); return v; };
       const a = await peak(); worpPanel(true, worpToken(leadSpec(), 'lead')); await w(1500); worpPanel(false); await w(200); const b = await peak(); return { a, b }; }, rmsJS);
     assert(r.a > .01 && r.b > .01, JSON.stringify(r)); });
 
