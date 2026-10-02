@@ -43,9 +43,10 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       S.fx.padOn = false; return bad; }, rmsJS); assert(!r.length, 'silent: ' + r.join(', ')); });
 
   await check('Lead sounds and sits in the mix', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), db = v => 20 * Math.log10(v + 1e-9), out = [];
-      S.bars = 2; S.fx.leadOn = true; S.fx.leadLvl = .5;
+      S.bars = 2; S.fx.leadOn = true; S.fx.leadLvl = .5;   /* v175: the loud moments (95th percentile of 50 ms windows), not the average, so a sparse line is not judged too soft */
+      const p95 = a => { const w = 1102, v = []; for (let i = 0; i + w <= a.length; i += w) { let e = 0; for (let j = i; j < i + w; j++) e += a[j] * a[j]; v.push(Math.sqrt(e / w)); } v.sort((x, y) => x - y); return v[Math.floor(v.length * .95)] || 0; };
       for (const sd of [4242, 12163, 20084]) { S.fx.wlead = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] }; await leadMeasure(S.fx.wlead);   /* v174: with its per-patch gain, as it plays live */
-        const m = await renderLoop(false, 22050); S.renderOnly = -2; const l = await renderLoop(false, 22050); S.renderOnly = null; out.push(+(db(rms(l[0])) - db(rms(m[0]))).toFixed(1)); }
+        const m = await renderLoop(false, 22050); S.renderOnly = -2; const l = await renderLoop(false, 22050); S.renderOnly = null; out.push(+(db(p95(l[0])) - db(p95(m[0]))).toFixed(1)); }
       return out; }, rmsJS); assert(r.every(x => x > -16 && x < -3), 'lead vs mix dB ' + r.join(' ')); return 'lead ' + r.join(' / ') + ' dB under mix'; });
 
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
@@ -234,6 +235,15 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     assert(r.notes > 8 && r.aaaa, 'AAAA does not repeat ' + JSON.stringify(r)); assert(r.r3, 'Rhythm 3 does not loop'); assert(r.qaEnd, 'the answer does not land on the root');
     assert(r.varied > 2, 'Vary changes nothing: ' + r.varied); assert(r.gaps < r.onBeats, 'Drums gaps did not thin the beats ' + r.gaps + '/' + r.onBeats); assert(r.newBtns && r.pn, 'New rhythm / New notes'); assert(r.rms > .002, 'lead silent ' + r.rms);
     return r.notes + ' notes in 8 bars, ' + r.varied + ' different phrases with Vary, beats ' + r.onBeats + ' > ' + r.gaps + ' in the gaps'; });
+
+  await check('Plaits lead: the seed picks the sound, the line plays, keys sound, export renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx), o = { pre: [], rms: [] };
+      S.bars = 1; Object.assign(S.fx, { leadOn: true, leadLvl: .6, padOn: false }); delete S.fx.leadEng; let prev = null; o.diff = 0;
+      for (const sd of [101, 202, 303]) { S.fx.wlead = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] }; o.pre.push(plPatch(sd).nm); S.renderOnly = -2; const b = await renderLoop(false, 22050); S.renderOnly = null; o.rms.push(+rms(b[0]).toFixed(4));
+        if (prev) { let d = 0; for (let i = 0; i < b[0].length; i += 7) d += Math.abs(b[0][i] - prev[i]); o.diff += d; } prev = b[0]; }
+      ensureCtx(); await loadFilter(actx); plKeys(AG).noteOn(64, .8, actx.currentTime + .05); o.keys = !!AG.plaits; o.ok = plOn();
+      Object.assign(S.fx, JSON.parse(keep)); return o; }, rmsJS);
+    assert(r.ok && r.rms.every(x => x > .002), 'Plaits lead silent ' + JSON.stringify(r)); assert(r.diff > 1, 'seeds sound the same'); assert(r.keys, 'keys made no Plaits voice');
+    return r.pre.join(', ') + ' · rms ' + r.rms.join(' / '); });
 
   await check('Bloom: renders, the tail sings and stays in bounds', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
       Object.assign(S.fx, { rvOn: true, rvType: 'hall', rvLevel: .5 }); const a = await renderLoop(false, 22050); S.fx.rvType = 'bloom'; const b = await renderLoop(false, 22050);
