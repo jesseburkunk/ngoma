@@ -1,0 +1,90 @@
+/* ===== v181 proef: Layers als eigen instrumenten (Jesse, 02-10). Pad = Worp 'Lijst' (Folktek: zwart gelakt bord, notenhouten lijst,
+   koper geëtst, licht = status, crème). Lead = aluminium met dunne zwarte lijnen (een knipoog naar Mutable, eigen accent: Ngoma-oranje,
+   trommelvel-ringen). Alleen CSS/SVG, geen afbeeldingen. Selectors onder body.sk-* zodat de proef kan wisselen. ===== */
+
+/* ---------- PAD: Lijst ---------- */
+body.sk-pad #padU{--cu:#cf8f5e;--cu-d:#8a5a38;--etch:#5c3d28;--ink:#ede4d0;--dim:#a09682;--lit:#f0e1b4;
+  border:11px solid transparent!important;border-radius:16px!important;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%237d6740' stroke-width='.9'%3E%3Cpath d='M2 6 H26 L34 14 V38'/%3E%3Cpath d='M2 10 H24 L30 16 V38' opacity='.55'/%3E%3C/g%3E%3Ccircle cx='2' cy='6' r='1.8' fill='%237d6740'/%3E%3C/svg%3E") top 6px right 6px/30px no-repeat padding-box,
+    linear-gradient(#13110d,#100e0b) padding-box,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300'%3E%3Cfilter id='w' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .2' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='.42 0 0 0 .06  .26 0 0 0 .03  .15 0 0 0 .015  0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='600' height='300' filter='url(%23w)'/%3E%3C/svg%3E") 0 0/600px 300px border-box!important;
+  box-shadow:0 0 0 1px #1e120b,0 18px 40px -18px rgba(0,0,0,.9),inset 0 0 0 1px #2a1d14!important}
+body.sk-pad #padU .fxh .lbl{font:400 15px/1 "Federo",serif!important;letter-spacing:.22em;color:var(--cu)!important;text-transform:uppercase}
+body.sk-pad #padU .fxh .lbl::before{background:var(--lit)!important;box-shadow:0 0 8px var(--lit)!important}
+body.sk-pad #padU .kl{color:var(--cu)!important;letter-spacing:.16em!important;font-weight:500!important}
+body.sk-pad #padU .knob.lvl .kl{color:#e0a072!important}
+body.sk-pad #padU .kv{color:var(--ink)!important}
+body.sk-pad #padU .kn{--kc:var(--lit);background:conic-gradient(from 225deg,var(--lit) 0deg calc(var(--p)*270deg),#070605 calc(var(--p)*270deg) 270deg,transparent 270deg)!important;box-shadow:0 0 0 1px var(--etch)!important}
+body.sk-pad #padU .kn.bi,body.sk-pad #padU .knob.bi .kn{background:conic-gradient(from 225deg,#070605 0deg calc(var(--pa,.5)*270deg),var(--lit) calc(var(--pa,.5)*270deg) calc(var(--pb,.5)*270deg),#070605 calc(var(--pb,.5)*270deg) 270deg,transparent 270deg)!important}
+body.sk-pad #padU .kn::after{background:linear-gradient(#ede4d0,#ede4d0) 50% 3px/2px 28% no-repeat,radial-gradient(circle at 50% 35%,#3c3830,#0d0c0a 72%)!important;box-shadow:0 0 0 1.5px var(--cu-d),0 3px 6px rgba(0,0,0,.7)!important}
+body.sk-pad #padU .btn,body.sk-pad #padU .seg button{background:linear-gradient(180deg,#1f1c16,#151310)!important;border:1px solid var(--etch)!important;color:var(--ink)!important;box-shadow:0 2px 0 #050504,inset 0 1px 0 rgba(255,230,180,.06)!important}
+body.sk-pad #padU .seg button[aria-pressed="true"],body.sk-pad #padU .btn[aria-pressed="true"],body.sk-pad #padU .wm[aria-pressed="false"]{color:var(--lit)!important;border-color:color-mix(in srgb,var(--lit) 45%,var(--etch))!important;
+  background:radial-gradient(120% 150% at 50% 0%,color-mix(in srgb,var(--lit) 22%,#15130f),#15130f 75%)!important;box-shadow:0 2px 0 #050504,inset 0 0 12px -3px color-mix(in srgb,var(--lit) 55%,transparent)!important;text-shadow:0 0 8px color-mix(in srgb,var(--lit) 55%,transparent)}
+body.sk-pad #padU .wname.lcd{--lcd:#f0e1b4;background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 1px,transparent 1px 3px),radial-gradient(120% 140% at 30% 20%,#2a2416,#0d0b07 70%)!important;box-shadow:inset 0 0 0 1px var(--etch),0 0 0 3px #0c0a08,0 0 0 4px var(--cu-d)!important}
+body.sk-pad #padU .wname.lcd b,body.sk-pad #padU .wname.lcd small{color:var(--lit)!important;text-shadow:0 0 6px rgba(240,225,180,.45)!important}
+body.sk-pad #padU .lmix{border-left-color:var(--etch)!important}
+body.sk-pad #padU .lmix .kl{color:var(--dim)!important}
+body.sk-pad #padU select{background:#0b0a08!important;border:1px solid var(--etch)!important;color:var(--ink)!important}
+body.sk-pad #padU .chk{color:var(--dim)!important}
+body.sk-pad #padU .wportal{border-color:var(--etch)!important}
+
+/* ---------- LEAD: aluminium (licht) ---------- */
+body.sk-lead #leadU{--al-ink:#1b1b1a;--al-dim:#55554f;--al-line:#2b2b29;--al-or:#ff6a2b;
+  border-radius:10px!important;border:1px solid #8f8f88!important;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%232b2b29' stroke-width='.8'%3E%3Ccircle cx='120' cy='0' r='34'/%3E%3Ccircle cx='120' cy='0' r='46' opacity='.6'/%3E%3Ccircle cx='120' cy='0' r='58' opacity='.35'/%3E%3C/g%3E%3Ccircle cx='120' cy='0' r='46' fill='none' stroke='%23ff6a2b' stroke-width='1.2' stroke-dasharray='4 7' opacity='.8'/%3E%3C/svg%3E") top right/120px no-repeat,
+    repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,rgba(0,0,0,.025) 1px 2px,transparent 2px 4px),
+    linear-gradient(180deg,#dcdcd6,#c8c8c1)!important;
+  box-shadow:inset 0 1px 0 #f4f4ef,inset 0 -1px 0 #9a9a93,0 14px 30px -18px rgba(0,0,0,.8)!important;color:var(--al-ink)}
+body.sk-lead #leadU .fxh .lbl{font:600 13px/1 "Instrument Sans",system-ui,sans-serif!important;letter-spacing:.28em;color:var(--al-ink)!important;text-transform:uppercase}
+body.sk-lead #leadU .fxh .lbl::before{background:var(--al-or)!important;box-shadow:0 0 6px var(--al-or)!important}
+body.sk-lead #leadU .chk{color:var(--al-dim)!important}
+body.sk-lead #leadU .kl{color:var(--al-ink)!important;letter-spacing:.14em!important;font-weight:600!important}
+body.sk-lead #leadU .kv{color:var(--al-dim)!important}
+/* panel lines: a thin black rule over each group, with a small dot where it starts */
+body.sk-lead #leadU .lsound,body.sk-lead #leadU .lmix,body.sk-lead #leadU .lvfold{position:relative}
+body.sk-lead #leadU #plRow{border-top:1px solid var(--al-line);padding-top:12px;position:relative}
+body.sk-lead #leadU #plRow::before{content:"";position:absolute;left:-3px;top:-3.5px;width:6px;height:6px;border-radius:50%;background:var(--al-line)}
+body.sk-lead #leadU .lmix{border-left:1px solid var(--al-line)!important}
+body.sk-lead #leadU .lvfold{border-top:1px solid var(--al-line)!important}
+body.sk-lead #leadU .lvfold>summary{color:var(--al-ink)!important}
+body.sk-lead #leadU .lvfold>summary span{color:var(--al-dim)!important}
+/* knobs: black caps with a white line, the travel as a thin orange arc on a pale track */
+body.sk-lead #leadU .kn{background:conic-gradient(from 225deg,var(--al-or) 0deg calc(var(--p)*270deg),#a9a9a2 calc(var(--p)*270deg) 270deg,transparent 270deg)!important;box-shadow:none!important}
+body.sk-lead #leadU .knob.bi .kn{background:conic-gradient(from 225deg,#a9a9a2 0deg calc(var(--pa,.5)*270deg),var(--al-or) calc(var(--pa,.5)*270deg) calc(var(--pb,.5)*270deg),#a9a9a2 calc(var(--pb,.5)*270deg) 270deg,transparent 270deg)!important}
+body.sk-lead #leadU .kn::after{background:linear-gradient(#f2f2ee,#f2f2ee) 50% 3px/2px 30% no-repeat,radial-gradient(circle at 50% 30%,#3a3a38,#121211 70%)!important;box-shadow:0 0 0 1px #7d7d77,0 3px 5px rgba(0,0,0,.45)!important}
+body.sk-lead #leadU .btn,body.sk-lead #leadU .seg button,body.sk-lead #leadU .kseg button{background:linear-gradient(180deg,#efefea,#d3d3cc)!important;border:1px solid #8a8a84!important;color:var(--al-ink)!important;box-shadow:0 1px 0 #7c7c76,inset 0 1px 0 #fff!important}
+body.sk-lead #leadU .btn[aria-pressed="true"],body.sk-lead #leadU .seg button[aria-pressed="true"],body.sk-lead #leadU .kseg button[aria-pressed="true"]{background:linear-gradient(180deg,#26262a,#16161a)!important;color:#fff!important;border-color:#111!important;box-shadow:inset 0 0 0 1px #000,0 0 0 1px var(--al-or)!important}
+body.sk-lead #leadU .btn:disabled{opacity:.45}
+body.sk-lead #leadU .btn.rec.recording{background:var(--al-or)!important;color:#fff!important}
+body.sk-lead #leadU select{background:#f4f4f0!important;border:1px solid #8a8a84!important;color:var(--al-ink)!important;box-shadow:inset 0 1px 2px rgba(0,0,0,.18)!important}
+body.sk-lead #leadU .wname.lcd{box-shadow:inset 0 0 0 1px #000,0 0 0 3px #b9b9b2,0 0 0 4px #6f6f69!important}
+
+/* ---------- LEAD: aluminium (donker) ---------- */
+body.sk-lead-d #leadU{--al-ink:#ecece8;--al-dim:#a3a39d;--al-line:#8d8f92;--al-or:#ff6a2b;
+  border-radius:10px!important;border:1px solid #121214!important;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%238d8f92' stroke-width='.8'%3E%3Ccircle cx='120' cy='0' r='34'/%3E%3Ccircle cx='120' cy='0' r='46' opacity='.6'/%3E%3Ccircle cx='120' cy='0' r='58' opacity='.35'/%3E%3C/g%3E%3Ccircle cx='120' cy='0' r='46' fill='none' stroke='%23ff6a2b' stroke-width='1.2' stroke-dasharray='4 7' opacity='.8'/%3E%3C/svg%3E") top right/120px no-repeat,
+    repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px),
+    linear-gradient(180deg,#36383b,#28292c)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 14px 30px -18px rgba(0,0,0,.9)!important}
+body.sk-lead-d #leadU .fxh .lbl{font:600 13px/1 "Instrument Sans",system-ui,sans-serif!important;letter-spacing:.28em;color:var(--al-ink)!important;text-transform:uppercase}
+body.sk-lead-d #leadU .fxh .lbl::before{background:var(--al-or)!important;box-shadow:0 0 6px var(--al-or)!important}
+body.sk-lead-d #leadU .kl{color:var(--al-ink)!important;letter-spacing:.14em!important;font-weight:600!important}
+body.sk-lead-d #leadU .kv{color:var(--al-dim)!important}
+body.sk-lead-d #leadU #plRow{border-top:1px solid var(--al-line);padding-top:12px;position:relative}
+body.sk-lead-d #leadU #plRow::before{content:"";position:absolute;left:-3px;top:-3.5px;width:6px;height:6px;border-radius:50%;background:var(--al-line)}
+body.sk-lead-d #leadU .lmix{border-left:1px solid var(--al-line)!important}
+body.sk-lead-d #leadU .lvfold{border-top:1px solid var(--al-line)!important}
+body.sk-lead-d #leadU .lvfold>summary{color:var(--al-ink)!important}
+body.sk-lead-d #leadU .kn{background:conic-gradient(from 225deg,var(--al-or) 0deg calc(var(--p)*270deg),#55575b calc(var(--p)*270deg) 270deg,transparent 270deg)!important;box-shadow:none!important}
+body.sk-lead-d #leadU .knob.bi .kn{background:conic-gradient(from 225deg,#55575b 0deg calc(var(--pa,.5)*270deg),var(--al-or) calc(var(--pa,.5)*270deg) calc(var(--pb,.5)*270deg),#55575b calc(var(--pb,.5)*270deg) 270deg,transparent 270deg)!important}
+body.sk-lead-d #leadU .kn::after{background:linear-gradient(#f2f2ee,#f2f2ee) 50% 3px/2px 30% no-repeat,radial-gradient(circle at 50% 30%,#4a4b4e,#141416 70%)!important;box-shadow:0 0 0 1px #6a6c70,0 3px 5px rgba(0,0,0,.55)!important}
+body.sk-lead-d #leadU .btn,body.sk-lead-d #leadU .seg button,body.sk-lead-d #leadU .kseg button{background:linear-gradient(180deg,#45474b,#323437)!important;border:1px solid #1a1b1d!important;color:var(--al-ink)!important;box-shadow:0 1px 0 #111,inset 0 1px 0 rgba(255,255,255,.1)!important}
+body.sk-lead-d #leadU .btn[aria-pressed="true"],body.sk-lead-d #leadU .seg button[aria-pressed="true"],body.sk-lead-d #leadU .kseg button[aria-pressed="true"]{background:#ecece8!important;color:#141416!important;border-color:#ecece8!important;box-shadow:0 0 0 1px var(--al-or)!important}
+body.sk-lead-d #leadU select{background:#1d1e20!important;border:1px solid #55575b!important;color:var(--al-ink)!important}
+
+/* ---------- the switcher of this preview ---------- */
+.skbar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:9999;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:8px 12px;border-radius:12px;background:rgba(18,17,15,.94);border:1px solid #3a3833;box-shadow:0 10px 30px rgba(0,0,0,.6);font:12px system-ui,sans-serif;color:#ece6da}
+.skbar b{font-weight:600;margin-right:2px}.skbar button{font:inherit;color:#ece6da;background:#2a2925;border:1px solid #3a3833;border-radius:6px;padding:4px 9px;cursor:pointer}.skbar button[aria-pressed="true"]{background:#ff6a2b;border-color:#ff6a2b;color:#fff}
