@@ -76,6 +76,14 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       for (const at of [0, 1]) { S.fx.cdAtk = at; S.renderOnly = -4; const w = await renderLoop(true, 22050); S.renderOnly = null; out.push(crest(w[0])); } Object.assign(S.fx, JSON.parse(keep)); return out; });
     assert(r[1] < r[0] * .75, 'crest ' + r.map(x => x.toFixed(1)).join(' -> ')); return 'crest factor ' + r.map(x => x.toFixed(0)).join(' -> '); });
 
+  await check('Bass: sounds in every style, steps aside for the surdo, its own stem', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx), out = { st: [] }; S.bars = 2; S.fx.bsOn = true;
+      for (const st of ['drop', 'step', 'off', 'half']) { S.fx.bsSty = st; S.renderOnly = -5; const w = await renderLoop(false, 22050); S.renderOnly = null; let pk = 0; for (const x of w[0]) pk = Math.max(pk, Math.abs(x)); out.st.push([rms(w[0]), pk]); }
+      S.fx.bsSty = 'step'; const su = S.lanes.find(L => L.id === 'surdo' || INSTR[S.lanes.indexOf(L)].id === 'surdo'); const m0 = su ? su.mute : null;
+      S.renderOnly = -5; const a = await renderLoop(false, 22050); if (su) su.mute = true; const b = await renderLoop(false, 22050); if (su) su.mute = m0; S.fx.bsOn = false; const c = await renderLoop(false, 22050); S.renderOnly = null;
+      out.duck = su && su.steps && su.steps.some(x => x) ? rms(a[0]) / rms(b[0]) : null; out.off = rms(c[0]); Object.assign(S.fx, JSON.parse(keep)); return out; }, rmsJS);
+    assert(r.st.every(x => x[0] > .01 && x[1] < 1), 'styles ' + JSON.stringify(r.st)); assert(r.off < .0002, 'off ' + r.off); if (r.duck != null) assert(r.duck < .99, 'duck ' + r.duck);
+    return r.st.map(x => x[0].toFixed(3)).join(' / ') + ' rms' + (r.duck != null ? ', surdo duck ' + (20 * Math.log10(r.duck)).toFixed(1) + ' dB' : ''); });
+
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
       for (let i = 0; i < MG_MODES.length; i++) { S.fx.mgMode = i; const w = await renderLoop(false, 22050), v = rms(w[0]); if (!(v > .002)) bad.push(MG_NAMES[i] + ':' + (v < 0 ? 'NaN' : v.toFixed(4))); }
       S.fx.mgOn = false; return { n: MG_MODES.length, bad }; }, rmsJS); assert(!r.bad.length, r.bad.join(', ')); return r.n + ' modes'; });
