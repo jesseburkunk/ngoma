@@ -2300,9 +2300,9 @@ const PRESETS = [
    desc:'Amapiano is South African house music that grew out of township music scenes in Gauteng, around Pretoria and Johannesburg, in the 2010s, usually at around 110 to 115 BPM. The shaker runs in sixteenths with accents on the offbeats. The conga plays on two, the last sixteenth of two, the and of three and four. The udu stands in for the log drum, the style\'s pitched, syncopated bass. Add a soft kick of your own.',
    lanes:{shaker:'xxXxxxXxxxXxxxXx', conga:'....O..O..O.O...', bongo:'.m.....m.m....m.', udu:'...O..O...O.O..o', clave:'....W.......W...'},
    xs:{udu:{6:{tn:3},10:{tn:5},12:{tn:3},15:{tn:-2}}}},
-  {id:'cavacha', trad:'saf', name:'Cavacha', res:4, tempo:132,
+  {id:'cavacha', trad:'saf', mix:{surdo:.55}, name:'Cavacha', res:4, tempo:132,   /* v195 (Jesse: the steady surdo, softer and shorter): muted strokes, lower in the mix */
    desc:'Cavacha is the drum rhythm that drummer Meridjo Belobi of Zaïko Langa Langa created in Kinshasa around 1971: running sixteenths on the snare with ghost notes, which drive the sebene, the fast dancing second half of a Congolese rumba or soukous song. The story goes that he heard it in the wheels of a train; he himself said he took it from an mbonda drum pattern of a traditional group. The cajón plays the snare, the clave the son clave that the guitars and bass imply, the surdo the bass drum on the beats. The accents on the snare are a reading, not a transcription.',
-   lanes:{cajon:'ssSsssSsssSsssSs', clave:'X..X..X...X.X...', surdo:'O...O...O...O...'}},
+   lanes:{cajon:'ssSsssSsssSsssSs', clave:'X..X..X...X.X...', surdo:'m...m...m...m...'}},
   {id:'kuku', trad:'west', mix:{agogo:.5,djembe:.6,conga:.65}, name:'Kuku', res:4, tempo:120, groove:'jembe', swing:.35,
    desc:'Kuku comes from the Konianka people around Beyla and Nzérékoré in Guinea\'s forest region, where women danced it in a circle after returning from fishing. At first only djembes played it; the dunun parts came later. The conga plays the kenkeni on the first two pulses of each beat, the tumba plays the sangban, open on one, the and of two, three and the and of four, and the surdo plays the dununba.',
    lanes:{djembe:'S.tt..S.S.tt..S.', conga:'OO..OO..OO..OO..', tumba:'O..m..O.O.m...O.', surdo:'...O......m.....', agogo:'L.lL.lL.L.l.L.l.'}},

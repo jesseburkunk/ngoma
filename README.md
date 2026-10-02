@@ -223,7 +223,8 @@ Open: save/load own patterns, MIDI import, test in real tracks.
 - v191: Rec vouwt de staart: na de laatste maatstreep neemt hij nog 2 s op (max de helft van de take) en het begin van het bestand wordt die doorloop (de loop die weer begint, met de galm van de laatste maat erin), met een crossfade van 50 ms naar de take. Alleen als Ngoma speelt. Getest: hele maten, sprong op het lus-punt 0,0008.
 - v192: Pad-volume per klank gelijkgetrokken. Elke Worp-pad wordt één keer offline gemeten (droog, 4 maten) en naar dezelfde luidheid gebracht, zoals de lead. Standaard Level overal 35% (was 22% bij een eerste bezoek). Gevolg: pad ongeveer 10 dB harder bij de standaard, 15 tot 18 dB onder de drums, verschil tussen klanken kleiner. Export wacht op de meting. Smoke: 36 checks.
 - v193: Filter delay, naar Ableton's Filter Delay: drie herhalingen op tempo (links gestippelde achtste, midden kwart, rechts achtste), elk door een eigen resonante band-pass die langzaam drijft, soft clip in de lus. Eén gedeelde unit; knop F.Delay bij Lead (mix-rij) en Candy (naast Space), standaard 0. Smoke: check Filter delay.
-- v194: Candy in de stems: Export zet stems/...-candy.wav erbij (droog, zoals de andere stems), en Rec (jam) neemt een candy-spoor op. Smoke: check Candy has its own stem.
+- v194: Candy in de stems: Export zet stems/...-candy.wav erbij, net als de andere stems, en Rec (jam) neemt een candy-spoor op. Smoke: check Candy has its own stem.
+- v195: Cavacha: de surdo op elke tel zachter (mix 55%) en korter (gedempte slagen).
 - v172: Rec telt af (Jesse: met de maat, niet in procenten; twee maten lead-in): vanaf de volgende maatstreep twee maten klik op elke tel (hoger op de één), de knop telt de tellen af (In 8 ... In 1), daarna maat en tel van de opname (● 1·1 tot 2·4).
 - v168: de Worp-helft van de app-switch, de Worp-stip en Open in Worp in koper en Federo (was mint en Michroma), passend bij het nieuwe uiterlijk van Worp v1.26.
 
