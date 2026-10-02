@@ -29,7 +29,7 @@ eng="""/* Worp engine for Ngoma: a copy of the sound engine of Worp (public/worp
 """+gen+"""
 function create(ctx,OUT,host){
   const A={};let CUR=null,rand=rng(1);
-  const state={get key(){return host.key()},get deg(){return host.deg?host.deg():0},get res(){return host.res?host.res():4},get anchor(){return host.anchor||null},get cx(){return host.cx?host.cx():.3},cdv:0};
+  const state={get key(){return host.key()},get deg(){return host.deg?host.deg():0},get res(){return host.res?host.res():4},get anchor(){return host.anchor||null},get cx(){return host.cx?host.cx():.3},get lv(){return host.lv?host.lv():null},drum:g=>host.drum?host.drum(g):0,cdv:0};   /* v172: lv = Lead v2 settings, drum(g) = how loud the drums are on step g */
   const getBpm=()=>host.bpm();
   const cur=()=>CUR;
   const renderPatch=()=>{},renderFx=()=>{};
@@ -95,13 +95,14 @@ function create(ctx,OUT,host){
       set('per',per);const t0=host.t0?host.t0():0;set('t0',((t0%per)+per)%per)},
   };
 }
-window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt};
+function lineAt(P,i,h){const o=PH_HOST;PH_HOST=h;try{return phraseOut(P,i)}finally{PH_HOST=o}}   /* v172: the line as the host would hear it, for tests and for picking candidates */
+window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt,LV_FORMS,lineAt};
 })();
 """
 ng=os.path.join(HERE,'..','public','index.html')
 s=open(ng).read()
 import re
-a=s.index('/* Worp engine for Ngoma');mz=re.compile(r'window\.WorpEngine=\{[^}]*\};\n\}\)\(\);\n').search(s,a);z=mz.end()
+a=s.index('/* Worp engine for Ngoma');mz=re.compile(r'window\.WorpEngine=\{[^\n]*\};\n\}\)\(\);\n').search(s,a);z=mz.end()
 if s[a:z]==eng:
     print('Worp engine in Ngoma is up to date.')
 else:

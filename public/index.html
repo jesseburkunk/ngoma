@@ -283,7 +283,7 @@ body.wopen{overflow:hidden}
 .wm{width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:600 11px "JetBrains Mono",ui-monospace,monospace;cursor:pointer}
 .midibtn[aria-pressed=true],.midiq[aria-pressed=true]{background:var(--cream);color:var(--oxblood);border-color:var(--cream)}
 .tmidi{display:flex;align-items:center;gap:6px}.midibtn{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.midiseg button{height:34px}
-.btn.rec.arming{animation:recblink 1s steps(2) infinite}.btn.rec.recording{background:#d9531c;border-color:#d9531c;color:#fff}@keyframes recblink{50%{opacity:.45}}   /* v171 */
+.btn.rec.arming{animation:recblink 1s steps(2) infinite}.btn.rec.recording{background:#d9531c;border-color:#d9531c;color:#fff}@keyframes recblink{50%{opacity:.45}}   /* v171 */ .btn.rec.counting{animation:none;border-color:#d9531c;color:#ff8a5c;font-variant-numeric:tabular-nums;min-width:86px}.btn.rec.recording{font-variant-numeric:tabular-nums;min-width:86px}   /* v172: the count-in */
 .lineseg button{height:30px;padding:0 10px}.lineseg button:disabled{opacity:.35;cursor:default}
 .wstrip #leadLock[aria-pressed=true]{background:var(--cream);color:var(--oxblood);border-color:var(--cream)}
 .wm[aria-pressed="true"]{background:transparent;color:var(--muted);text-decoration:line-through}
@@ -1165,8 +1165,8 @@ input,select{accent-color:var(--accent)}
   <h2>Layers</h2>
   <p class="g-p">What plays with the drums, always in your key, scale and chords. Each layer has its own On switch.</p>
   <dl>
-    <dt>Pad</dt><dd>A soft layer under the drums. On a Worp pad, <i>New sound</i> keeps the chords and movement and <i>New pattern</i> keeps the sound; <i>Rec 2 bars</i> records chords from your MIDI keys, and <i>Mine | Worp</i> switches between your take and the pad's own. <i>Worp</i> throws a new patch from Ngoma's sister synth; <i>Classic</i> has six pads of its own.<details class="g-more"><summary>More</summary><p><b>Worp:</b> every throw is a patch of up to four sources with slow modulation that keeps re-patching itself. <i>New</i> throws another, the numbered buttons mute its layers, <i>Open in Worp</i> opens Worp over Ngoma while Ngoma keeps playing (<i>Ngoma</i> or Esc brings you back). Whatever you pick or change there plays here at once; ← undoes a new sound.</p><p><b>Classic types:</b> <i>Bed</i>, one chord per bar. <i>Loops</i>, five tone fragments on their own lengths, like a Buddha Machine. <i>Tides</i>, a four-voice chord whose voices swell on their own cycles. <i>Echoes</i>, two short phrases into a darkening tape echo. <i>Seasons</i> and <i>Cloud</i>, a slow chord walk with shared notes held, as a warm pad or a cloud of grains.</p><p><b>Knobs:</b> <i>Level</i> (0 is really off), <i>Move</i> (how far the filter breathes, or how deep a Worp gate dips), <i>Filter</i> (low-pass to the left, high-pass to the right), <i>Reverb</i> and <i>Echo</i>, and <i>Pitch</i> (up a fourth, a fifth or an octave). Off at the first start.</p></details></dd>
-    <dt>Lead</dt><dd>A struck or plucked melody from Worp, in time and with the swing of the drums. Off by default. <i>Rec 2 bars</i> records a line from your MIDI keys, from the next bar line; <i>Mine | Worp</i> switches between yours and Worp's.<details class="g-more"><summary>More</summary><p>Every lead has one of nine ways of making its line, shown next to its code: <i>Bounce</i> (after Dillon Bastan's Bouncy Notes), <i>Anchor</i> (the rhythm of the tradition's timeline), <i>Triplets</i>, <i>Loop</i>, <i>Phase</i> (after Steve Reich), <i>Modules</i> (after Terry Riley's In C), <i>Additive</i> (after Philip Glass), <i>Isorhythm</i> and <i>Pulse</i> (after Music for 18 Musicians). The sounds: marimba, vibraphone, kalimba, balafon, soft electric piano, reed, celesta or music box.</p><p><b>Knobs:</b> <i>Level</i>, <i>Complexity</i> (left repeats longer and stays on the grid, right moves on sooner and bounces freely), <i>Filter</i>, <i>Reverb</i>, <i>Echo</i> and <i>Pitch</i>. <i>New sound</i> throws another sound and keeps the melody, <i>New pattern</i> another melody on the same sound, <i>Lock</i> keeps the current bars exactly as they are.</p><p><b>Your own line:</b> <i>Rec 2 bars</i> in Worp records one (a count-in, then two bars, quantized with the drums' swing). <b>Mine | Worp</b> switches between your line and Worp's.</p></details></dd>
+    <dt>Pad</dt><dd>A soft layer under the drums. On a Worp pad, <i>New sound</i> keeps the chords and movement and <i>New pattern</i> keeps the sound; <i>Rec 2 bars</i> counts in for two bars (clicks, beats counting down) and records two bars of chords from your MIDI keys, and <i>Mine | Worp</i> switches between your take and the pad's own. <i>Worp</i> throws a new patch from Ngoma's sister synth; <i>Classic</i> has six pads of its own.<details class="g-more"><summary>More</summary><p><b>Worp:</b> every throw is a patch of up to four sources with slow modulation that keeps re-patching itself. <i>New</i> throws another, the numbered buttons mute its layers, <i>Open in Worp</i> opens Worp over Ngoma while Ngoma keeps playing (<i>Ngoma</i> or Esc brings you back). Whatever you pick or change there plays here at once; ← undoes a new sound.</p><p><b>Classic types:</b> <i>Bed</i>, one chord per bar. <i>Loops</i>, five tone fragments on their own lengths, like a Buddha Machine. <i>Tides</i>, a four-voice chord whose voices swell on their own cycles. <i>Echoes</i>, two short phrases into a darkening tape echo. <i>Seasons</i> and <i>Cloud</i>, a slow chord walk with shared notes held, as a warm pad or a cloud of grains.</p><p><b>Knobs:</b> <i>Level</i> (0 is really off), <i>Move</i> (how far the filter breathes, or how deep a Worp gate dips), <i>Filter</i> (low-pass to the left, high-pass to the right), <i>Reverb</i> and <i>Echo</i>, and <i>Pitch</i> (up a fourth, a fifth or an octave). Off at the first start.</p></details></dd>
+    <dt>Lead</dt><dd>A struck or plucked melody from Worp, in time and with the swing of the drums. Off by default. <i>Rec 2 bars</i> counts in for two bars and records a line of two bars from your MIDI keys; <i>Mine | Worp</i> switches between yours and Worp's.<details class="g-more"><summary>More</summary><p>Every lead has one of nine ways of making its line, shown next to its code: <i>Bounce</i> (after Dillon Bastan's Bouncy Notes), <i>Anchor</i> (the rhythm of the tradition's timeline), <i>Triplets</i>, <i>Loop</i>, <i>Phase</i> (after Steve Reich), <i>Modules</i> (after Terry Riley's In C), <i>Additive</i> (after Philip Glass), <i>Isorhythm</i> and <i>Pulse</i> (after Music for 18 Musicians). The sounds: marimba, vibraphone, kalimba, balafon, soft electric piano, reed, celesta or music box.</p><p><b>Knobs:</b> <i>Level</i>, <i>Complexity</i> (left repeats longer and stays on the grid, right moves on sooner and bounces freely), <i>Filter</i>, <i>Reverb</i>, <i>Echo</i> and <i>Pitch</i>. <i>New sound</i> throws another sound and keeps the melody, <i>New pattern</i> another melody on the same sound, <i>Lock</i> keeps the current bars exactly as they are.</p><p><b>Your own line:</b> <i>Rec 2 bars</i> in Worp records one (a count-in, then two bars, quantized with the drums' swing). <b>Mine | Worp</b> switches between your line and Worp's.</p></details></dd>
     <dt>Texture</dt><dd>A field recording far under the drums, as a background texture: a place rather than an instrument, in the spirit of Chris Watson and Jake Muir. Off by default.<details class="g-more"><summary>More</summary><p>Seven recordings by Félix Blume, all CC0 (public domain): a castle moat through hydrophones, a forest at night in Mexico, wind in a wire fence, dawn in the Amazon, ice on an alpine lake, a night in Port-au-Prince with the city far away, and a contact microphone on a bat nest. <i>Your file…</i> plays your own recording; it stays in this browser.</p><p><b>Filter</b> darkens it (left) or thins it out of the way of the drums (right). <b>Distance</b> pushes the place away: darker, quieter, more reverb. <b>Drift</b> lets the recording come apart into slow, overlapping grains at lower speeds, so it floats instead of running. <b>Tune</b> sends it through narrow filters on the tones of the current chord, so wind, water or insects start to sing the harmony. The low drums duck it a little. Everything is seeded, so the export sounds as you hear it, and loops without a seam.</p></details></dd>
     <dt>Magic</dt><dd>Seven characters that work on the sound, not the rhythm. <i>Amount</i> says how far; everything stays in tune and in the export.<details class="g-more"><summary>More</summary><p><b>Breath</b>: gentle life in timing and dynamics. <b>Resonate</b>: sympathetic strings on your key that ring with every stroke; <i>Chord</i> picks their notes (and with Chords on they follow the scheme). <b>Comb</b>: a tuned comb that moves to another note every two bars. <b>Air</b>: harmonics and sheen on top. <b>Formant</b>: two vowel filters, as if the kit speaks. <b>Cosmos</b>: a drifting echo after the SOMA Cosmos, two echo lines that drift apart and meet again. <b>Ghosts</b>: a tiny grain of a hit comes back a few steps later, quiet and far left or right.</p><p><b>Decay</b> sets how long Resonate rings and Comb and Cosmos repeat. <b>Every</b> sends only every 2nd to 8th hit into Magic; the rest stays dry. <b>Echo</b> gives Magic its own dub echo. With Ghosts, <b>Chance</b> sets how often and <b>Hard</b> how present.</p></details></dd>
   </dl>
@@ -1533,6 +1533,48 @@ function phraseCore(P,i){const ph=P.phrase,Z=phZ(),CX=phCx();
       if(!s.on)return[];const nx=ph.steps[(k+1)%len];return[{v:0,deg:s.deg,acc:s.acc,gate:s.gate,tie:s.tie&&nx.on}]}
   }}
 function phraseDesc(P){const ph=P.phrase;return`${PH_STYLES[ph.style]||'Loop'}: ${PH_AFTER[ph.style]||PH_AFTER.loop}`}
+/* v1.27: a line with a memory (Ngoma's Lead v2, after Marbles' deja vu, the Turing Machine and the Torso T-1). Only when the host asks
+   for it (phCtx().lv); Worp on its own plays as before. One bar of the style is the motif: its rhythm loops every Rhythm steps, its notes
+   run through a row of Notes pitches, taken from a second phrase seed (lv.pn) so rhythm and notes can be redrawn apart. Four bars make a
+   phrase in a Form (X: A with a new ending, Q: ends open on the fifth, R: a new ending that lands on the root). Strong beats lean to chord
+   tones, Range keeps the line stepwise or lets it leap, Drums thins the line where the drums play (gaps) or rest (accents), and at the end
+   of each phrase Vary may change the motif for good: a step up or down, a new ending, mirrored, shifted, or the next bar of the style. */
+const LV_FORMS={qa:'Call · answer',aaba:'AABA',aaab:'AA′AB',aaaa:'AAAA'};
+const LV_LET={aaaa:'AAAA',aaba:'AABA',aaab:'AXAB',qa:'AQAR'};
+function lvSd(P){return((P._ps!=null?P._ps:P.seed)>>>0)}
+function lvMem(P,lv,b,R){const ph=P.phrase,K=ph._lvm||(ph._lvm={}),vy=Math.max(0,Math.min(1,+lv.vary||0)),key=vy.toFixed(2)+'|'+R,sd=lvSd(P);let C=K[key];if(!C)C=K[key]=[{m:0,tr:0,inv:0,rot:0,end:0}];
+  while(C.length<=b){const k=C.length,q={...C[k-1]};if(rnd01((sd^0x7A11E)>>>0,k)<vy*.85){const u=rnd01((sd^0x7A11F)>>>0,k),w=rnd01((sd^0x7A120)>>>0,k);
+      if(u<.28)q.tr=Math.max(-3,Math.min(4,q.tr+(w<.5?1:-1)*(w<.2||w>.8?2:1)));else if(u<.48)q.end++;else if(u<.62)q.inv^=1;else if(u<.76)q.rot=(q.rot+(w<.5?2:R))%(4*R);else{q.m++;q.end=0;q.rot=0;q.inv=0;q.tr=0}}
+    C.push(q)}return C[b]}
+const LV_P2=new Map();
+function lvP2(P,pn){const q=pn>>>0;let ph=LV_P2.get(q);if(!ph){ph=genPatch(q,'lead').phrase;LV_P2.set(q,ph);if(LV_P2.size>24)LV_P2.delete(LV_P2.keys().next().value)}return{...P,phrase:ph,_ps:q}}
+function lvCt(P,c){const n=SCALES[P.scale].length,o=[];for(let k=0;k<n;k++){const iv=((semis(P.scale,c+k)-semis(P.scale,c))%12+12)%12;if(iv===0||iv===3||iv===4||iv===7)o.push(k)}return o.length>1?o:[0,2%n,4%n]}   // root, third, fifth of the chord on scale step c, in the scale
+function lvSnap(P,d,dg,c){const n=SCALES[P.scale].length,ct=lvCt(P,c);for(const o of[0,-1,1,-2,2,-3,3])if(ct.includes(mod(d+dg+o,n)))return d+o;return d}
+function lvBar(P,lv,M,L,R){const ph=P.phrase,B=4*R,sc=SCALES[P.scale],n=sc.length,i5=Math.max(1,sc.indexOf(7)),sd=lvSd(P),rg=Math.max(0,Math.min(1,+lv.rg||0));
+  const C=ph._lvb||(ph._lvb=new Map()),key=[M.m,M.tr,M.inv,M.rot,M.end,L,R,lv.rl,lv.pl,lv.pn==null?'':lv.pn>>>0,rg.toFixed(2),sc.join(',')].join('|');let bar=C.get(key);if(bar)return bar;
+  const rl=lv.rl>0&&lv.rl<B?lv.rl|0:B,P2=lv.pn!=null&&(lv.pn>>>0)!==sd?lvP2(P,lv.pn):P,rot=L==='B'?(M.rot+2*R)%B:M.rot,newEnd=L==='X'||L==='Q'||L==='R';
+  const row=[],pl=lv.pl|0,lim=pl?4*B:B;for(let j=0;j<lim&&(!pl||row.length<pl);j++)for(const e of phraseAt0(P2,M.m*B+j))if(!e.v)row.push(e.deg);
+  if(!row.length)row.push(0);const r0=row[0],lmax=2+Math.round(rg*2*n);let k=0,prev=null;bar=[];
+  for(let s=0;s<B;s++){const s1=((s-rot)%B+B)%B,tail=s1>=B-R&&(newEnd||M.end>0),src=tail?phraseAt0(P,(M.m+M.end+(newEnd?1:0))*B+s1):phraseAt0(P,M.m*B+s1%rl),out=[];
+    for(const e0 of src){const e={...e0};if(e.v){e.deg+=M.tr;out.push(e);continue}
+      let d=row[k%row.length];if(M.inv)d=2*r0-d;if(L==='B')d=2*r0-d+(n>5?2:1);d+=M.tr;
+      if(prev!=null){let g=0;while(d-prev>lmax&&g++<4)d-=n;g=0;while(prev-d>lmax&&g++<4)d+=n}   // Range: a leap wider than allowed folds to the nearer octave
+      if(rg>.6&&e.acc&&rnd01((sd^0x1EA9)>>>0,k)<(rg-.6)*1.2)d+=n;
+      {let g=0;while(d<-n&&g++<4)d+=n;g=0;while(d>2*n+2&&g++<4)d-=n}
+      e.deg=d;e.st=s%R===0;if(k===0)e.keep=true;k++;prev=d;out.push(e)}
+    bar.push(out)}
+  if(L==='Q'||L==='R'){for(let s=B-1;s>=0;s--){const e=bar[s].find(x=>!x.v);if(e){let d=L==='R'?0:i5;const p=e.deg;let g=0;while(d-p>n/2&&g++<4)d-=n;g=0;while(p-d>n/2&&g++<4)d+=n;
+      Object.assign(e,{deg:d,acc:true,keep:true,st:false,tie:false,gate:Math.max(e.gate||.5,.8)});break}}}
+  C.set(key,bar);if(C.size>48)C.delete(C.keys().next().value);return bar}
+function phraseV2(P,i){const H=phCtx(),lv=H.lv,ph=P.phrase;if(!ph||i<0)return[];const R=H.res||4,B=4*R,PL=4*B,b=Math.floor(i/PL),s=i%B;
+  const M=lvMem(P,lv,b,R),L=(LV_LET[lv.form]||'AAAA')[Math.floor(i/B)%4],ev=lvBar(P,lv,M,L,R)[s];if(!ev||!ev.length)return[];
+  const sd=lvSd(P),dr=Math.max(-1,Math.min(1,+lv.dr||0)),x=dr&&H.drum?Math.max(0,Math.min(1,+H.drum(i)||0)):0,out=[];
+  for(const e0 of ev){let e=e0;
+    if(!e.v&&e.st&&(s%(2*R)===0||rnd01((sd^0xC4D7)>>>0,i%PL)<.6)){const d=lvSnap(P,e.deg,H.deg|0,H.cdv|0);if(d!==e.deg)e={...e,deg:d}}   // strong beats lean to the chord
+    if(dr&&!e.keep){const p=dr<0?-dr*x*.85:dr*(1-x)*.85;if(rnd01((sd^0xD7A3)>>>0,i%PL+(e.v?977:0))<p)continue}
+    out.push(e)}
+  return out}
+function phraseOut(P,i){const lv=phCtx().lv;return lv&&LV_LET[lv.form]?phraseV2(P,i):phraseAt(P,i)}
 
 /* ---------- the modular part: sources, cables, re-patching ---------- */
 const FOLDMAX=6;
@@ -1651,7 +1693,7 @@ function srcDesc(x,P){
 
 function create(ctx,OUT,host){
   const A={};let CUR=null,rand=rng(1);
-  const state={get key(){return host.key()},get deg(){return host.deg?host.deg():0},get res(){return host.res?host.res():4},get anchor(){return host.anchor||null},get cx(){return host.cx?host.cx():.3},cdv:0};
+  const state={get key(){return host.key()},get deg(){return host.deg?host.deg():0},get res(){return host.res?host.res():4},get anchor(){return host.anchor||null},get cx(){return host.cx?host.cx():.3},get lv(){return host.lv?host.lv():null},drum:g=>host.drum?host.drum(g):0,cdv:0};   /* v172: lv = Lead v2 settings, drum(g) = how loud the drums are on step g */
   const getBpm=()=>host.bpm();
   const cur=()=>CUR;
   const renderPatch=()=>{},renderFx=()=>{};
@@ -2027,7 +2069,7 @@ function playRec(R,i,t,spb,res){if(!R||!R.notes||!R.notes.length)return;const r=
   let M=RECM.get(R);if(!M){M={};RECM.set(R,M)}let map=M[r];
   if(!map){map=M[r]={};R.notes.forEach((n,k)=>{const p=n.s*r/4,st=Math.floor(p);(map[st]||(map[st]=[])).push({k,off:p-st,d:n.d*r/4,r:n.r,v:n.v})})}
   const ev=map[pos];if(!ev)return;for(const e of ev){const tt=t+e.off*spb,midi=state.key+48+e.r;if(!isFinite(midi))continue;const key='rec'+e.k;polyOn(key,midi,e.v,tt);polyOff(key,tt+Math.max(.06,e.d*spb))}}
-function playPhrase(P,i,t0,spb){for(const e of phraseAt(P,i)){const t=t0+(e.off||0)*spb,c=e.v?seqLead2:seqLead,midi=state.key+48+semis(P.scale,e.deg+(state.deg|0)+(state.cdv|0)),vel=e.vel!=null?e.vel:(e.acc?1:.62);if(!isFinite(midi))continue;   // a guard: a line never takes the voice down
+function playPhrase(P,i,t0,spb){for(const e of phraseOut(P,i)){const t=t0+(e.off||0)*spb,c=e.v?seqLead2:seqLead,midi=state.key+48+semis(P.scale,e.deg+(state.deg|0)+(state.cdv|0)),vel=e.vel!=null?e.vel:(e.acc?1:.62);if(!isFinite(midi))continue;   // a guard: a line never takes the voice down
   if(c.tied&&c.voice&&!c.voice.rel)c.voice.setFreq(mtof(midi),t,P.glide||.03);else{if(c.voice)c.voice.release(t);c.voice=new Voice(P,mtof(midi),vel,t)}
   const tie=!!e.tie&&!P.mallet;c.tied=tie;if(!tie)c.voice.release(t+spb*(P.mallet?Math.max(e.gate||.6,1.5):(e.gate||.6)))}}
 function releaseAll(t){for(const v of poly.values())v.release(t);poly.clear();[liveLead,seqLead,seqLead2].forEach(c=>{if(c.voice){c.voice.release(t);c.voice=null}c.tied=false})}
@@ -2093,7 +2135,8 @@ function releaseAll(t){for(const v of poly.values())v.release(t);poly.clear();[l
       set('per',per);const t0=host.t0?host.t0():0;set('t0',((t0%per)+per)%per)},
   };
 }
-window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt};
+function lineAt(P,i,h){const o=PH_HOST;PH_HOST=h;try{return phraseOut(P,i)}finally{PH_HOST=o}}   /* v172: the line as the host would hear it, for tests and for picking candidates */
+window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt,LV_FORMS,lineAt};
 })();
 </script>
 <script>
@@ -3703,20 +3746,28 @@ function worpSeed(){ const u=new Uint32Array(1); crypto.getRandomValues(u); retu
 /* v171 Rec in Ngoma (Jesse: switching between Ngoma and Worp is awkward). Rec 2 bars on the Lead or the Pad records what you play on your
    MIDI keys, from the next bar line, on the grid (sixteenths; Ngoma's swing is added when it plays). While you record only that unit's
    own line rests; the drums go on and your keys sound. The take becomes Mine; Worp switches back to the generated line or chords. */
-var PREC=false; const NREC={st:'',u:'',g0:0,g1:0,notes:[],open:new Map()};
+var PREC=false; const NREC={st:'',u:'',l0:0,g0:0,g1:0,notes:[],open:new Map(),clk:[]};
 function padRecOn(){ const R=S.fx.worp&&S.fx.worp.rec; return R&&!R.off?R:null; }
 function stepNow(){ if(!actx||!playing) return null; return gStep-(nextT-actx.currentTime)/stepDur(S); }
 function nrecUI(){ ['lead','pad'].forEach(u=>{ const b=$(u==='lead'?'leadRec':'padRec'); if(!b) return; const me=NREC.u===u&&!!NREC.st;
   b.classList.toggle('arming',me&&NREC.st==='arm'); b.classList.toggle('recording',me&&NREC.st==='rec'); b.setAttribute('aria-pressed',me?'true':'false');
-  let t='Rec 2 bars'; if(me&&NREC.st==='arm') t='Rec · next bar'; if(me&&NREC.st==='rec') t='Rec '+Math.round(Math.max(0,Math.min(1,(stepNow()-NREC.g0)/(NREC.g1-NREC.g0)))*100)+'%'; if(b.textContent!==t) b.textContent=t; }); }
+  /* v172 (Jesse: count with the bar, not a percentage; a lead-in of two bars, clearly): before the count-in 'Rec · wait', then the beats
+     that are left (8 down to 1, with a click on every beat), then bar and beat of the take (1·1 to 2·4) */
+  let t='Rec 2 bars'; const p=me?stepNow():null, r=S.res;
+  if(me&&p!=null&&NREC.st==='arm') t=p<NREC.l0?'Rec · wait':'In '+Math.max(1,Math.ceil((NREC.g0-p)/r-1e-6));
+  if(me&&p!=null&&NREC.st==='rec'){ const k=Math.max(0,Math.floor((p-NREC.g0)/r)); t='● '+(Math.floor(k/4)+1)+'·'+(k%4+1); }
+  b.classList.toggle('counting',me&&NREC.st==='arm'&&p!=null&&p>=NREC.l0); if(b.textContent!==t) b.textContent=t; }); }
+function nrecClicks(){ if(!actx||!AG) return; const sd=stepDur(S), now=actx.currentTime, out=AG.vol||actx.destination;   /* the count-in: a click per beat, higher on the one */
+  for(let g=NREC.l0; g<NREC.g0; g+=S.res){ const t=nextT+(g-gStep)*sd; if(t<now) continue; const one=(g-NREC.l0)%(4*S.res)===0, o=actx.createOscillator(), e=actx.createGain();
+    o.frequency.value=one?2000:1400; e.gain.setValueAtTime(0,t); e.gain.linearRampToValueAtTime(one?.32:.2,t+.002); e.gain.exponentialRampToValueAtTime(.001,t+.05); o.connect(e).connect(out); o.start(t); o.stop(t+.06); NREC.clk.push(o); } }
 function nrecToggle(u){ if(NREC.st){ const was=NREC.u; nrecStop(false); if(was===u) return; }
   if(u==='lead'&&!S.fx.leadOn){ S.fx.leadOn=true; UPD.forEach(f=>f()); if(AG) leadSync(AG); }
   if(u==='pad'&&!midiPadOK()){ S.fx.padOn=true; S.fx.padType=7; UPD.forEach(f=>f()); worpUI(); if(AG) padSync(AG); }
   S.midiTo=u; midiUI(); save(); if(!MIDIK.on) midiConnect(false);
-  if(!playing) start(); const BL=4*S.res; NREC.g0=Math.ceil((stepNow()+1)/BL)*BL; NREC.g1=NREC.g0+2*BL; NREC.u=u; NREC.st='arm'; NREC.notes=[]; NREC.open.clear();
+  if(!playing) start(); const BL=4*S.res; NREC.l0=Math.ceil((stepNow()+1)/BL)*BL; NREC.g0=NREC.l0+2*BL; NREC.g1=NREC.g0+2*BL; NREC.clk=[];   /* v172: two bars of count-in from the next bar line */ NREC.u=u; NREC.st='arm'; NREC.notes=[]; NREC.open.clear();
   if(u==='lead') LREC=true; else { PREC=true; if(AG&&AG.worp) AG.worp.stop(actx.currentTime); } if(AG) leadSync(AG);
-  status('Rec on the '+(u==='lead'?'Lead':'Pad')+': play on your MIDI keys from the next bar, two bars long. Rec again cancels.'); nrecUI(); }
-function nrecStop(done){ NREC.st=''; NREC.u=''; LREC=false; PREC=false; if(AG) leadSync(AG); nrecUI(); if(!done) status('Rec cancelled.'); }
+  nrecClicks(); status('Rec on the '+(u==='lead'?'Lead':'Pad')+': two bars count-in (the clicks), then play two bars on your MIDI keys. Rec again cancels.'); nrecUI(); }
+function nrecStop(done){ if(actx) NREC.clk.forEach(o=>{ try{ o.stop(actx.currentTime); }catch(e){} }); NREC.clk=[]; NREC.st=''; NREC.u=''; LREC=false; PREC=false; if(AG) leadSync(AG); nrecUI(); if(!done) status('Rec cancelled.'); }
 function nrecNote(on,m,v){ if(!NREC.st) return; const p=stepNow(); if(p==null) return;
   if(on){ if(p<NREC.g1) NREC.open.set(m,{p:Math.max(p,NREC.g0-.6),v}); return; }   /* a note played just before the bar counts as on the one */
   const o=NREC.open.get(m); if(!o) return; NREC.open.delete(m); NREC.notes.push({p0:o.p,p1:Math.min(p,NREC.g1),m,v:o.v}); }
