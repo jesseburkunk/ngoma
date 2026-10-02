@@ -11,3 +11,5 @@ dawn.mp3   Dawn in the Amazonian Rainforest, near Tefe, Brazil   https://freesou
 ice.mp3    Ice is melting and crisping at the surface of the lake, Switzerland   https://freesound.org/s/133754/
 city.mp3   Night in Haiti: crickets, dogs, some sounds of the city far away, Port-au-Prince   https://freesound.org/s/395939/
 bats.mp3   Vibration of a nest with hundreds of bats coming out at twilight (contact microphone), southern France   https://freesound.org/s/245811/
+
+voices: radio voices from NASA Artemis II mission audio (nasa.gov/artemisaudio), public domain in the US. NASA does not endorse Ngoma. Identifiable voices: ask permission before any commercial use. Cut with tools/make_voices.py from field_src/voices/ (pieces in cuts.json).
