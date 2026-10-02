@@ -811,7 +811,7 @@ input,select{accent-color:var(--accent)}
 @media (max-width:560px){.zlayers #fldU .mgw{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
 /* v179 layers layout: strip on top, sound knobs, small mix knobs, the melody folded */
 .zlayers .wstrip.wtop{margin:0 0 12px}.zlayers .lsound{margin-bottom:6px}.zlayers .lmix{gap:6px 18px;margin:6px 0 4px;padding-left:18px;border-left:1px solid rgba(236,230,218,.08)}
-.zlayers .lmix .knob{width:56px}.lvfold{margin-top:10px;border-top:1px solid rgba(236,230,218,.07);padding-top:8px}.lvfold>summary{cursor:pointer;list-style:none;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute,#a59f92);user-select:none}
+.zlayers .lmix .knob{width:56px}.lvfold{margin-top:10px;border-top:1px solid rgba(236,230,218,.07);padding-top:8px}.lvfold>summary{cursor:pointer;list-style:none;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text,#ece6da);user-select:none;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid rgba(255,106,43,.55);border-radius:7px;background:rgba(255,106,43,.06)}.lvfold>summary:hover{background:rgba(255,106,43,.14)}.lvfold[open]>summary{border-color:rgba(236,230,218,.18);background:none}.lvfold .lvhint{font-style:normal;text-transform:none;letter-spacing:0;opacity:.6;margin-left:6px}.lvfold[open] .lvhint{display:none}
 .lvfold>summary::-webkit-details-marker{display:none}.lvfold>summary::before{content:'▸ ';color:#ff6a2b}.lvfold[open]>summary::before{content:'▾ '}.lvfold>summary span{text-transform:none;letter-spacing:0;color:#cfc8ba;margin-left:6px}
 .ft-credits{font-size:13px}.ft-lic summary{cursor:pointer;margin-top:6px}.ft-lic pre{white-space:pre-wrap;font-size:11px;line-height:1.5;opacity:.8;max-width:680px}
 /* v173 Lead v2 row */
@@ -868,7 +868,7 @@ body.sk-lead #leadU #plRow{border-top:.5px solid var(--al-line);padding-top:12px
 body.sk-lead #leadU #plRow::before{content:"";position:absolute;left:-2px;top:-2.25px;width:4px;height:4px;border-radius:50%;background:var(--al-line)}
 body.sk-lead #leadU .lmix{border-left:.5px solid var(--al-line)!important}
 body.sk-lead #leadU .lvfold{border-top:.5px solid var(--al-line)!important}
-body.sk-lead #leadU .lvfold>summary{color:var(--al-ink)!important}
+body.sk-lead #leadU .lvfold>summary{color:var(--al-ink)!important;background:#ecece8!important;border-color:var(--al-or)!important}
 body.sk-lead #leadU .lvfold>summary span{color:var(--al-dim)!important}
 /* knobs: black caps with a white line, the travel as a thin orange arc on a pale track */
 body.sk-lead #leadU .kn{background:conic-gradient(from 225deg,var(--al-or) 0deg calc(var(--p)*270deg),#b9b9b3 calc(var(--p)*270deg) 270deg,transparent 270deg)!important;box-shadow:none!important}
@@ -897,7 +897,7 @@ body.sk-lead-d #leadU #plRow{border-top:.5px solid var(--al-line);padding-top:12
 body.sk-lead-d #leadU #plRow::before{content:"";position:absolute;left:-2px;top:-2.25px;width:4px;height:4px;border-radius:50%;background:var(--al-line)}
 body.sk-lead-d #leadU .lmix{border-left:.5px solid var(--al-line)!important}
 body.sk-lead-d #leadU .lvfold{border-top:.5px solid var(--al-line)!important}
-body.sk-lead-d #leadU .lvfold>summary{color:var(--al-ink)!important}
+body.sk-lead-d #leadU .lvfold>summary{color:var(--al-ink)!important;border-color:var(--al-or)!important}
 body.sk-lead-d #leadU .kn{background:conic-gradient(from 225deg,var(--al-or) 0deg calc(var(--p)*270deg),#55575b calc(var(--p)*270deg) 270deg,transparent 270deg)!important;box-shadow:none!important}
 body.sk-lead-d #leadU .knob.bi .kn{background:conic-gradient(from 225deg,#55575b 0deg calc(var(--pa,.5)*270deg),var(--al-or) calc(var(--pa,.5)*270deg) calc(var(--pb,.5)*270deg),#55575b calc(var(--pb,.5)*270deg) 270deg,transparent 270deg)!important}
 body.sk-lead-d #leadU .kn::after{width:calc(100% - 7px)!important;height:calc(100% - 7px)!important;background:linear-gradient(#f2f2ee,#f2f2ee) 50% 3px/1.5px 30% no-repeat,radial-gradient(circle at 50% 30%,#47484b,#161618 70%)!important;box-shadow:0 0 0 .5px #66686c,0 2px 3px rgba(0,0,0,.45)!important}
@@ -4857,7 +4857,7 @@ function layersLayout(){ const lab=k=>{ const e=k.querySelector('.kl'); return e
   const pl=document.querySelector('#plRow .lvw'), mg=document.querySelector('#leadU .mgw'), vary=mg&&[...mg.querySelectorAll('.knob')].find(k=>lab(k)==='Vary'), mel=document.querySelector('#lvRow .lvw');
   if(vary&&mel){ vary.classList.remove('big','mgk'); vary.classList.add('big','mgk'); mel.append(vary); }
   unit('leadU',['Level'],['Filter','Reverb','Echo','Pitch'],pl);
-  const lv=$('lvRow'); if(lv&&!lv.closest('details')){ const d=document.createElement('details'); d.className='lvfold'; const sm=document.createElement('summary'); sm.innerHTML='Melody <span id="lvSum"></span>'; lv.before(d); d.append(sm,lv);
+  const lv=$('lvRow'); if(lv&&!lv.closest('details')){ const d=document.createElement('details'); d.className='lvfold'; try{ if(localStorage.getItem('ngoma.melody')==='open') d.open=true; }catch(e){} d.addEventListener('toggle',()=>{ try{ localStorage.setItem('ngoma.melody',d.open?'open':'closed'); }catch(e){} });   /* v181: remembers whether you keep it open */ const sm=document.createElement('summary'); sm.innerHTML='Melody <span id="lvSum"></span><em class="lvhint">patterns: form, rhythm, notes, range, drums, vary</em>'; sm.title='Open the pattern controls of the Lead'; lv.before(d); d.append(sm,lv);
     const su=()=>{ const F=S.fx, f=F.leadForm||'qa', fn=f==='free'?'Free':(window.WorpEngine&&WorpEngine.LV_FORMS[f])||f, rl=F.leadRl??16, pl2=F.leadPl??5; $('lvSum').textContent=f==='free'?'· Free':'· '+fn+' · rhythm '+(rl>=16?'bar':rl)+' · notes '+(pl2||'all')+' · vary '+Math.round((F.leadCx??.3)*100)+'%'; }; su(); UPD.push(su);
     d.addEventListener('input',su); d.addEventListener('click',()=>setTimeout(su,0)); } }
 function initControls(){

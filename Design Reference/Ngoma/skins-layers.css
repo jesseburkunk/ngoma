@@ -48,7 +48,7 @@ body.sk-lead #leadU #plRow{border-top:.5px solid var(--al-line);padding-top:12px
 body.sk-lead #leadU #plRow::before{content:"";position:absolute;left:-2px;top:-2.25px;width:4px;height:4px;border-radius:50%;background:var(--al-line)}
 body.sk-lead #leadU .lmix{border-left:.5px solid var(--al-line)!important}
 body.sk-lead #leadU .lvfold{border-top:.5px solid var(--al-line)!important}
-body.sk-lead #leadU .lvfold>summary{color:var(--al-ink)!important}
+body.sk-lead #leadU .lvfold>summary{color:var(--al-ink)!important;background:#ecece8!important;border-color:var(--al-or)!important}
 body.sk-lead #leadU .lvfold>summary span{color:var(--al-dim)!important}
 /* knobs: black caps with a white line, the travel as a thin orange arc on a pale track */
 body.sk-lead #leadU .kn{background:conic-gradient(from 225deg,var(--al-or) 0deg calc(var(--p)*270deg),#b9b9b3 calc(var(--p)*270deg) 270deg,transparent 270deg)!important;box-shadow:none!important}
@@ -77,7 +77,7 @@ body.sk-lead-d #leadU #plRow{border-top:.5px solid var(--al-line);padding-top:12
 body.sk-lead-d #leadU #plRow::before{content:"";position:absolute;left:-2px;top:-2.25px;width:4px;height:4px;border-radius:50%;background:var(--al-line)}
 body.sk-lead-d #leadU .lmix{border-left:.5px solid var(--al-line)!important}
 body.sk-lead-d #leadU .lvfold{border-top:.5px solid var(--al-line)!important}
-body.sk-lead-d #leadU .lvfold>summary{color:var(--al-ink)!important}
+body.sk-lead-d #leadU .lvfold>summary{color:var(--al-ink)!important;border-color:var(--al-or)!important}
 body.sk-lead-d #leadU .kn{background:conic-gradient(from 225deg,var(--al-or) 0deg calc(var(--p)*270deg),#55575b calc(var(--p)*270deg) 270deg,transparent 270deg)!important;box-shadow:none!important}
 body.sk-lead-d #leadU .knob.bi .kn{background:conic-gradient(from 225deg,#55575b 0deg calc(var(--pa,.5)*270deg),var(--al-or) calc(var(--pa,.5)*270deg) calc(var(--pb,.5)*270deg),#55575b calc(var(--pb,.5)*270deg) 270deg,transparent 270deg)!important}
 body.sk-lead-d #leadU .kn::after{width:calc(100% - 7px)!important;height:calc(100% - 7px)!important;background:linear-gradient(#f2f2ee,#f2f2ee) 50% 3px/1.5px 30% no-repeat,radial-gradient(circle at 50% 30%,#47484b,#161618 70%)!important;box-shadow:0 0 0 .5px #66686c,0 2px 3px rgba(0,0,0,.45)!important}
