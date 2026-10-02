@@ -192,7 +192,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     return r.hit + ' hits from ' + r.size + ' buffers, ' + r.miss + ' synthesised while filling'; });
 
   await check('Load budget: layers do not cost more than they should', async () => { const r = await p.evaluate(async () => { const keep = JSON.stringify(S.fx), b0 = S.bars; S.bars = 2;
-      const t = async fn => { Object.assign(S.fx, JSON.parse(keep)); fn && fn(); let best = 1e9; for (let k = 0; k < 2; k++) { const t0 = performance.now(); await renderLoop(false, 48000); best = Math.min(best, performance.now() - t0); } return best; };
+      const t = async fn => { Object.assign(S.fx, JSON.parse(keep)); fn && fn(); let best = 1e9; for (let k = 0; k < 3; k++) {   /* v192: best of 3, two runs swung between 2.2 and 3.4 on the same build */ const t0 = performance.now(); await renderLoop(false, 48000); best = Math.min(best, performance.now() - t0); } return best; };
       const d = await t(), all = await t(() => { S.fx.padOn = true; S.fx.padType = 7; S.fx.leadOn = true; S.fx.mgOn = true; S.fx.mgMode = 1; S.fx.rvType = 'bloom'; S.fx.rvLevel = .3; });
       Object.assign(S.fx, JSON.parse(keep)); S.bars = b0; return { d, all, x: all / d, rt: d / 1000 / (2 * 4 * 60 / S.bpm) }; });
     assert(r.x < 3.3, 'everything on costs ' + r.x.toFixed(2) + ' x the drums alone (budget 3.3)'); return 'all on ' + r.x.toFixed(2) + ' x drums, drums ' + r.rt.toFixed(2) + ' x real time here'; });
