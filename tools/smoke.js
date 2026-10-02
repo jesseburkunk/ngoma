@@ -71,6 +71,11 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       const out = { bars: c.bars, ratio: w[0].length / one[0].length, live: S.bars, nb }; S.lanes.forEach((x, i) => x.len = lens[i]); L.len = l0; S.bars = b0; Object.assign(S.fx, JSON.parse(keep)); return out; });
     assert(r.bars === 3 && Math.abs(r.ratio - 3) < .01 && r.live === 1, JSON.stringify(r)); return 'a lane of 3 beats in a 1-bar loop: ' + r.bars + ' bars'; });
 
+  await check('Candy Attack softens the transients', async () => { const r = await p.evaluate(async () => { const keep = JSON.stringify(S.fx); S.bars = 1; Object.assign(S.fx, { cdOn: true, cdSrc: 'synth', cdLvl: .6, cdAmt: .7 });
+      const crest = a => { let pk = 0, e = 0; for (const x of a) { pk = Math.max(pk, Math.abs(x)); e += x * x; } return pk / Math.sqrt(e / a.length); }, out = [];
+      for (const at of [0, 1]) { S.fx.cdAtk = at; S.renderOnly = -4; const w = await renderLoop(true, 22050); S.renderOnly = null; out.push(crest(w[0])); } Object.assign(S.fx, JSON.parse(keep)); return out; });
+    assert(r[1] < r[0] * .75, 'crest ' + r.map(x => x.toFixed(1)).join(' -> ')); return 'crest factor ' + r.map(x => x.toFixed(0)).join(' -> '); });
+
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
       for (let i = 0; i < MG_MODES.length; i++) { S.fx.mgMode = i; const w = await renderLoop(false, 22050), v = rms(w[0]); if (!(v > .002)) bad.push(MG_NAMES[i] + ':' + (v < 0 ? 'NaN' : v.toFixed(4))); }
       S.fx.mgOn = false; return { n: MG_MODES.length, bad }; }, rmsJS); assert(!r.bad.length, r.bad.join(', ')); return r.n + ' modes'; });
