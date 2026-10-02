@@ -45,7 +45,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
   await check('Lead sounds and sits in the mix', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), db = v => 20 * Math.log10(v + 1e-9), out = [];
       S.bars = 2; S.fx.leadOn = true; S.fx.leadLvl = .5;   /* v175: the loud moments (95th percentile of 50 ms windows), not the average, so a sparse line is not judged too soft */
       const p95 = a => { const w = 1102, v = []; for (let i = 0; i + w <= a.length; i += w) { let e = 0; for (let j = i; j < i + w; j++) e += a[j] * a[j]; v.push(Math.sqrt(e / w)); } v.sort((x, y) => x - y); return v[Math.floor(v.length * .95)] || 0; };
-      for (const sd of [4242, 12163, 20084]) { S.fx.wlead = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] }; await leadMeasure(S.fx.wlead);   /* v174: with its per-patch gain, as it plays live */
+      for (const sd of [4242, 12163, 20084]) { S.fx.wlead = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] };
         const m = await renderLoop(false, 22050); S.renderOnly = -2; const l = await renderLoop(false, 22050); S.renderOnly = null; out.push(+(db(p95(l[0])) - db(p95(m[0]))).toFixed(1)); }
       return out; }, rmsJS); assert(r.every(x => x > -16 && x < -3), 'lead vs mix dB ' + r.join(' ')); return 'lead ' + r.join(' / ') + ' dB under mix'; });
 
@@ -84,24 +84,13 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       return { A, B, end: sig(), started, mids: [...seen].filter(s => s !== A && s !== B).length }; });
     assert(r.started, 'morph never started'); assert(r.end === r.A, 'did not land on the scene'); assert(r.mids >= 2, 'no gradual steps (' + r.mids + ')'); return r.mids + ' in-between states'; });
 
-  await check('Worp panel: keys play Ngoma lead, record a line on the grid, Mine | Worp', async () => {
-    await p.evaluate(() => { S.fx.leadOn = true; if (!playing) start(); worpPanel(true, worpToken(leadSpec(), 'lead')); }); await p.waitForTimeout(2500);
-    const f = p.frames().find(x => x.url().includes('/worp')); assert(f, 'no Worp frame'); f.page();
-    await f.evaluate(() => initAudio()); await p.evaluate(() => ngMidi({ data: [0x90, 67, 110] })); await p.waitForTimeout(200);   /* v174: the keys come in through Ngoma, which passes them to the panel */
-    const r1 = await f.evaluate(() => ({ routed: KEYS_NG.size, kind: cur().kind, fwd: MIDIFWD })); await p.evaluate(() => ngMidi({ data: [0x80, 67, 0] }));
-    assert(r1.kind === 'lead' && r1.routed === 1 && r1.fwd, 'keys not routed to Ngoma ' + JSON.stringify(r1));
-    await f.evaluate(() => recLine()); const wait = await f.evaluate(() => REC.start - ctx.currentTime); await p.waitForTimeout(wait * 1000 + 300);
-    await f.evaluate(async () => { const w = ms => new Promise(r => setTimeout(r, ms)); await w(90); onMidi({ fwd: true, data: [0x90, 64, 100] }); await w(250); onMidi({ fwd: true, data: [0x80, 64, 0] }); await w(330); onMidi({ fwd: true, data: [0x90, 67, 90] }); await w(120); onMidi({ fwd: true, data: [0x80, 67, 0] }); });
-    const endIn = await f.evaluate(() => REC.end - ctx.currentTime); await p.waitForTimeout(endIn * 1000 + 1200);
-    const r2 = await p.evaluate(() => { const R = leadSpec().rec, sg = document.getElementById('leadLine'), mine = sg.querySelector('[data-l=mine]'), wo = sg.querySelector('[data-l=worp]');
-      const a = { n: R && R.notes.length, shown: !sg.hidden && !mine.disabled, grid: R && R.notes.every(x => Math.abs(x.s - Math.round(x.s)) < .34 && Math.abs(x.d - Math.round(x.d)) < 1e-6)   /* v167: an offbeat lands on the drums' swing (7.16 with swing), which is on the grid as Ngoma plays it */ , notes: R && JSON.stringify(R.notes) };
-      wo.click(); a.off = !recOn(); mine.click(); a.on = !!recOn(); a.lrec = LREC; return a; });
-    assert(r2.n >= 1, 'line not recorded'); assert(r2.grid, 'recording not on the grid at Quantize 100%: ' + r2.notes); assert(r2.shown && r2.off && r2.on, 'Mine | Worp switch'); assert(!r2.lrec, 'lead left muted after recording');
-    const r3 = await f.evaluate(async () => { const sg = document.getElementById('lineSeg'), mine = sg.querySelector('[data-l=mine]'), wo = sg.querySelector('[data-l=worp]'); const vis = !sg.hidden && !mine.disabled;
-      wo.click(); await new Promise(r => setTimeout(r, 700)); const off = !state.rec && !mine.disabled; mine.click(); await new Promise(r => setTimeout(r, 700)); return { vis, off, on: !!state.rec, ring: !!ringAn() }; });
-    const r4 = await p.evaluate(() => { const a = { ng: !!recOn() }; worpPanel(false); return a; });
-    assert(r3.vis && r3.off && r3.on && r4.ng, 'Mine | Worp in Worp ' + JSON.stringify([r3, r4])); assert(r3.ring, 'Worp ring has no signal source over Ngoma');
-    await p.evaluate(() => { const W = leadSpec(); delete W.rec; save(); }); });
+  await check('Worp panel: a pad opens, Ngoma passes your keys on, Worp makes pads only', async () => {
+    const keep = await p.evaluate(() => { const k = { padOn: S.fx.padOn, padType: S.fx.padType }; S.fx.padOn = true; S.fx.padType = 7; if (!playing) start(); worpPanel(true, worpToken(worpSpec())); return k; }); await p.waitForTimeout(2500);
+    const f = p.frames().find(x => x.url().includes('/worp')); assert(f, 'no Worp frame');
+    await f.evaluate(() => initAudio()); await p.evaluate(() => ngMidi({ data: [0x90, 67, 110] })); await p.waitForTimeout(200);   /* v174: the keys come in through Ngoma */
+    const r1 = await f.evaluate(() => { const a = { kind: cur().kind, fwd: MIDIFWD, held: held.has(67) }; setMode('lead'); a.after = state.mode; a.segHidden = document.getElementById('mPad').parentNode.hidden; return a; }); await p.evaluate(() => ngMidi({ data: [0x80, 67, 0] }));
+    await p.evaluate(k => { worpPanel(false); Object.assign(S.fx, k); UPD.forEach(f => f()); if (AG) padSync(AG); }, keep);
+    assert(r1.kind === 'pad' && r1.fwd && r1.held, 'keys did not reach the Worp panel ' + JSON.stringify(r1)); assert(r1.after === 'pad' && r1.segHidden, 'Worp still has a lead mode ' + JSON.stringify(r1)); });
 
   await check('Vet: renders, on and off at about the same loudness, peaks held', async () => { const r = await p.evaluate(async () => { applyPreset(PRESETS[0].id); S.bars = 1; const lo = S.fx.leadOn; S.fx.leadOn = false; const o = [];
       for (const [on, a] of [[false, .3], [true, .3], [true, 1]]) { S.fx.vetOn = on; S.fx.vetAmt = a; const w = await renderLoop(false, 22050), ch = [w[0], w[1] || w[0]]; let pk = 0; for (const c of ch) for (const v of c) pk = Math.max(pk, Math.abs(v)); o.push({ lu: loudness(ch, 22050), pk }); }
@@ -124,7 +113,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
 
   await check('MIDI keys play the lead before Play and after closing Worp', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), w = ms => new Promise(r => setTimeout(r, ms));
       stop(); await w(300); S.fx.leadOn = true; S.fx.padOn = false; const peak = async () => { let v = 0; ngMidi({ data: [0x90, 64, 110] }); for (let k = 0; k < 12; k++) { await w(40); const a = new Float32Array(2048); AG.scopeTap.aL.getFloatTimeDomainData(a); v = Math.max(v, rms(a)); } ngMidi({ data: [0x80, 64, 0] }); await w(300); return v; };
-      const a = await peak(); worpPanel(true, worpToken(leadSpec(), 'lead')); await w(1500); worpPanel(false); await w(200); const b = await peak(); return { a, b }; }, rmsJS);
+      const a = await peak(); worpPanel(true, worpToken(worpSpec())); await w(1500); worpPanel(false); await w(200); const b = await peak(); return { a, b }; }, rmsJS);
     assert(r.a > .01 && r.b > .01, JSON.stringify(r)); });
 
   await check('Old shared links still open', async () => { const link = await p.evaluate(async () => { const str = JSON.stringify({ pattern: patternData(), kit: kitData() });
@@ -237,10 +226,10 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     return r.notes + ' notes in 8 bars, ' + r.varied + ' different phrases with Vary, beats ' + r.onBeats + ' > ' + r.gaps + ' in the gaps'; });
 
   await check('Plaits lead: the seed picks the sound, the line plays, keys sound, export renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx), o = { pre: [], rms: [] };
-      S.bars = 1; Object.assign(S.fx, { leadOn: true, leadLvl: .6, padOn: false }); delete S.fx.leadEng; let prev = null; o.diff = 0;
+      S.bars = 1; Object.assign(S.fx, { leadOn: true, leadLvl: .6, padOn: false }); let prev = null; o.diff = 0;
       for (const sd of [101, 202, 303]) { S.fx.wlead = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] }; o.pre.push(plPatch(sd).nm); S.renderOnly = -2; const b = await renderLoop(false, 22050); S.renderOnly = null; o.rms.push(+rms(b[0]).toFixed(4));
         if (prev) { let d = 0; for (let i = 0; i < b[0].length; i += 7) d += Math.abs(b[0][i] - prev[i]); o.diff += d; } prev = b[0]; }
-      ensureCtx(); await loadFilter(actx); plKeys(AG).noteOn(64, .8, actx.currentTime + .05); o.keys = !!AG.plaits; o.ok = plOn();
+      ensureCtx(); await loadFilter(actx); plKeys(AG).noteOn(64, .8, actx.currentTime + .05); o.keys = !!AG.plaits; o.ok = true;
       S.fx.wlead.pl = { e: 13, t: .2 }; o.ovr = plPatch(303).nm === 'Wavetable' && plPatch(303).t === .2; S.fx.leadMove = 1; S.renderOnly = -2; const mvb = await renderLoop(false, 22050); S.renderOnly = null; o.mv = rms(mvb[0]); o.row = !!document.querySelector('#plRow select') && !document.getElementById('plRow').hidden;   /* v176: knobs and Move */
       Object.assign(S.fx, JSON.parse(keep)); return o; }, rmsJS);
     assert(r.ok && r.rms.every(x => x > .002), 'Plaits lead silent ' + JSON.stringify(r)); assert(r.diff > 1, 'seeds sound the same'); assert(r.keys, 'keys made no Plaits voice'); assert(r.ovr && r.row && r.mv > .002, 'Plaits knobs ' + JSON.stringify(r));
@@ -254,13 +243,13 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
 
   await p.close();   /* else Worp links to this Ngoma tab and plays there */
   const w = await ctx.newPage();
-  await check('Worp alone: loads, rolls, pads and leads sound', async () => { await w.goto(base + 'worp/index.html'); await w.waitForTimeout(1500); await w.click('body', { position: { x: 5, y: 5 } });
+  await check('Worp alone: loads, rolls, pads sound', async () => { await w.goto(base + 'worp/index.html'); await w.waitForTimeout(1500); await w.click('body', { position: { x: 5, y: 5 } });
     const r = await w.evaluate(async rj => { const rms = eval(rj), wt = ms => new Promise(r => setTimeout(r, ms)); initAudio(); const got = { pad: 0, lead: 0 }, bad = [];
-      for (const mode of ['pad', 'pad', 'pad', 'lead', 'lead', 'lead']) { state.mode = mode; roll(); startPlay(); let v = 0;
+      for (const mode of ['pad', 'pad', 'pad']) { state.mode = mode; roll(); startPlay(); let v = 0;
         for (let k = 0; k < 12; k++) { await wt(250); const a = new Float32Array(2048); A.an.getFloatTimeDomainData(a); v = Math.max(v, rms(a)); }
         stopPlay(); await wt(200); if (v > .002) got[cur().kind]++; else bad.push(mode + ':' + cur().name + ':' + v.toFixed(4)); }
       return { got, bad }; }, rmsJS);
-    assert(r.got.pad === 3 && r.got.lead === 3, JSON.stringify(r)); return 'pads ' + r.got.pad + ', leads ' + r.got.lead; });
+    assert(r.got.pad === 3, JSON.stringify(r)); return 'pads ' + r.got.pad; });
 
   await b.close(); srv.close();
   const f = results.filter(r => !r.ok); console.log('\n' + (results.length - f.length) + '/' + results.length + ' passed' + (f.length ? '. Failed: ' + f.map(r => r.name).join('; ') : '.'));

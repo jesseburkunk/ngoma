@@ -328,6 +328,7 @@ details.more{border-top-color:var(--line)}
   background:radial-gradient(circle at 50% 20%,rgba(255,220,180,.35),transparent 55%);-webkit-mask:radial-gradient(circle closest-side,transparent 84%,#000 84.5%);mask:radial-gradient(circle closest-side,transparent 84%,#000 84.5%)}
 
 
+.chip[data-kind="lead"]{display:none}   /* v1.30: pads only */
 </style>
 </head>
 <body>
@@ -335,7 +336,7 @@ details.more{border-top-color:var(--line)}
 
 <div class="app">
   <header>
-    <div class="brand"><b>Worp</b><span>Pads and leads by chance. Press, listen, keep or throw again.</span></div>
+    <div class="brand"><b>Worp</b><span>Pads by chance. Press, listen, keep or throw again.</span></div>
     <div class="hr">
     <span class="pill" id="midiPill"><i></i><em id="midiText">MIDI not connected</em></span>
     </div>
@@ -355,7 +356,7 @@ details.more{border-top-color:var(--line)}
 
     <section class="panel" aria-label="Controls">
       <div class="row">
-        <div class="seg" role="group" aria-label="Sound type">
+        <div class="seg" role="group" aria-label="Sound type" hidden>
           <button id="mPad" aria-pressed="true" title="Pads: slow, wide sounds that swell and drift, played as a drone in the key">Pad</button>
           <button id="mLead" aria-pressed="false" title="Leads: one voice at a time with glide, played as a short phrase that changes a little every few bars">Lead</button>
         </div>
@@ -1450,6 +1451,7 @@ function back(){
   const h=list[i+1];if(h)setPatch(fromHist(h),{record:false});
 }
 function setMode(m){
+  if(m==='lead')return;   /* v1.30 (Jesse, 02-10): Worp makes pads; the Lead lives in Ngoma, on Plaits */
   if(m===state.mode)return;
   FLTS[state.mode]={...FLT};Object.assign(FLT,FLTS[m]||FLT_OPEN);syncFilter();renderFilter();ENVS[state.mode]={...ENV};Object.assign(ENV,ENVS[m]||ENV_N);renderEnv();
   const wasPlaying=S.playing;if(wasPlaying)stopPlay();
@@ -1604,7 +1606,7 @@ const EMBED=window.parent!==window;let MIDIFWD=false;
 function toNgoma(m){if(EMBED){try{window.parent.postMessage(m,'*')}catch(e){}}else if(BC)BC.postMessage(m)}
 function onHostMsg(m){
   if(!m||typeof m!=='object')return;
-  if(m.t==='load'){const h=parseToken('#'+m.token);if(h){if(h.kind!==state.mode)setMode(h.kind);setFLT(h.flt||FLT_OPEN);setENV(h.env);const P=fromHist(h);uniqueName(P);setPatch(P)}return}
+  if(m.t==='load'){const h=parseToken('#'+m.token);if(h&&h.kind!=='lead'){if(h.kind!==state.mode)setMode(h.kind);setFLT(h.flt||FLT_OPEN);setENV(h.env);const P=fromHist(h);uniqueName(P);setPatch(P)}return}
   if(m.t==='rec'){m.on?recStart(m.epoch):recStop();return}
   if(m.t==='midi'){if(!MIDIFWD){MIDIFWD=true;try{midiStatus('Your keys, via Ngoma',true)}catch(x){}}onMidi({data:m.data,fwd:true});return}
   if(m.t==='panel'){PANEL=!!m.open;if(PANEL){}else{LINK.armed=false;if(S.playing&&cur().kind==='pad')stopPlay()}renderLive();return}
@@ -1870,7 +1872,7 @@ $('#learnPlay').addEventListener('click',()=>{learn=learn==='play'?null:'play';r
 load();
 document.body.dataset.mode='pad';
 {const first=state.hist.find(h=>h.kind==='pad');const P=first?fromHist(first):genPatch(0x5EED17,'pad');state.patch.pad=P;state.voicing=P.voicing.slice();if(!first){state.hist.unshift(histEntry(P))}}
-{const h=parseToken(location.hash);if(h){if(h.kind!==state.mode)setMode(h.kind);setFLT(h.flt||FLT_OPEN);setENV(h.env);const P=fromHist(h);uniqueName(P);setPatch(P);try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}}
+{const h=parseToken(location.hash);if(h&&h.kind!=='lead'){if(h.kind!==state.mode)setMode(h.kind);setFLT(h.flt||FLT_OPEN);setENV(h.env);const P=fromHist(h);uniqueName(P);setPatch(P);try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}}
 // Tooltips as in Ngoma: after a short pause, above the control (below when there is no room), also on keyboard focus
 (function initTips(){
   const tip=document.createElement('div');tip.className='tip';tip.setAttribute('role','tooltip');tip.hidden=true;document.body.append(tip);
