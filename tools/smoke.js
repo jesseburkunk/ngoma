@@ -197,6 +197,14 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       Object.assign(S.fx, JSON.parse(keep)); S.bars = b0; return { d, all, x: all / d, rt: d / 1000 / (2 * 4 * 60 / S.bpm) }; });
     assert(r.x < 3.3, 'everything on costs ' + r.x.toFixed(2) + ' x the drums alone (budget 3.3)'); return 'all on ' + r.x.toFixed(2) + ' x drums, drums ' + r.rt.toFixed(2) + ' x real time here'; });
 
+  await check('Field: plays a recording, Drift and Tune sound, the loop has no seam', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
+      Object.assign(S.fx, { fldOn: true, fldSrc: 'water', fldLvl: .5, fldDrift: 0, fldTune: 0 }); const b = await fldLoad('water'); if (!b) return { err: 'not loaded (' + FLD.err + ')' };
+      S.renderOnly = -3; const a = await renderLoop(false, 22050); S.fx.fldDrift = .8; const d = await renderLoop(false, 22050); S.fx.fldDrift = 0; S.fx.fldTune = 1; const t = await renderLoop(false, 22050); S.renderOnly = null;
+      const seam = x => { const n = x.length, w = 256; let e = 0, m = 0; for (let i = 0; i < w; i++) e += Math.abs(x[n - w + i] - x[i]); for (let i = w; i < n - w; i += 997) m += Math.abs(x[i] - x[i - 1]); return { jump: Math.abs(x[n - 1] - x[0]), step: m / Math.floor((n - 2 * w) / 997) }; };
+      let pk = 0; for (const w of [a, d, t]) for (const v of w[0]) pk = Math.max(pk, Math.abs(v)); Object.assign(S.fx, JSON.parse(keep)); return { ra: rms(a[0]), rd: rms(d[0]), rt: rms(t[0]), pk, s: seam(a[0]), dur: b.duration }; }, rmsJS);
+    assert(!r.err, r.err); assert(r.ra > .005 && r.rd > .005 && r.rt > .003, 'silent ' + JSON.stringify(r)); assert(r.pk < 1, 'peak ' + r.pk.toFixed(3)); assert(r.s.jump < .1 + 6 * r.s.step, 'seam ' + JSON.stringify(r.s));
+    return 'plain ' + r.ra.toFixed(3) + ', drift ' + r.rd.toFixed(3) + ', tune ' + r.rt.toFixed(3) + ' rms, ' + r.dur.toFixed(0) + ' s recording'; });
+
   await check('Bloom: renders, the tail sings and stays in bounds', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
       Object.assign(S.fx, { rvOn: true, rvType: 'hall', rvLevel: .5 }); const a = await renderLoop(false, 22050); S.fx.rvType = 'bloom'; const b = await renderLoop(false, 22050);
       let pk = 0; for (const v of b[0]) pk = Math.max(pk, Math.abs(v)); const hz = bloomHz(0); Object.assign(S.fx, JSON.parse(keep)); return { ra: rms(a[0]), rb: rms(b[0]), pk, hz }; }, rmsJS);

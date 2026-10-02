@@ -13,7 +13,7 @@
 <script>document.documentElement.setAttribute('data-theme','dark');   /* v129: one look, dark (Jesse: the light/dark switch can go) */</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Michroma&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=VT323&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Federo&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=VT323&display=swap">
 <style>
 :root{--cream:var(--text);--oxblood:var(--bg)}   /* v163: the colour tokens live in the skin (end of this file); these two aliases stay */
 *{box-sizing:border-box}
@@ -240,7 +240,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .tg.dice{font-size:17px;line-height:1;padding:0 6px}
 .mgw{display:flex;gap:6px;justify-content:center}
 .wnav{display:inline-flex;align-items:center;text-decoration:none;color:inherit;gap:6px}
-.wnav.live::after{content:'';width:7px;height:7px;border-radius:50%;background:#7fd2bd;box-shadow:0 0 6px #7fd2bd}
+.wnav.live::after{content:'';width:7px;height:7px;border-radius:50%;background:#f0e1b4;box-shadow:0 0 6px #cf8f5e}
 /* v124: the Worp button in Worp's own colours (its ground, ink and pad mint), in both themes, so it reads as the door to Worp (Jesse) */
 /* v131: the app switch (Ngoma | Worp), the same in both pages and on the same spot, top left, so you flip back and forth without looking.
    Each half is a window into its app: its own ground, a slowly breathing glow in its colour, its name in its own face. */
@@ -249,13 +249,13 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .apps2>a,.apps2>b{display:flex;align-items:center;justify-content:center;width:104px;text-decoration:none;position:relative;background-size:170% 170%;animation:wglow 7s ease-in-out infinite;transition:filter .2s}
 .apps2 .nglogo{height:13px;width:auto;display:block;color:#f4efe6;filter:drop-shadow(0 0 6px rgba(226,181,107,.55))}   /* v134: the wordmark in white on the gold glow (Jesse) */   /* v132: the real Ngoma wordmark, not a font */
 .apps2 .ng{color:#e2b56b;text-shadow:0 0 8px rgba(226,181,107,.5);background-image:radial-gradient(120% 160% at 25% 15%,rgba(226,181,107,.32),rgba(226,181,107,0) 60%),radial-gradient(90% 120% at 90% 100%,rgba(218,122,96,.22),rgba(218,122,96,0) 60%);background-color:#17130f}
-.apps2 .wp{font:400 11px "Michroma",sans-serif;letter-spacing:.14em;color:#7fd2bd;text-shadow:0 0 8px rgba(127,210,189,.55);background-image:radial-gradient(120% 160% at 25% 15%,rgba(127,210,189,.34),rgba(127,210,189,0) 60%),radial-gradient(90% 120% at 90% 100%,rgba(239,177,104,.16),rgba(239,177,104,0) 60%);background-color:#101317;animation-delay:-3.5s}
+.apps2 .wp{font:400 12px "Federo",serif;letter-spacing:.2em;color:#e0a072;text-shadow:0 0 8px rgba(207,143,94,.45);background-image:radial-gradient(120% 160% at 25% 15%,rgba(207,143,94,.28),rgba(207,143,94,0) 60%),radial-gradient(90% 120% at 90% 100%,rgba(240,225,180,.10),rgba(240,225,180,0) 60%);background-color:#0d0b09;animation-delay:-3.5s}   /* v168: Worp in copper and Federo, after its new look (Worp v1.26) */
 .apps2>b{box-shadow:inset 0 -2px 0 currentColor}.apps2>a{filter:saturate(.8) brightness(.85)}.apps2>a:hover{filter:none}
-.apps2 .ng+.wp{border-left:1px solid #2a3139}
-.wportal{display:inline-flex;align-items:center;gap:7px;text-decoration:none;border:1px solid #2a3139!important;border-radius:9px;color:#7fd2bd!important;background-color:#101317!important;background-image:radial-gradient(120% 160% at 25% 15%,rgba(127,210,189,.34),rgba(127,210,189,0) 60%),radial-gradient(90% 120% at 90% 100%,rgba(239,177,104,.16),rgba(239,177,104,0) 60%)!important;background-size:170% 170%!important;animation:wglow 7s ease-in-out infinite;box-shadow:0 2px 10px rgba(0,0,0,.35),inset 0 0 0 1px rgba(127,210,189,.08);transition:filter .2s,box-shadow .2s}   /* v141: Open in Worp as a portal, like the Worp half of the app switch (Jesse) */
-.wportal .wpo{font-size:11px;color:#a9c9c0;letter-spacing:.02em}
-.wportal .wpw{font:400 11px "Michroma",sans-serif;letter-spacing:.14em;text-shadow:0 0 8px rgba(127,210,189,.55)}
-.wportal:hover{filter:brightness(1.15);box-shadow:0 2px 14px rgba(127,210,189,.25),inset 0 0 0 1px rgba(127,210,189,.2)}
+.apps2 .ng+.wp{border-left:1px solid #2e2620}
+.wportal{display:inline-flex;align-items:center;gap:7px;text-decoration:none;border:1px solid #2e2620!important;border-radius:9px;color:#e0a072!important;background-color:#0d0b09!important;background-image:radial-gradient(120% 160% at 25% 15%,rgba(207,143,94,.28),rgba(207,143,94,0) 60%),radial-gradient(90% 120% at 90% 100%,rgba(240,225,180,.10),rgba(240,225,180,0) 60%)!important;background-size:170% 170%!important;animation:wglow 7s ease-in-out infinite;box-shadow:0 2px 10px rgba(0,0,0,.35),inset 0 0 0 1px rgba(207,143,94,.10);transition:filter .2s,box-shadow .2s}   /* v141: Open in Worp as a portal, like the Worp half of the app switch (Jesse) */
+.wportal .wpo{font-size:11px;color:#c9b39a;letter-spacing:.02em}
+.wportal .wpw{font:400 12px "Federo",serif;letter-spacing:.2em;text-shadow:0 0 8px rgba(207,143,94,.45)}
+.wportal:hover{filter:brightness(1.15);box-shadow:0 2px 14px rgba(207,143,94,.25),inset 0 0 0 1px rgba(207,143,94,.2)}
 @media (prefers-reduced-motion:reduce){.wportal{animation:none}}
 @keyframes wglow{0%,100%{background-position:0% 0%}50%{background-position:100% 60%}}
 @media (prefers-reduced-motion:reduce){.apps2>a,.apps2>b{animation:none}}
@@ -265,6 +265,7 @@ body.wopen{overflow:hidden}
 .padu.isworp .wstrip{border-top:0;margin-top:0;padding-top:0}
 .padu.isworp .wname b{font-size:17px}
 .padseg{margin-left:auto;margin-right:8px}
+.wstrip select{height:30px;max-width:150px;border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-size:13px;padding:0 8px}   /* v168: Field's recordings */
 .wstrip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px;padding-top:10px;border-top:1px solid var(--line)}
 .wstrip .btn{height:30px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 .wname{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2;min-width:0}
@@ -897,6 +898,11 @@ input,select{accent-color:var(--accent)}
       <div class="fxc"><div class="knrow"><div id="leadSlot"></div></div>
         <div class="wstrip" id="leadStrip"><button class="btn" id="leadLock" aria-pressed="false" title="Lock the line: the lead keeps playing these bars exactly as they are">Lock</button><span class="seg lineseg" id="leadLine" role="group" aria-label="Which line the lead plays" title="Mine: the line you recorded in Worp (Rec 2 bars). Worp: the melody Worp makes itself. Your line stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Worp</button></span><button class="btn" id="leadNew" title="New sound: another Worp lead, playing the same melody (the old one stays in undo)">New sound</button><button class="btn" id="leadPat" title="New pattern: another melody, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="LEAD"><b id="leadName"></b><small id="leadCode"></small></span><span class="wms" id="leadMutes" aria-label="Mute lead layers"></span><a class="btn wportal" id="leadOpen" href="worp/" target="worp" rel="opener" title="Open this lead in Worp, over Ngoma: every sound you pick there and every change plays in Ngoma"><span class="wpo">Open in</span><span class="wpw">WORP</span></a></div></div>
     </div>
+    <div class="fxg magic fldu" id="fldU">
+      <div class="fxh"><span class="lbl" title="A field recording under the drums: a place, not an instrument. With Tune it sings your chords">Field</span><label class="chk"><input id="fldOn" type="checkbox"> On</label></div>
+      <div class="fxc"><div class="knrow"><div id="fldSlot"></div></div>
+        <div class="wstrip" id="fldStrip"><select id="fldSel" aria-label="Recording" title="Which recording plays"></select><button class="btn" id="fldFile" type="button" title="Play your own recording (wav, mp3, m4a, ogg). It stays in this browser">Your file…</button><input type="file" id="fldIn" accept="audio/*" hidden><span class="wname lcd" data-lcd="FIELD"><b id="fldName"></b><small id="fldCred"></small></span></div></div>
+    </div>
     <div class="fxg magic" id="spaceU">
       <div class="fxh"><span class="lbl" title="How much room is around the drums: reverb and echo together">Space</span></div>
       <div class="fxc"><div class="knrow"><div id="spSlot"></div></div></div>
@@ -1160,6 +1166,7 @@ input,select{accent-color:var(--accent)}
   <dl>
     <dt>Pad</dt><dd>A soft layer under the drums. <i>Worp</i> throws a new patch from Ngoma's sister synth; <i>Classic</i> has six pads of its own.<details class="g-more"><summary>More</summary><p><b>Worp:</b> every throw is a patch of up to four sources with slow modulation that keeps re-patching itself. <i>New</i> throws another, the numbered buttons mute its layers, <i>Open in Worp</i> opens Worp over Ngoma while Ngoma keeps playing (<i>Ngoma</i> or Esc brings you back). Whatever you pick or change there plays here at once; ← undoes a new sound.</p><p><b>Classic types:</b> <i>Bed</i>, one chord per bar. <i>Loops</i>, five tone fragments on their own lengths, like a Buddha Machine. <i>Tides</i>, a four-voice chord whose voices swell on their own cycles. <i>Echoes</i>, two short phrases into a darkening tape echo. <i>Seasons</i> and <i>Cloud</i>, a slow chord walk with shared notes held, as a warm pad or a cloud of grains.</p><p><b>Knobs:</b> <i>Level</i> (0 is really off), <i>Move</i> (how far the filter breathes, or how deep a Worp gate dips), <i>Filter</i> (low-pass to the left, high-pass to the right), <i>Reverb</i> and <i>Echo</i>, and <i>Pitch</i> (up a fourth, a fifth or an octave). Off at the first start.</p></details></dd>
     <dt>Lead</dt><dd>A struck or plucked melody from Worp, in time and with the swing of the drums. Off by default.<details class="g-more"><summary>More</summary><p>Every lead has one of nine ways of making its line, shown next to its code: <i>Bounce</i> (after Dillon Bastan's Bouncy Notes), <i>Anchor</i> (the rhythm of the tradition's timeline), <i>Triplets</i>, <i>Loop</i>, <i>Phase</i> (after Steve Reich), <i>Modules</i> (after Terry Riley's In C), <i>Additive</i> (after Philip Glass), <i>Isorhythm</i> and <i>Pulse</i> (after Music for 18 Musicians). The sounds: marimba, vibraphone, kalimba, balafon, soft electric piano, reed, celesta or music box.</p><p><b>Knobs:</b> <i>Level</i>, <i>Complexity</i> (left repeats longer and stays on the grid, right moves on sooner and bounces freely), <i>Filter</i>, <i>Reverb</i>, <i>Echo</i> and <i>Pitch</i>. <i>New sound</i> throws another sound and keeps the melody, <i>New pattern</i> another melody on the same sound, <i>Lock</i> keeps the current bars exactly as they are.</p><p><b>Your own line:</b> <i>Rec 2 bars</i> in Worp records one (a count-in, then two bars, quantized with the drums' swing). <b>Mine | Worp</b> switches between your line and Worp's.</p></details></dd>
+    <dt>Field</dt><dd>A field recording under the drums: a place rather than an instrument, in the spirit of Chris Watson and Jake Muir. Off by default.<details class="g-more"><summary>More</summary><p>Seven recordings by Félix Blume, all CC0 (public domain): a castle moat through hydrophones, a forest at night in Mexico, wind in a wire fence, dawn in the Amazon, ice on an alpine lake, a night in Port-au-Prince with the city far away, and a contact microphone on a bat nest. <i>Your file…</i> plays your own recording; it stays in this browser.</p><p><b>Distance</b> pushes the place away: darker, quieter, more reverb. <b>Drift</b> lets the recording come apart into slow, overlapping grains at lower speeds, so it floats instead of running. <b>Tune</b> sends it through narrow filters on the tones of the current chord, so wind, water or insects start to sing the harmony. The low drums duck it a little. Everything is seeded, so the export sounds as you hear it, and loops without a seam.</p></details></dd>
     <dt>Magic</dt><dd>Seven characters that work on the sound, not the rhythm. <i>Amount</i> says how far; everything stays in tune and in the export.<details class="g-more"><summary>More</summary><p><b>Breath</b>: gentle life in timing and dynamics. <b>Resonate</b>: sympathetic strings on your key that ring with every stroke; <i>Chord</i> picks their notes (and with Chords on they follow the scheme). <b>Comb</b>: a tuned comb that moves to another note every two bars. <b>Air</b>: harmonics and sheen on top. <b>Formant</b>: two vowel filters, as if the kit speaks. <b>Cosmos</b>: a drifting echo after the SOMA Cosmos, two echo lines that drift apart and meet again. <b>Ghosts</b>: a tiny grain of a hit comes back a few steps later, quiet and far left or right.</p><p><b>Decay</b> sets how long Resonate rings and Comb and Cosmos repeat. <b>Every</b> sends only every 2nd to 8th hit into Magic; the rest stays dry. <b>Echo</b> gives Magic its own dub echo. With Ghosts, <b>Chance</b> sets how often and <b>Hard</b> how present.</p></details></dd>
   </dl>
 </section>
@@ -2517,7 +2524,7 @@ const SW_DEFAULT={bongo:1,shaker:1,conga:1};
 const REV_DEFAULT={surdo:0,tumba:.1,udu:.15,cajon:.08,bendir:.15,djembe:.15,conga:.22,bongo:.2,darbuka:.2,talking:.2,agogo:.18,clave:.3,shaker:.15,tri:.18,tabla:.16,bayan:.12,tamb:.18,palmas:.22};
 const DLY_DEFAULT={clave:.18,agogo:.05,bongo:.08};
 function freshLane(i,res){ const b=res*4, id=INSTR[i].id; return {id,tune:0,decay:.8,level:.8,pan:PAN_DEFAULT[id]||0,push:id==='shaker'?6:0,sw:SW_DEFAULT[id]||0,tvar:.45,drift:false,rev:REV_DEFAULT[id]||0,dly:DLY_DEFAULT[id]||0,blen:b,btpl:'.'.repeat(b),len:b,tpl:'.'.repeat(b),mute:false,solo:false,lock:false,steps:[],eu:null,xs:{}}; }
-const FX_DEFAULT={rvOn:true,rvType:'room',rvSize:1,rvShim:.65,rvPre:12,rvTone:.5,rvLevel:0,dlOn:true,dlTime:'3/16',dlMode:'pp',dlType:'clean',dlHeads:'13',dlFb:.35,dlTone:.45,dlLevel:0,dlAnim:0,eqLow:0,eqMid:0,eqHigh:-2,eqCut:.78,eqRes:0,eqDrive:0,fModel:'clean',fEnv:.3,fEnvSrc:'mix',fLfo:.12,fRate:0,chProg:'drone',chBars:2,chDrums:true,fFree:false,fHz:.4,kitPitch:0,mgOn:false,mgAmt:.4,mgMode:1,mgVer:2,dlSend:0,mgEvery:1,rvEvery:1,dlEvery:1,mgChord:'fifths',mgEcho:0,mgChance:.5,mgHard:.5,padOn:false,padLvl:.22,padMove:.5,padType:7,vetOn:true,vetAmt:.3,width:1,room:.25,mVer:1,padRv:0,padEc:0,leadRv:0,leadEc:0};   /* v142: a first visit and Refresh! start with drums only and without effects: Pad off (Worp when you switch it on), no reverb, no echo, Phat off (Jesse: it gets busy fast if you don't know what you're doing) */
+const FX_DEFAULT={rvOn:true,rvType:'room',rvSize:1,rvShim:.65,rvPre:12,rvTone:.5,rvLevel:0,dlOn:true,dlTime:'3/16',dlMode:'pp',dlType:'clean',dlHeads:'13',dlFb:.35,dlTone:.45,dlLevel:0,dlAnim:0,eqLow:0,eqMid:0,eqHigh:-2,eqCut:.78,eqRes:0,eqDrive:0,fModel:'clean',fEnv:.3,fEnvSrc:'mix',fLfo:.12,fRate:0,chProg:'drone',chBars:2,chDrums:true,fFree:false,fHz:.4,kitPitch:0,mgOn:false,mgAmt:.4,mgMode:1,mgVer:2,dlSend:0,mgEvery:1,rvEvery:1,dlEvery:1,mgChord:'fifths',mgEcho:0,mgChance:.5,mgHard:.5,padOn:false,padLvl:.22,padMove:.5,padType:7,vetOn:true,vetAmt:.3,width:1,room:.25,mVer:1,padRv:0,padEc:0,leadRv:0,leadEc:0,fldOn:false,fldSrc:'water',fldLvl:.4,fldDist:.35,fldDrift:0,fldTune:0,fldRv:.5,fldEc:.5};   /* v142: a first visit and Refresh! start with drums only and without effects: Pad off (Worp when you switch it on), no reverb, no echo, Phat off (Jesse: it gets busy fast if you don't know what you're doing) */
 const S_DEFAULT={life:.45,scenes:[null,null,null,null,null,null,null,null],sceneCur:-1,bpm:92,res:4,bars:2,key:9,keylock:false,density:.6,mutate:.35,dialog:.25,mutmode:'hyp',swing:.32,groove:'mpc16',humanize:.2,kickroom:false,poly:.25,fat:.25,seed:1,
   fill:false,autofill:8,compact:true,scale:'mpenta',diceAmt:.5,editMode:'hits',stems:false,favs:[],
   preset:'cumbia',trad:'car',midimap:'rack',knobsOpen:true};   // v122: open on Cumbia at 92 BPM, calm, with a kick (the surdo as tambora) and the bongo varying (Jesse: Son had no low end to start from)
@@ -3761,6 +3768,68 @@ function buildLead(ctx,master,rvIn){ const bus=ctx.createGain(), cut=bq(ctx,'low
   const wL=ctx.createDelay(.05), wR=ctx.createDelay(.05), gL=ctx.createGain(), gR=ctx.createGain(), pL=ctx.createStereoPanner(), pR=ctx.createStereoPanner(); wL.delayTime.value=.011; wR.delayTime.value=.017; gL.gain.value=gR.gain.value=.22; pL.pan.value=-.85; pR.pan.value=.85;
   pres.connect(wL).connect(gL).connect(pL).connect(out); pres.connect(wR).connect(gR).connect(pR).connect(out);
   const dub=buildDub(ctx,out,master); return {bus,cut,hpf,out,send,pk,dub,lc,pres}; }   /* v135: pk = peak tamer, the louder struck leads must not push the master over the limiter */   // v108: Cutoff, like the pad's
+/* ---------- Field (v168; Jesse: a layer of field recordings, open material, in the spirit of Chris Watson and Jake Muir) ----------
+   A recording plays under the drums as a loop: a place, not an instrument. Distance pushes it away (darker, quieter, more reverb). Drift
+   lets it come apart into slow overlapping grains at lower speeds, seeded per beat, so the export sounds the same. Tune sends it through
+   narrow band-passes on the tones of the current chord, so wind, water or insects start to sing the harmony. Low drum hits duck it a
+   little. The seven recordings are CC0 by Felix Blume (freesound.org), cut into loops in public/field/; Your file plays your own,
+   kept in this browser (IndexedDB). The export crossfades the end of the loop into its start (the tail fold), so it loops without a seam. */
+const FLD_SRC=[
+ ['water','Moat','Hydrophones in a castle moat near Namur, Belgium, on a summer night: frogs and toads under water.',260165,-3.7,-1.3],
+ ['night','Night forest','The Sian Ka\'an Biosphere Reserve, Mexico, at night: crickets, cicadas and insects.',328293,2.1,-0.2],
+ ['wires','Wind in wire','Wind in a wire fence and dry grass in the Arizona desert, with whistling gusts and a cicada.',665629,-3.9,-2.7],
+ ['dawn','Amazon dawn','Birds and toucans at dawn by a small river near Tefé, Brazil.',408048,-2,1.7],
+ ['ice','Lake ice','Ice melting and crackling on the surface of an alpine lake in Switzerland.',133754,-2.2,-1.8],
+ ['city','Far city','A night in Port-au-Prince, Haiti: crickets, dogs, voices, and the city very far away.',395939,-1.3,3.2],
+ ['bats','Bat nest','A contact microphone on a nest as hundreds of bats fly out at twilight, southern France.',245811,-5.1,-0.3]];
+const FLD={buf:{},load:{},own:null,ownName:'',ownP:null,err:''}, FLD_TRIM=1.9, FLD_BANK=3.2;   /* per recording: level and Tune trim in dB, measured (K-weighted) so each sits about 14 LU under the drums at 40% */
+function fldTrim(k){ const I=fldInfo(fldId()); return I?Math.pow(10,(I[4+k]||0)/20):1; }
+function fldId(){ const id=S.fx.fldSrc||'water'; return id==='own'||FLD_SRC.some(x=>x[0]===id)?id:'water'; }
+function fldInfo(id){ return FLD_SRC.find(x=>x[0]===id)||null; }
+function fldKey(){ const id=fldId(); return id==='own'?'own:'+FLD.ownName:id; }
+function fldBuf(){ const id=fldId(); return id==='own'?FLD.own:(FLD.buf[id]||null); }
+function fldNorm(b){ let s=0,n=0; for(let c=0;c<b.numberOfChannels;c++){ const d=b.getChannelData(c); for(let i=0;i<d.length;i+=7){ s+=d[i]*d[i]; n++; } }
+  const r=Math.sqrt(s/Math.max(1,n)); b._g=r>1e-5?Math.min(10,.1/r):1; return b; }   /* every recording at the same loudness (RMS -20 dBFS) */
+function fldDecode(ab){ return new Promise((res,rej)=>{ const oc=new OfflineAudioContext(2,1,48000); const p=oc.decodeAudioData(ab,res,rej); if(p&&p.then) p.then(res,rej); }); }
+function fldLoad(id){ id=id||fldId(); if(id==='own') return FLD.own?Promise.resolve(FLD.own):fldOwnLoad();
+  if(FLD.buf[id]) return Promise.resolve(FLD.buf[id]); if(FLD.load[id]) return FLD.load[id];
+  return FLD.load[id]=fetch('field/'+id+'.mp3').then(r=>{ if(!r.ok) throw new Error(r.status); return r.arrayBuffer(); }).then(fldDecode)
+    .then(b=>{ FLD.buf[id]=fldNorm(b); FLD.err=''; if(AG) fldSync(AG); fldUI(); return b; })
+    .catch(e=>{ delete FLD.load[id]; FLD.err=location.protocol==='file:'?'file':'net'; fldUI(); return null; }); }
+function fldOwnLoad(){ if(FLD.ownP) return FLD.ownP; return FLD.ownP=(async()=>{ const o=await kvGet('fldOwn'); if(!o||!o.ab) return null;
+    try{ FLD.own=fldNorm(await fldDecode(o.ab.slice(0))); FLD.ownName=o.name||'Your file'; fldUI(); if(AG) fldSync(AG); return FLD.own; }catch(e){ return null; } })(); }
+async function fldOwnSet(file){ try{ const ab=await file.arrayBuffer(), b=await fldDecode(ab.slice(0)); FLD.own=fldNorm(b); FLD.ownName=file.name.replace(/\.[^.]+$/,'').slice(0,60); FLD.ownP=Promise.resolve(FLD.own); kvSet('fldOwn',{name:FLD.ownName,ab}); return true; }catch(e){ return false; } }
+function buildField(ctx,master,rvIn){ const lg=ctx.createGain(), gg=ctx.createGain(), hp=bq(ctx,'highpass',70,.7), lp=bq(ctx,'lowpass',16000,.5), dry=ctx.createGain(), bank=ctx.createGain(), duck=ctx.createGain(), out=ctx.createGain(), send=ctx.createGain();
+  gg.gain.value=0; bank.gain.value=0; out.gain.value=0; send.gain.value=0; lg.connect(hp); gg.connect(hp); hp.connect(dry).connect(lp); const bp=[];
+  for(let k=0;k<5;k++){ const f=bq(ctx,'bandpass',440,14); hp.connect(f); f.connect(bank); bp.push(f); } bank.connect(lp); const gate=ctx.createGain(); lp.connect(duck).connect(gate).connect(out).connect(master);   /* gate: Stop fades the grains too */ out.connect(send).connect(rvIn);
+  const dub=buildDub(ctx,out,master); return {lg,gg,hp,lp,dry,bank,bp,duck,gate,out,send,dub,loop:null,id:'',on:false}; }
+function fldLive(){ const F=S.fx; return !!F.fldOn && (S.renderOnly==null||S.renderOnly===-3) && (F.fldLvl??.4)>.005; }   /* -3: the field stem */
+function fldHz(g){ const sc=padSc(), n=sc.length, d=chordAt(g), R=[[180,900],[180,900],[180,900],[900,2400],[2400,6000]]; return [d,d+2,d+4,d+n,d+n+2].map((x,k)=>{ let f=mtof(48+S.key+sc[((x%n)+n)%n]+12*Math.floor(x/n)); while(f>R[k][1]) f/=2; while(f<R[k][0]) f*=2; return f; }); }   /* three tones low, one in the middle, one high, so insects and wind can sing too */
+function fldStopLoop(G,fade){ const P=G&&G.fld, L=P&&P.loop; if(!L) return; const n=G.ctx.currentTime; try{ L.fg.gain.cancelScheduledValues(n); L.fg.gain.setTargetAtTime(0,n,fade/3); L.s.stop(n+fade+.1); }catch(e){} P.loop=null; }
+function fldSync(G){ const P=G&&G.fld; if(!P) return; const F=S.fx, b=fldBuf(), on=fldLive()&&!!b, l=F.fldLvl??.4, d=F.fldDist??.35, dr=F.fldDrift??0, tu=F.fldTune??0;
+  const live=!(G.ctx instanceof OfflineAudioContext), setG=(pr,v)=>{ if(live) pr.setTargetAtTime(v,G.ctx.currentTime,.08); else pr.value=v; };
+  P.on=on; setG(P.out.gain,on?l*FLD_TRIM*(b._g||1)*fldTrim(0)*(1-.45*d):0); setG(P.send.gain,on?(.12+.55*d)*unitWet(F,'fld'):0); setG(P.lp.frequency,16000*Math.pow(1000/16000,d));
+  setG(P.lg.gain,1-.85*dr); setG(P.gg.gain,1.5*dr); setG(P.dry.gain,1-.8*tu); setG(P.bank.gain,FLD_BANK*fldTrim(1)*tu); dubSync(G,P.dub,F.fldEc??.5,on);
+  if(live&&P.loop&&(!on||P.id!==fldKey())) fldStopLoop(G,on?1.5:.4);   /* off, or another recording: the old one fades, the new one starts on the next step */
+  if(F.fldOn&&!b) fldLoad(); }
+function fldWalk(g,len){ const x=g*stepDur(S), L=Math.max(1,len-6); return ((x*.4+L*.5*(1+Math.sin(x/23.7)*Math.cos(x/61.3+.7))+rnd(S.seed+1781,g,0)*2.5)%L+L)%L; }   /* the grains wander slowly through the recording */
+function fldStep(ctx,G,g,t){ const P=G&&G.fld; if(!P||!P.on) return; const b=fldBuf(); if(!b) return; const live=!(ctx instanceof OfflineAudioContext), sd=stepDur(S), F=S.fx;
+  if(!P.loop){ const s=ctx.createBufferSource(), fg=ctx.createGain(); s.buffer=b; s.loop=true; s.connect(fg).connect(P.lg);
+    if(live){ P.gate.gain.cancelScheduledValues(t); P.gate.gain.setValueAtTime(1,t); fg.gain.setValueAtTime(0,t); fg.gain.linearRampToValueAtTime(1,t+.6); s.start(t,(g*sd)%b.duration); }
+    else { const dur=S.bars*4*S.res*sd, xf=Math.min(2,dur*.5), N=32, fi=new Float32Array(N), fo=new Float32Array(N); for(let k=0;k<N;k++){ fi[k]=Math.sin(Math.PI/2*k/(N-1)); fo[k]=Math.cos(Math.PI/2*k/(N-1)); }
+      /* the export: an equal-power fade in at the start and a fade out after the loop end; the tail fold lays one over the other */
+      fg.gain.setValueCurveAtTime(fi,t,xf); fg.gain.setValueCurveAtTime(fo,t+dur,xf); s.start(t,0); s.stop(t+dur+xf+.05); }
+    P.loop={s,fg}; P.id=fldKey(); }
+  if(g%(4*S.res)===0){ const hz=fldHz(g); P.bp.forEach((f,k)=>{ if(live) f.frequency.setTargetAtTime(hz[k],Math.max(ctx.currentTime||0,t),.4); else if(g===0) f.frequency.value=hz[k]; else f.frequency.setTargetAtTime(hz[k],t,.4); }); }
+  const dr=F.fldDrift??0; if(dr<.02||g%Math.max(1,S.res)) return;   /* a grain every beat */
+  const q=k=>rnd(S.seed+1777,g,k), dur=1.6+2.6*q(0)+1.5*dr, rate=[1,.75,.5,.667,.5][Math.min(4,Math.floor(q(1)*(2+3*dr)))], s=ctx.createBufferSource(), e=ctx.createGain(), pn=ctx.createStereoPanner();
+  s.buffer=b; s.playbackRate.value=rate; pn.pan.value=(q(2)*2-1)*.8; e.gain.setValueAtTime(0,t); e.gain.linearRampToValueAtTime(.5,t+dur*.45); e.gain.linearRampToValueAtTime(0,t+dur);
+  s.connect(e).connect(pn).connect(P.gg); s.start(t,fldWalk(g,b.duration)); s.stop(t+dur+.05); }
+function fldDuck(G,t,v){ const P=G&&G.fld; if(!P||!P.on) return; const d=P.duck.gain, k=.3*Math.min(1,v); d.cancelScheduledValues(t); d.setTargetAtTime(1-k,t,.008); d.setTargetAtTime(1,t+.07,.22); }   /* the low drums push the place back a little */
+function fldUI(){ const sel=$('fldSel'), nm=$('fldName'), cr=$('fldCred'); if(!sel||!nm) return; const id=fldId(), I=fldInfo(id); if(sel.value!==id) sel.value=id; let a, b, ti='';
+  if(id==='own'){ a=FLD.own?FLD.ownName:'No file yet'; b=FLD.own?'your recording, kept in this browser':'Your file… picks one'; }
+  else { a=I[1]; b=FLD.buf[id]?'Félix Blume · CC0':FLD.err==='file'?'open Ngoma from a web address':FLD.err?'could not load the recording':S.fx.fldOn?'loading…':'Félix Blume · CC0'; ti=I[2]+' Recorded by Félix Blume, freesound.org/s/'+I[3]+' (CC0, public domain).'; }
+  if(nm.textContent!==a) nm.textContent=a; if(cr.textContent!==b) cr.textContent=b; nm.parentNode.title=ti; }
 function leadLive(){ const F=S.fx; return !!F.leadOn && (S.renderOnly==null||S.renderOnly===-2) && (F.leadLvl??.5)>.005; }   // -2: the lead stem
 function leadSpec(){ const F=S.fx; if(!F.wlead||!F.wlead.seed) F.wlead={seed:worpSeed(),mix:[1,1,1,1],mute:[false,false,false,false]}; return F.wlead; }
 function leadSync(G){ const L=G&&G.lead; if(!L) return; const on=leadLive(), l=S.fx.leadLvl??.5, live=!(G.ctx instanceof OfflineAudioContext), setG=(pr,v)=>{ if(live) pr.setTargetAtTime(v,G.ctx.currentTime,.05); else pr.value=v; };
@@ -3909,9 +3978,9 @@ function buildGraph(ctx,opts={}){
     return {in:inp,sh,dg,sc,g,p,rs,ds,rG,eG,mG,reg:I.reg}; });
   const dlAll=ctx.createGain(), dlHp=bq(ctx,'highpass',250,.7); dlAll.gain.value=0; lanes.forEach(l=>l.eG.connect(dlHp)); dlHp.connect(dlAll).connect(dl.in);   // Delay Send: the whole kit, above 250 Hz
   const mg=opts.dry?null:buildMagic(ctx,master,lanes,rv.in); if(mg) mg.duck=duck;
-  const pad=buildPad(ctx,master,rv.in), lead=buildLead(ctx,master,rv.in);
+  const pad=buildPad(ctx,master,rv.in), lead=buildLead(ctx,master,rv.in), fld=buildField(ctx,master,rv.in);
   let worpTap=null; if(scopeTap){ worpTap={}; [['pad',pad],['lead',lead]].forEach(([k,u])=>{ if(!u||!u.out) return; const a=ctx.createAnalyser(); a.fftSize=2048; u.out.connect(a); worpTap[k]=a; }); }   /* v139: Worp's ring reads these */
-  const G={ctx,master,vol,scopeTap,worpTap,capNode:ceil,dlAll,lanes,fat:-1,rv,dl,dry:!!opts.dry,mg,pad,lead,vet,room,eq:{eqL,eqM,eqH,eqC,fin,fout,wk:null},scBus}; syncGraph(G); attachFilter(G); return G;
+  const G={ctx,master,vol,scopeTap,worpTap,capNode:ceil,dlAll,lanes,fat:-1,rv,dl,dry:!!opts.dry,mg,pad,lead,fld,vet,room,eq:{eqL,eqM,eqH,eqC,fin,fout,wk:null},scBus}; syncGraph(G); attachFilter(G); return G;
 }
 /* v148 Room (Jesse: softly on by default): early reflections of a small wooden room, 5 to 29 ms, the left and right taps
    different and fed partly from the other side, so every drum stands in a space instead of as a dry point in the middle. Low end
@@ -3991,7 +4060,7 @@ function pv(G,prm,v,tc){ if(G.ctx instanceof OfflineAudioContext||!G.ctx.current
 function syncGraph(G){ if(!G) return;
   if(G.fat!==S.fat){ const c=shaperCurve(S.fat); G.lanes.forEach(l=>l.sh.curve=c); G.fat=S.fat; }
   S.lanes.forEach((L,i)=>{ const l=G.lanes[i]; pv(G,l.g.gain,L.level*(1-S.fat*.25)); pv(G,l.p.pan,Math.max(-1,Math.min(1,L.pan*(S.fx.width??1))));   /* v148 Width scales every pan */ pv(G,l.rs.gain,L.rev||0); pv(G,l.ds.gain,L.dly||0); l.sc.gain.value=(S.fx.fEnvSrc===L.id)?2.5:0; });
-  syncFx(G); magicSync(G); padSync(G); leadSync(G); vetSync(G); roomSync(G);
+  syncFx(G); magicSync(G); padSync(G); leadSync(G); fldSync(G); vetSync(G); roomSync(G);
 }
 // Delay animation: feedback, tone and wow drift along smooth curves whose cycle is the loop length, so exports stay seamless
 function animCurve(t){ const C=Math.max(1,S.bars)*4*60/S.bpm, w=2*Math.PI*t/C;
@@ -4012,6 +4081,7 @@ function fxTail(){ const F=S.fx; let t=1.5;
   if(F.dlOn&&F.dlFb>0){ const tp=F.dlType==='tape', hs=String(F.dlHeads||'13'), mx=tp?Math.max(...[1,2,3].filter(i=>hs.includes(String(i)))):1, fb=tp?Math.min(.97,F.dlFb*1.25):F.dlFb; t+=Math.min(tp?12:8,60/S.bpm*(DL_TIMES[F.dlTime]||.75)*mx*Math.log(.001)/Math.log(fb)); }
   if(F.padOn&&(F.padType|0)===7) t=Math.max(t,14);
   if(F.mgOn&&(F.mgEcho||0)>0) t=Math.max(t,3+7*F.mgEcho);   /* v144: Magic's echo tail */
+  if(F.fldOn) t=Math.max(t,4);   /* v168: the field's fade-out after the loop end (crossfaded by the fold) and its grains */
   if(F.leadOn) t=Math.max(t,8);   // v106: the lead's echo and reverb   // v96: Worp's long releases and its own reverb
   return Math.min(16,t); }
 // Flam guard: when tracks hit the same step, swing on only some of them (or push and humanize) can spread them 8 to 35 ms,
@@ -4026,7 +4096,7 @@ function flamGuard(evs,go){ const live=evs.filter(e=>!e.silent); if(live.length<
 const mgQ=(g,i,k)=>{ const LL=S.bars*4*S.res; return rnd(S.seed+k+Math.floor(g/LL)*31,((g%LL)+LL)%LL,i); };   // seeded per loop cycle
 function scheduleStep(ctx,G,g,t,vis){
   if(ctx===actx&&MORPH.on) morphStep(g);   // v104: morph between scenes, live only
-  padBar(ctx,G,g,t); leadBar(ctx,G,g,t); bloomStep(G,g,t);
+  padBar(ctx,G,g,t); leadBar(ctx,G,g,t); bloomStep(G,g,t); fldStep(ctx,G,g,t);
   if(G.mg && g%(S.bars*4*S.res)===0) magicSync(G);
   const cosEr=G.mg?cosmosErase(G,g,t):false; if(G.mg){ combStep(G,g,t,G.ctx instanceof OfflineAudioContext); formantStep(G,g,t); resStep(G,g,t,G.ctx instanceof OfflineAudioContext); }
   const sd=stepDur(S), go=grooveOff(g,S,sd); const evs=eventsAt(g,S);
@@ -4038,7 +4108,7 @@ function scheduleStep(ctx,G,g,t,vis){
     const I=INSTR[e.lane], isA=anch.includes(I.id);
     let t0=t+go*e.sw+e.dt, v=e.v, tn=e.tn+chTn(e.lane,g), dc=e.dc, rv=e.rv;   /* v158: tuned drums follow the chords */
     if(P.br){ const k=P.br*a*(isA?.4:1), ph=(g*sd)/(7+(e.lane%5)*1.9)+e.lane*1.37; t0+=Math.sin(2*Math.PI*ph)*.03*k; v=Math.min(1,v*(1+.5*k*Math.sin(2*Math.PI*ph*.7+1.1))); }   // breathing
-    const ln=e.lane, ar=e.a; hitGate(G,ln,Math.max(now,t0));
+    const ln=e.lane, ar=e.a; hitGate(G,ln,Math.max(now,t0)); if(I.reg==='low'&&v>.5) fldDuck(G,Math.max(now,t0),v);
     for(const [o,vm] of hitsOf(e,sd)){
       const r2=o?rv.map((x,k)=>Math.max(-1,Math.min(1,x*.6+Math.sin((o*977+k)*12.9898)*.4))):rv;   // every stroke of a flam or roll is a little different
       voice(ctx,G.lanes[ln].in,ln,ar,Math.max(now,t0+o),v*vm,v*vm>.8,r2,tn,dc); }
@@ -4074,7 +4144,7 @@ function tick(){ const sd=stepDur(S); if(nextT<actx.currentTime-.05){ const k=Ma
     scheduleStep(actx,AG,gStep,nextT,true); nextT+=stepDur(S); gStep++; } }
 function start(){ ensureCtx(); clearTimeout(suspT); if(AG.pad){ const g=AG.pad.gate.gain; g.cancelScheduledValues(actx.currentTime); g.setValueAtTime(1,actx.currentTime); } animLive(); gStep=0; nextT=actx.currentTime+.08; if(M4L.on&&M4L.pos) m4lAlign(M4L.pos.b,S.bpm); AG.t0=nextT-gStep*stepDur(S); capStart(nextT); syncFx(AG); vq.length=0; playing=true; timer=setInterval(tick,25); tick(); worpPost(); requestAnimationFrame(draw); setPlayUI(); }
 let suspT=0;
-function stop(){ playing=false; if(MORPH.on) morphEnd(false); setTimeout(worpPost,0); if(QB.list.length) qRun(); CAP.stopT=actx?actx.currentTime:0; clearInterval(timer); clearInterval(animTimer); vq.length=0; clearNow(); setPlayUI();
+function stop(){ playing=false; if(AG&&AG.fld){ fldStopLoop(AG,.6); const fg=AG.fld.gate.gain, n0=actx.currentTime; fg.cancelScheduledValues(n0); fg.setTargetAtTime(0,n0,.25); } if(MORPH.on) morphEnd(false); setTimeout(worpPost,0); if(QB.list.length) qRun(); CAP.stopT=actx?actx.currentTime:0; clearInterval(timer); clearInterval(animTimer); vq.length=0; clearNow(); setPlayUI();
   if(AG&&AG.pad){ const g=AG.pad.gate.gain, n=actx.currentTime; g.cancelScheduledValues(n); g.setTargetAtTime(0,n,.12); }                  // the pad fades out instead of ringing on
   if(AG&&AG.worp) AG.worp.stop(actx.currentTime+.4);
   if(AG&&AG.wlead) AG.wlead.stop(actx.currentTime+.05);
@@ -4564,6 +4634,25 @@ function initControls(){
     $('worpMutes').onclick=e=>{ const b=e.target.closest('.wm'); if(!b) return; const W=worpSpec(), i=+b.dataset.i; W.mute[i]=!W.mute[i]; save(); worpUI(); };
     cb.onchange=()=>{ S.fx.padOn=cb.checked; u(); padSync(AG); save(); };
   }
+  { const cb=$('fldOn'), U=$('fldU'), sel=$('fldSel');   /* v168 Field */
+    const mk=(label,key,def,sync=true)=>makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; if(sync) fldSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)});
+    const kl=mk('Level','fldLvl',.4), kd=mk('Distance','fldDist',.35), kr=mk('Drift','fldDrift',0), kt=mk('Tune','fldTune',0);
+    const kx=makeKnob({label:'Reverb',min:0,max:100,step:1,get:()=>Math.round(unitWet(S.fx,'fld')/1.2*100),set:v=>{ S.fx.fldRv=v/100; fldSync(AG); save(); },fmt:v=>v+'%',def:50});
+    const ke=makeKnob({label:'Echo',min:0,max:100,step:1,get:()=>Math.round(unitEcho(S.fx,'fld')/1.2*100),set:v=>{ S.fx.fldEc=v/100; fldSync(AG); save(); },fmt:v=>v+'%',def:50});
+    kl.title='Volume of the recording · drag, double-click resets'; kd.title='How far away the place is: darker, quieter and more reverb to the right · drag, double-click resets';
+    kr.title='To the left the recording runs as it was made; to the right it comes apart into slow, overlapping grains at lower speeds and floats · drag, double-click resets';
+    kt.title='Sends the recording through narrow filters on the tones of the current chord, so the place starts to sing the harmony · drag, double-click resets';
+    kx.title='How much reverb the recording gets, apart from the drums · drag, double-click resets'; ke.title='A dub echo on the recording. At 50% and below there is none · drag, double-click resets';
+    [kl,kd,kr,kt,kx,ke].forEach(k=>k.classList.add('big','mgk')); const wr=document.createElement('div'); wr.className='mgw'; wr.append(kl,kd,kr,kt,kx,ke); $('fldSlot').replaceWith(wr);
+    FLD_SRC.forEach(([id,nm,ds])=>{ const o=document.createElement('option'); o.value=id; o.textContent=nm; o.title=ds; sel.append(o); }); { const o=document.createElement('option'); o.value='own'; o.textContent='Your file'; sel.append(o); }
+    const u=()=>{ cb.checked=!!S.fx.fldOn; U.classList.toggle('off',!S.fx.fldOn); [kl,kd,kr,kt,kx,ke].forEach(k=>k.upd()); fldUI(); }; u(); UPD.push(u);
+    cb.onchange=()=>{ S.fx.fldOn=cb.checked; u(); if(cb.checked) fldLoad(); fldSync(AG); save(); };
+    sel.onchange=()=>{ const v=sel.value; if(v==='own'&&!FLD.own){ fldUI(); $('fldIn').click(); return; } hRecord(()=>{ S.fx.fldSrc=v; S.fx.fldOn=true; }); updHist(); save(); u(); fldLoad(); fldSync(AG); };
+    $('fldFile').onclick=()=>$('fldIn').click();
+    $('fldIn').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return; if(f.size>80e6){ status('That file is too big for Field (over 80 MB).'); return; }
+      status('Reading '+f.name+'…'); const ok=await fldOwnSet(f); if(!ok){ status('Field could not read that file. Try wav, mp3, m4a or ogg.'); fldUI(); return; }
+      hRecord(()=>{ S.fx.fldSrc='own'; S.fx.fldOn=true; }); updHist(); save(); u(); fldSync(AG); status('Field plays your file: '+FLD.ownName+'. It stays in this browser.'); };
+    if(S.fx.fldOn) fldLoad(); }
   { const cb=$('leadOn'), U=$('leadU');   // v106
     const kl=makeKnob({label:'Level',min:0,max:100,step:1,get:()=>Math.round((S.fx.leadLvl??.5)*100),set:v=>{ S.fx.leadLvl=v/100; leadSync(AG); save(); },fmt:v=>v+'%',def:50});
     const kc=makeKnob({label:'Filter',min:-100,max:100,step:1,get:()=>Math.round(unitFlt(S.fx,'lead')*100),set:v=>{ S.fx.leadFlt=v/100; leadSync(AG); save(); },fmt:fltFmt,def:0});
@@ -4851,7 +4940,7 @@ const EXPORT_SR=48000;   // 48 kHz: Ableton converts to the project rate, the 10
 function loopLen(sr){ return Math.round(S.bars*4*S.res*stepDur(S)*sr); }
 // One seamless loop, exactly as it is exported: rendered offline, tail folded back to the start, pre-roll onto the end.
 async function renderLoop(dry,sr=EXPORT_SR){ S.exporting=true; try{ return await renderLoopX(dry,sr); } finally{ S.exporting=false; varCache.clear(); } }
-async function renderLoopX(dry,sr){ if(S.fx.leadOn) await leadMeasure(leadSpec()); const total=S.bars*4*S.res, sd=stepDur(S), dur=total*sd, n=loopLen(sr);
+async function renderLoopX(dry,sr){ if(S.fx.leadOn) await leadMeasure(leadSpec()); if(S.fx.fldOn) await fldLoad(); const total=S.bars*4*S.res, sd=stepDur(S), dur=total*sd, n=loopLen(sr);
     const PRE=.05, pn=Math.round(PRE*sr);   // pre-roll: hits pushed early (negative Push, flam grace notes) on step 0 are not lost
   const tail=dry?2:fxTail(); const oc=new OfflineAudioContext(2,pn+Math.ceil((dur+tail)*sr),sr); await loadFilter(oc); const G=buildGraph(oc,{dry,export:true}); G.t0=PRE; magicWorklet(G); syncFx(G); magicSync(G);
       for(let g=0;g<total;g++) scheduleStep(oc,G,g,PRE+g*sd,false);
@@ -5027,7 +5116,8 @@ async function exportLoop(){
       for(let i=0;i<S.lanes.length;i++){ const L=S.lanes[i]; if(!hasHits(L) || L.mute || (solo&&!L.solo)) continue;
         status('Rendering stem '+INSTR[i].name+'…'); S.renderOnly=i; try{ stems.push({id:INSTR[i].id,ch:await render(false)}); } finally{ S.renderOnly=null; } }
       if(S.fx.padOn && (S.fx.padLvl??.35)>.005){ status('Rendering stem Pad…'); S.renderOnly=-1; try{ stems.push({id:'pad',ch:await render(false)}); } finally{ S.renderOnly=null; } }
-      if(S.fx.leadOn && (S.fx.leadLvl??.5)>.005){ status('Rendering stem Lead…'); S.renderOnly=-2; try{ stems.push({id:'lead',ch:await render(false)}); } finally{ S.renderOnly=null; } } }
+      if(S.fx.leadOn && (S.fx.leadLvl??.5)>.005){ status('Rendering stem Lead…'); S.renderOnly=-2; try{ stems.push({id:'lead',ch:await render(false)}); } finally{ S.renderOnly=null; } }
+      if(S.fx.fldOn && (S.fx.fldLvl??.4)>.005){ status('Rendering stem Field…'); S.renderOnly=-3; try{ stems.push({id:'field',ch:await render(false)}); } finally{ S.renderOnly=null; } } }
     for(let k=stems.length-1;k>=0;k--){ let pk=0; stems[k].ch.forEach(c=>{ for(let i=0;i<n;i++) pk=Math.max(pk,Math.abs(c[i])); }); if(pk<1e-5) stems.splice(k,1); }   // a track that ends up silent (e.g. every stroke on the beat with Leave room for kick) gets no empty file
     status('Setting the level…');
     const lu=loudness(wet,sr), tp=Math.max(...[wet,dry,...stems.map(x=>x.ch)].filter(Boolean).map(truePeak));
@@ -5137,7 +5227,7 @@ function sceneRecall(k){ const sc=S.scenes[k]; if(!sc) return; onBar('scene:'+k,
    model, Magic mode, pad type or Worp pad, tuning) changes halfway. A rhythm on another grid (16ths against triplets) or a
    track whose length differs changes halfway too. The export always renders the scene as stored. */
 const MORPH={on:false};
-const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx'];
+const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx','fldLvl','fldDist','fldDrift','fldTune','fldRv','fldEc'];
 function morphCap(){ return {lanes:S.lanes.map(L=>{ const o={steps:L.steps.slice(),len:L.len,tpl:L.tpl,btpl:L.btpl,blen:L.blen,eu:L.eu,mute:L.mute,solo:L.solo,tune:L.tune,col:L.col,choke:L.choke};
       MLANE.forEach(f=>o[f]=L[f]); return o; }), fx:JSON.parse(JSON.stringify(S.fx)), fat:S.fat, swing:S.swing, humanize:S.humanize, res:S.res}; }
 function morphStart(sc,k){ const A=morphCap(); hRecord(()=>hApply(sc)); S.sceneCur=k; updHist();

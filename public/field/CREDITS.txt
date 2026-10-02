@@ -1,0 +1,13 @@
+Ngoma Field recordings
+
+All seven recordings are by Felix Blume and released under Creative Commons 0 (public domain) on Freesound.
+CC0 asks for no attribution; we name him anyway. Ngoma uses a 48-second stretch of each, cut into a loop
+(tools/get_field.sh downloads, tools/make_field.py cuts; cuts.json says where each stretch starts).
+
+water.mp3  Aquatic Sound in a moat behind a castle in Belgium (hydrophones, near Namur)   https://freesound.org/s/260165/
+night.mp3  Forest at night, crickets, cicadas and insects, Sian Ka'an Biosphere Reserve, Mexico   https://freesound.org/s/328293/
+wires.mp3  Wind in wire, dry grass and bushes, whistling gusts, cicada, Arizona   https://freesound.org/s/665629/
+dawn.mp3   Dawn in the Amazonian Rainforest, near Tefe, Brazil   https://freesound.org/s/408048/
+ice.mp3    Ice is melting and crisping at the surface of the lake, Switzerland   https://freesound.org/s/133754/
+city.mp3   Night in Haiti: crickets, dogs, some sounds of the city far away, Port-au-Prince   https://freesound.org/s/395939/
+bats.mp3   Vibration of a nest with hundreds of bats coming out at twilight (contact microphone), southern France   https://freesound.org/s/245811/
