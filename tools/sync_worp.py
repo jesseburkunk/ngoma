@@ -33,10 +33,10 @@ function create(ctx,OUT,host){
   const getBpm=()=>host.bpm();
   const cur=()=>CUR;
   const renderPatch=()=>{},renderFx=()=>{};
-  let MOVE=.5,voicing=null,droneOn=false,lastT=-1,keyAt=-1,scAt='',bpmAt=0,barAt=-1;
+  let MOVE=.5,voicing=null,droneOn=false,lastT=-1,keyAt=-1,scAt='',bpmAt=0,barAt=-1,pendRel=false;
 """+init+run+"""
   function hostVoicing(P){
-    const sc=SCALES.__host,n=sc.length,r=rng((P.seed^0xBEEF)>>>0);let i5=sc.indexOf(7);if(i5<0)i5=Math.min(n-1,Math.round(n*.57));
+    const sc=SCALES.__host,n=sc.length,r=rng((((P._vs!=null?P._vs:P.seed))^0xBEEF)>>>0);   /* v171: the voicing comes from the pattern seed */let i5=sc.indexOf(7);if(i5<0)i5=Math.min(n-1,Math.round(n*.57));
     const v=[0,i5,n+r.pick([1,2,Math.min(3,n-1)])];if(r.chance(.6))v.push(r.pick([n+i5,2*n,2*n-1]));return v;
   }
   function startDrone(t){const o=(state.deg|0)+(state.cdv|0);voicing.forEach((d,i)=>polyOn('drone:'+i,state.key+36+semis(CUR.scale,d+o),.8,t));droneOn=true}
@@ -62,7 +62,8 @@ function create(ctx,OUT,host){
     setMove(x,t){if(!CUR)return;MOVE=x;A.lfoGain.gain.setTargetAtTime(CUR.filter.lfoDepth*Math.min(2,x*2),t,.2);A.driftGain.gain.setTargetAtTime(CUR.drift*Math.min(2,x*2),t,.2)},   // Ngoma's Move: gate depth, or filter and pitch drift for pads without a gate
     noteOn(m,v,t){if(CUR)polyOn('key:'+m,m,v,t)},noteOff(m,t){polyOff('key:'+m,t)},   // Ngoma's MIDI keys
     setWet(r,e,t){if(e==null)e=r;[[A.wetR,r],[A.wetE,e],[A.fxE,e]].forEach(([n,x])=>{if(!ctx.currentTime)n.gain.value=x;else n.gain.setTargetAtTime(x,t,.05)})},
-    setPhrase(seed){if(!CUR||KIND!=='lead')return;const q=seed>>>0;if(CUR._ps!==q){CUR.phrase=genPatch(q,KIND).phrase;CUR._ps=q}},   // Ngoma's Lock: the line of one seed with the sound of another
+    setPhrase(seed){if(!CUR)return;const q=seed>>>0;if(CUR._ps===q)return;CUR._ps=q;const Q=genPatch(q,KIND);if(KIND==='lead'){CUR.phrase=Q.phrase;return}
+      CUR._vs=q;CUR.change=Q.change;CUR.gate=Q.gate;rand=rng((q^0x2545F491)>>>0);if(droneOn){droneOn=false;pendRel=true}},   /* v171: a pad's pattern (voicing, how often it moves, gate) from a seed of its own; the sound stays */   // Ngoma's Lock: the line of one seed with the sound of another
     setMix(mix,mute,t){if(!CUR)return;CUR.mix=mix.slice(0,4);CUR.mute=mute.slice(0,4);applyMix(CUR,t)},
     step(g,t,BL,sw){
       if(!CUR)return;
@@ -76,6 +77,9 @@ function create(ctx,OUT,host){
         if(sc!==scAt||k!==keyAt){scAt=sc;keyAt=k;for(const v of poly.values())v.release(t);poly.clear();retireFx(CUR);retireMods(CUR);voicing=hostVoicing(CUR);applyFx(CUR,t);droneOn=false}
         else if(b!==bpmAt){bpmAt=b;applyFx(CUR,t)}
       }
+      if(pendRel){for(const v of poly.values())v.release(t);poly.clear();pendRel=false}
+      {const R=host.rec;if(R&&R.notes&&R.notes.length){if(droneOn){for(const v of poly.values())v.release(t);poly.clear();droneOn=false}   /* v171: your recorded chords instead of the drone */
+        const rs=host.res?host.res():4;playRec(R,g,t+(sw||0),60/getBpm()/rs,rs);lastT=t;gateStep(CUR,g*16/BL|0,t+(sw||0),MOVE*2);modTick(t);return}}
       {const cd=host.cd?host.cd(g)|0:0;if(cd!==(state.cdv|0)){const o0=(state.deg|0)+(state.cdv|0);state.cdv=cd;   /* v156: Ngoma's chords. Only the voices whose note changes move; common tones hold */
         if(droneOn)voicing.forEach((d,i)=>{const m0=state.key+36+semis(CUR.scale,d+o0),m=state.key+36+semis(CUR.scale,d+(state.deg|0)+cd);if(m!==m0)polyOn('drone:'+i,m,.8,t)})}}
       if(!droneOn||t-lastT>1.5){if(droneOn){for(const v of poly.values())v.release(t);poly.clear()}voicing=hostVoicing(CUR);startDrone(t);barAt=-1}

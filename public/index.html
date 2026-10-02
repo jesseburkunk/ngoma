@@ -283,6 +283,7 @@ body.wopen{overflow:hidden}
 .wm{width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:600 11px "JetBrains Mono",ui-monospace,monospace;cursor:pointer}
 .midibtn[aria-pressed=true],.midiq[aria-pressed=true]{background:var(--cream);color:var(--oxblood);border-color:var(--cream)}
 .tmidi{display:flex;align-items:center;gap:6px}.midibtn{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.midiseg button{height:34px}
+.btn.rec.arming{animation:recblink 1s steps(2) infinite}.btn.rec.recording{background:#d9531c;border-color:#d9531c;color:#fff}@keyframes recblink{50%{opacity:.45}}   /* v171 */
 .lineseg button{height:30px;padding:0 10px}.lineseg button:disabled{opacity:.35;cursor:default}
 .wstrip #leadLock[aria-pressed=true]{background:var(--cream);color:var(--oxblood);border-color:var(--cream)}
 .wm[aria-pressed="true"]{background:transparent;color:var(--muted);text-decoration:line-through}
@@ -891,12 +892,12 @@ input,select{accent-color:var(--accent)}
     <div class="fxg magic padu" id="padU">
       <div class="fxh"><span class="lbl" title="The layer under the drums, in your key and scale">Pad</span><span class="seg padseg" id="padseg" role="group" aria-label="Pad engine"><button data-pm="worp" title="Worp: a new modular patch every throw that keeps re-patching itself. Open it in Worp to see and tweak everything">Worp</button><button data-pm="classic" title="The classic pads: Bed, Seasons, Tides, Echoes, Cloud and Loops">Classic</button></span><label class="chk"><input id="padOn" type="checkbox"> On</label></div>
       <div class="fxc"><div class="knrow"><div id="padSlot"></div></div>
-        <div class="wstrip" id="worpStrip" hidden><button class="btn" id="worpNew" title="Throw a new Worp pad (the old one stays in undo)">New</button><span class="wname lcd" data-lcd="PAD"><b id="worpName"></b><small id="worpCode"></small></span><span class="wms" id="worpMutes" aria-label="Mute Worp layers"></span><a class="btn wportal" id="worpOpen" href="worp/" target="worp" rel="opener" title="Open this pad in Worp, over Ngoma: all its layers, cables and effects, while Ngoma keeps playing. Use in Ngoma there sends a pad straight back"><span class="wpo">Open in</span><span class="wpw">WORP</span></a></div></div>
+        <div class="wstrip" id="worpStrip" hidden><button class="btn rec" id="padRec" type="button" aria-pressed="false" title="Record two bars of chords from your MIDI keys, from the next bar line. They loop on this pad as Mine">Rec 2 bars</button><span class="seg lineseg" id="padLine" role="group" aria-label="What the pad plays" title="Mine: the chords you recorded with Rec. Worp: the pad's own chords and movement. Your take stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Worp</button></span><button class="btn" id="worpNew" title="New sound: another Worp pad, with the same chords and movement (the old one stays in undo)">New sound</button><button class="btn" id="worpPat" title="New pattern: other chords, voicing and movement, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="PAD"><b id="worpName"></b><small id="worpCode"></small></span><span class="wms" id="worpMutes" aria-label="Mute Worp layers"></span><a class="btn wportal" id="worpOpen" href="worp/" target="worp" rel="opener" title="Open this pad in Worp, over Ngoma: all its layers, cables and effects, while Ngoma keeps playing. Use in Ngoma there sends a pad straight back"><span class="wpo">Open in</span><span class="wpw">WORP</span></a></div></div>
     </div>
     <div class="fxg magic leadu" id="leadU">
       <div class="fxh"><span class="lbl" title="A Worp lead: one voice with glide playing a short phrase in your key, in time and with the swing of the drums. Off by default, so it only plays when you want a melody">Lead</span><label class="chk"><input id="leadOn" type="checkbox"> On</label></div>
       <div class="fxc"><div class="knrow"><div id="leadSlot"></div></div>
-        <div class="wstrip" id="leadStrip"><button class="btn" id="leadLock" aria-pressed="false" title="Lock the line: the lead keeps playing these bars exactly as they are">Lock</button><span class="seg lineseg" id="leadLine" role="group" aria-label="Which line the lead plays" title="Mine: the line you recorded in Worp (Rec 2 bars). Worp: the melody Worp makes itself. Your line stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Worp</button></span><button class="btn" id="leadNew" title="New sound: another Worp lead, playing the same melody (the old one stays in undo)">New sound</button><button class="btn" id="leadPat" title="New pattern: another melody, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="LEAD"><b id="leadName"></b><small id="leadCode"></small></span><span class="wms" id="leadMutes" aria-label="Mute lead layers"></span><a class="btn wportal" id="leadOpen" href="worp/" target="worp" rel="opener" title="Open this lead in Worp, over Ngoma: every sound you pick there and every change plays in Ngoma"><span class="wpo">Open in</span><span class="wpw">WORP</span></a></div></div>
+        <div class="wstrip" id="leadStrip"><button class="btn rec" id="leadRec" type="button" aria-pressed="false" title="Record two bars from your MIDI keys, from the next bar line. Your line loops on the lead as Mine">Rec 2 bars</button><button class="btn" id="leadLock" aria-pressed="false" title="Lock the line: the lead keeps playing these bars exactly as they are">Lock</button><span class="seg lineseg" id="leadLine" role="group" aria-label="Which line the lead plays" title="Mine: the line you recorded (Rec 2 bars, here or in Worp). Worp: the melody Worp makes itself. Your line stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Worp</button></span><button class="btn" id="leadNew" title="New sound: another Worp lead, playing the same melody (the old one stays in undo)">New sound</button><button class="btn" id="leadPat" title="New pattern: another melody, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="LEAD"><b id="leadName"></b><small id="leadCode"></small></span><span class="wms" id="leadMutes" aria-label="Mute lead layers"></span><a class="btn wportal" id="leadOpen" href="worp/" target="worp" rel="opener" title="Open this lead in Worp, over Ngoma: every sound you pick there and every change plays in Ngoma"><span class="wpo">Open in</span><span class="wpw">WORP</span></a></div></div>
     </div>
     <div class="fxg magic fldu" id="fldU">
       <div class="fxh"><span class="lbl" title="Texture: a field recording far under the drums, a place rather than an instrument. With Tune it sings your chords">Texture</span><label class="chk"><input id="fldOn" type="checkbox"> On</label></div>
@@ -1164,8 +1165,8 @@ input,select{accent-color:var(--accent)}
   <h2>Layers</h2>
   <p class="g-p">What plays with the drums, always in your key, scale and chords. Each layer has its own On switch.</p>
   <dl>
-    <dt>Pad</dt><dd>A soft layer under the drums. <i>Worp</i> throws a new patch from Ngoma's sister synth; <i>Classic</i> has six pads of its own.<details class="g-more"><summary>More</summary><p><b>Worp:</b> every throw is a patch of up to four sources with slow modulation that keeps re-patching itself. <i>New</i> throws another, the numbered buttons mute its layers, <i>Open in Worp</i> opens Worp over Ngoma while Ngoma keeps playing (<i>Ngoma</i> or Esc brings you back). Whatever you pick or change there plays here at once; ← undoes a new sound.</p><p><b>Classic types:</b> <i>Bed</i>, one chord per bar. <i>Loops</i>, five tone fragments on their own lengths, like a Buddha Machine. <i>Tides</i>, a four-voice chord whose voices swell on their own cycles. <i>Echoes</i>, two short phrases into a darkening tape echo. <i>Seasons</i> and <i>Cloud</i>, a slow chord walk with shared notes held, as a warm pad or a cloud of grains.</p><p><b>Knobs:</b> <i>Level</i> (0 is really off), <i>Move</i> (how far the filter breathes, or how deep a Worp gate dips), <i>Filter</i> (low-pass to the left, high-pass to the right), <i>Reverb</i> and <i>Echo</i>, and <i>Pitch</i> (up a fourth, a fifth or an octave). Off at the first start.</p></details></dd>
-    <dt>Lead</dt><dd>A struck or plucked melody from Worp, in time and with the swing of the drums. Off by default.<details class="g-more"><summary>More</summary><p>Every lead has one of nine ways of making its line, shown next to its code: <i>Bounce</i> (after Dillon Bastan's Bouncy Notes), <i>Anchor</i> (the rhythm of the tradition's timeline), <i>Triplets</i>, <i>Loop</i>, <i>Phase</i> (after Steve Reich), <i>Modules</i> (after Terry Riley's In C), <i>Additive</i> (after Philip Glass), <i>Isorhythm</i> and <i>Pulse</i> (after Music for 18 Musicians). The sounds: marimba, vibraphone, kalimba, balafon, soft electric piano, reed, celesta or music box.</p><p><b>Knobs:</b> <i>Level</i>, <i>Complexity</i> (left repeats longer and stays on the grid, right moves on sooner and bounces freely), <i>Filter</i>, <i>Reverb</i>, <i>Echo</i> and <i>Pitch</i>. <i>New sound</i> throws another sound and keeps the melody, <i>New pattern</i> another melody on the same sound, <i>Lock</i> keeps the current bars exactly as they are.</p><p><b>Your own line:</b> <i>Rec 2 bars</i> in Worp records one (a count-in, then two bars, quantized with the drums' swing). <b>Mine | Worp</b> switches between your line and Worp's.</p></details></dd>
+    <dt>Pad</dt><dd>A soft layer under the drums. On a Worp pad, <i>New sound</i> keeps the chords and movement and <i>New pattern</i> keeps the sound; <i>Rec 2 bars</i> records chords from your MIDI keys, and <i>Mine | Worp</i> switches between your take and the pad's own. <i>Worp</i> throws a new patch from Ngoma's sister synth; <i>Classic</i> has six pads of its own.<details class="g-more"><summary>More</summary><p><b>Worp:</b> every throw is a patch of up to four sources with slow modulation that keeps re-patching itself. <i>New</i> throws another, the numbered buttons mute its layers, <i>Open in Worp</i> opens Worp over Ngoma while Ngoma keeps playing (<i>Ngoma</i> or Esc brings you back). Whatever you pick or change there plays here at once; ← undoes a new sound.</p><p><b>Classic types:</b> <i>Bed</i>, one chord per bar. <i>Loops</i>, five tone fragments on their own lengths, like a Buddha Machine. <i>Tides</i>, a four-voice chord whose voices swell on their own cycles. <i>Echoes</i>, two short phrases into a darkening tape echo. <i>Seasons</i> and <i>Cloud</i>, a slow chord walk with shared notes held, as a warm pad or a cloud of grains.</p><p><b>Knobs:</b> <i>Level</i> (0 is really off), <i>Move</i> (how far the filter breathes, or how deep a Worp gate dips), <i>Filter</i> (low-pass to the left, high-pass to the right), <i>Reverb</i> and <i>Echo</i>, and <i>Pitch</i> (up a fourth, a fifth or an octave). Off at the first start.</p></details></dd>
+    <dt>Lead</dt><dd>A struck or plucked melody from Worp, in time and with the swing of the drums. Off by default. <i>Rec 2 bars</i> records a line from your MIDI keys, from the next bar line; <i>Mine | Worp</i> switches between yours and Worp's.<details class="g-more"><summary>More</summary><p>Every lead has one of nine ways of making its line, shown next to its code: <i>Bounce</i> (after Dillon Bastan's Bouncy Notes), <i>Anchor</i> (the rhythm of the tradition's timeline), <i>Triplets</i>, <i>Loop</i>, <i>Phase</i> (after Steve Reich), <i>Modules</i> (after Terry Riley's In C), <i>Additive</i> (after Philip Glass), <i>Isorhythm</i> and <i>Pulse</i> (after Music for 18 Musicians). The sounds: marimba, vibraphone, kalimba, balafon, soft electric piano, reed, celesta or music box.</p><p><b>Knobs:</b> <i>Level</i>, <i>Complexity</i> (left repeats longer and stays on the grid, right moves on sooner and bounces freely), <i>Filter</i>, <i>Reverb</i>, <i>Echo</i> and <i>Pitch</i>. <i>New sound</i> throws another sound and keeps the melody, <i>New pattern</i> another melody on the same sound, <i>Lock</i> keeps the current bars exactly as they are.</p><p><b>Your own line:</b> <i>Rec 2 bars</i> in Worp records one (a count-in, then two bars, quantized with the drums' swing). <b>Mine | Worp</b> switches between your line and Worp's.</p></details></dd>
     <dt>Texture</dt><dd>A field recording far under the drums, as a background texture: a place rather than an instrument, in the spirit of Chris Watson and Jake Muir. Off by default.<details class="g-more"><summary>More</summary><p>Seven recordings by Félix Blume, all CC0 (public domain): a castle moat through hydrophones, a forest at night in Mexico, wind in a wire fence, dawn in the Amazon, ice on an alpine lake, a night in Port-au-Prince with the city far away, and a contact microphone on a bat nest. <i>Your file…</i> plays your own recording; it stays in this browser.</p><p><b>Filter</b> darkens it (left) or thins it out of the way of the drums (right). <b>Distance</b> pushes the place away: darker, quieter, more reverb. <b>Drift</b> lets the recording come apart into slow, overlapping grains at lower speeds, so it floats instead of running. <b>Tune</b> sends it through narrow filters on the tones of the current chord, so wind, water or insects start to sing the harmony. The low drums duck it a little. Everything is seeded, so the export sounds as you hear it, and loops without a seam.</p></details></dd>
     <dt>Magic</dt><dd>Seven characters that work on the sound, not the rhythm. <i>Amount</i> says how far; everything stays in tune and in the export.<details class="g-more"><summary>More</summary><p><b>Breath</b>: gentle life in timing and dynamics. <b>Resonate</b>: sympathetic strings on your key that ring with every stroke; <i>Chord</i> picks their notes (and with Chords on they follow the scheme). <b>Comb</b>: a tuned comb that moves to another note every two bars. <b>Air</b>: harmonics and sheen on top. <b>Formant</b>: two vowel filters, as if the kit speaks. <b>Cosmos</b>: a drifting echo after the SOMA Cosmos, two echo lines that drift apart and meet again. <b>Ghosts</b>: a tiny grain of a hit comes back a few steps later, quiet and far left or right.</p><p><b>Decay</b> sets how long Resonate rings and Comb and Cosmos repeat. <b>Every</b> sends only every 2nd to 8th hit into Magic; the rest stays dry. <b>Echo</b> gives Magic its own dub echo. With Ghosts, <b>Chance</b> sets how often and <b>Hard</b> how present.</p></details></dd>
   </dl>
@@ -1654,7 +1655,7 @@ function create(ctx,OUT,host){
   const getBpm=()=>host.bpm();
   const cur=()=>CUR;
   const renderPatch=()=>{},renderFx=()=>{};
-  let MOVE=.5,voicing=null,droneOn=false,lastT=-1,keyAt=-1,scAt='',bpmAt=0,barAt=-1;
+  let MOVE=.5,voicing=null,droneOn=false,lastT=-1,keyAt=-1,scAt='',bpmAt=0,barAt=-1,pendRel=false;
 function makeIR(sec){
   const sr=ctx.sampleRate,len=Math.floor(sr*sec),b=ctx.createBuffer(2,len,sr);
   for(let ch=0;ch<2;ch++){
@@ -2033,7 +2034,7 @@ function releaseAll(t){for(const v of poly.values())v.release(t);poly.clear();[l
 
 
   function hostVoicing(P){
-    const sc=SCALES.__host,n=sc.length,r=rng((P.seed^0xBEEF)>>>0);let i5=sc.indexOf(7);if(i5<0)i5=Math.min(n-1,Math.round(n*.57));
+    const sc=SCALES.__host,n=sc.length,r=rng((((P._vs!=null?P._vs:P.seed))^0xBEEF)>>>0);   /* v171: the voicing comes from the pattern seed */let i5=sc.indexOf(7);if(i5<0)i5=Math.min(n-1,Math.round(n*.57));
     const v=[0,i5,n+r.pick([1,2,Math.min(3,n-1)])];if(r.chance(.6))v.push(r.pick([n+i5,2*n,2*n-1]));return v;
   }
   function startDrone(t){const o=(state.deg|0)+(state.cdv|0);voicing.forEach((d,i)=>polyOn('drone:'+i,state.key+36+semis(CUR.scale,d+o),.8,t));droneOn=true}
@@ -2059,7 +2060,8 @@ function releaseAll(t){for(const v of poly.values())v.release(t);poly.clear();[l
     setMove(x,t){if(!CUR)return;MOVE=x;A.lfoGain.gain.setTargetAtTime(CUR.filter.lfoDepth*Math.min(2,x*2),t,.2);A.driftGain.gain.setTargetAtTime(CUR.drift*Math.min(2,x*2),t,.2)},   // Ngoma's Move: gate depth, or filter and pitch drift for pads without a gate
     noteOn(m,v,t){if(CUR)polyOn('key:'+m,m,v,t)},noteOff(m,t){polyOff('key:'+m,t)},   // Ngoma's MIDI keys
     setWet(r,e,t){if(e==null)e=r;[[A.wetR,r],[A.wetE,e],[A.fxE,e]].forEach(([n,x])=>{if(!ctx.currentTime)n.gain.value=x;else n.gain.setTargetAtTime(x,t,.05)})},
-    setPhrase(seed){if(!CUR||KIND!=='lead')return;const q=seed>>>0;if(CUR._ps!==q){CUR.phrase=genPatch(q,KIND).phrase;CUR._ps=q}},   // Ngoma's Lock: the line of one seed with the sound of another
+    setPhrase(seed){if(!CUR)return;const q=seed>>>0;if(CUR._ps===q)return;CUR._ps=q;const Q=genPatch(q,KIND);if(KIND==='lead'){CUR.phrase=Q.phrase;return}
+      CUR._vs=q;CUR.change=Q.change;CUR.gate=Q.gate;rand=rng((q^0x2545F491)>>>0);if(droneOn){droneOn=false;pendRel=true}},   /* v171: a pad's pattern (voicing, how often it moves, gate) from a seed of its own; the sound stays */   // Ngoma's Lock: the line of one seed with the sound of another
     setMix(mix,mute,t){if(!CUR)return;CUR.mix=mix.slice(0,4);CUR.mute=mute.slice(0,4);applyMix(CUR,t)},
     step(g,t,BL,sw){
       if(!CUR)return;
@@ -2073,6 +2075,9 @@ function releaseAll(t){for(const v of poly.values())v.release(t);poly.clear();[l
         if(sc!==scAt||k!==keyAt){scAt=sc;keyAt=k;for(const v of poly.values())v.release(t);poly.clear();retireFx(CUR);retireMods(CUR);voicing=hostVoicing(CUR);applyFx(CUR,t);droneOn=false}
         else if(b!==bpmAt){bpmAt=b;applyFx(CUR,t)}
       }
+      if(pendRel){for(const v of poly.values())v.release(t);poly.clear();pendRel=false}
+      {const R=host.rec;if(R&&R.notes&&R.notes.length){if(droneOn){for(const v of poly.values())v.release(t);poly.clear();droneOn=false}   /* v171: your recorded chords instead of the drone */
+        const rs=host.res?host.res():4;playRec(R,g,t+(sw||0),60/getBpm()/rs,rs);lastT=t;gateStep(CUR,g*16/BL|0,t+(sw||0),MOVE*2);modTick(t);return}}
       {const cd=host.cd?host.cd(g)|0:0;if(cd!==(state.cdv|0)){const o0=(state.deg|0)+(state.cdv|0);state.cdv=cd;   /* v156: Ngoma's chords. Only the voices whose note changes move; common tones hold */
         if(droneOn)voicing.forEach((d,i)=>{const m0=state.key+36+semis(CUR.scale,d+o0),m=state.key+36+semis(CUR.scale,d+(state.deg|0)+cd);if(m!==m0)polyOn('drone:'+i,m,.8,t)})}}
       if(!droneOn||t-lastT>1.5){if(droneOn){for(const v of poly.values())v.release(t);poly.clear()}voicing=hostVoicing(CUR);startDrone(t);barAt=-1}
@@ -3695,6 +3700,33 @@ function droneVoice(ctx,out,t,hz,dur,v,mv,k){ const x=Math.min(3,dur*.25), end=t
 // and scale. The seed, mix and mutes live in S.fx.worp, so saves, scenes and undo keep them. Links: #worp-pad-CODE-MUTES-MIX both ways.
 const WORP_URL=location.protocol==='file:'?'worp/index.html':'worp/';   // v97: Worp lives on the same site, ngoma.pages.dev/worp
 function worpSeed(){ const u=new Uint32Array(1); crypto.getRandomValues(u); return u[0]; }
+/* v171 Rec in Ngoma (Jesse: switching between Ngoma and Worp is awkward). Rec 2 bars on the Lead or the Pad records what you play on your
+   MIDI keys, from the next bar line, on the grid (sixteenths; Ngoma's swing is added when it plays). While you record only that unit's
+   own line rests; the drums go on and your keys sound. The take becomes Mine; Worp switches back to the generated line or chords. */
+var PREC=false; const NREC={st:'',u:'',g0:0,g1:0,notes:[],open:new Map()};
+function padRecOn(){ const R=S.fx.worp&&S.fx.worp.rec; return R&&!R.off?R:null; }
+function stepNow(){ if(!actx||!playing) return null; return gStep-(nextT-actx.currentTime)/stepDur(S); }
+function nrecUI(){ ['lead','pad'].forEach(u=>{ const b=$(u==='lead'?'leadRec':'padRec'); if(!b) return; const me=NREC.u===u&&!!NREC.st;
+  b.classList.toggle('arming',me&&NREC.st==='arm'); b.classList.toggle('recording',me&&NREC.st==='rec'); b.setAttribute('aria-pressed',me?'true':'false');
+  let t='Rec 2 bars'; if(me&&NREC.st==='arm') t='Rec · next bar'; if(me&&NREC.st==='rec') t='Rec '+Math.round(Math.max(0,Math.min(1,(stepNow()-NREC.g0)/(NREC.g1-NREC.g0)))*100)+'%'; if(b.textContent!==t) b.textContent=t; }); }
+function nrecToggle(u){ if(NREC.st){ const was=NREC.u; nrecStop(false); if(was===u) return; }
+  if(u==='lead'&&!S.fx.leadOn){ S.fx.leadOn=true; UPD.forEach(f=>f()); if(AG) leadSync(AG); }
+  if(u==='pad'&&!midiPadOK()){ S.fx.padOn=true; S.fx.padType=7; UPD.forEach(f=>f()); worpUI(); if(AG) padSync(AG); }
+  S.midiTo=u; midiUI(); save(); if(!MIDIK.on) midiConnect(false);
+  if(!playing) start(); const BL=4*S.res; NREC.g0=Math.ceil((stepNow()+1)/BL)*BL; NREC.g1=NREC.g0+2*BL; NREC.u=u; NREC.st='arm'; NREC.notes=[]; NREC.open.clear();
+  if(u==='lead') LREC=true; else { PREC=true; if(AG&&AG.worp) AG.worp.stop(actx.currentTime); } if(AG) leadSync(AG);
+  status('Rec on the '+(u==='lead'?'Lead':'Pad')+': play on your MIDI keys from the next bar, two bars long. Rec again cancels.'); nrecUI(); }
+function nrecStop(done){ NREC.st=''; NREC.u=''; LREC=false; PREC=false; if(AG) leadSync(AG); nrecUI(); if(!done) status('Rec cancelled.'); }
+function nrecNote(on,m,v){ if(!NREC.st) return; const p=stepNow(); if(p==null) return;
+  if(on){ if(p<NREC.g1) NREC.open.set(m,{p:Math.max(p,NREC.g0-.6),v}); return; }   /* a note played just before the bar counts as on the one */
+  const o=NREC.open.get(m); if(!o) return; NREC.open.delete(m); NREC.notes.push({p0:o.p,p1:Math.min(p,NREC.g1),m,v:o.v}); }
+function nrecTick(){ if(!NREC.st) return; const p=stepNow(); if(p==null){ nrecStop(false); return; } if(NREC.st==='arm'&&p>=NREC.g0) NREC.st='rec'; nrecUI(); if(p<NREC.g1) return;
+  NREC.open.forEach((o,m)=>NREC.notes.push({p0:o.p,p1:NREC.g1,m,v:o.v})); NREC.open.clear(); const u=NREC.u, k=4/S.res, root=S.key+48;
+  const notes=NREC.notes.filter(n=>n.p0<NREC.g1-.5).map(n=>{ let s=Math.round((n.p0-NREC.g0)*k); const d=Math.max(1,Math.round((n.p1-n.p0)*k)); if(s<0) s=0; if(s>=32) s-=32; return {s,d,r:n.m-root,v:+Math.max(.2,Math.min(1,n.v)).toFixed(2)}; }).filter(n=>n.s<32).sort((a,b)=>a.s-b.s).slice(0,256);
+  nrecStop(true); if(!notes.length){ status('Nothing recorded: after Rec, play on your MIDI keys from the next bar.'); return; }
+  hRecord(()=>{ const W=u==='lead'?leadSpec():worpSpec(); W.rec={notes,bars:2}; if(u==='lead') S.fx.leadOn=true; }); updHist(); save(); leadShown=''; worpShown=''; leadUI(); worpUI(); if(AG){ leadSync(AG); padSync(AG); } worpPost();
+  status('Your '+(u==='lead'?'line':'chords')+': '+notes.length+' notes, looping now. Mine | Worp switches between yours and the generated one.'); }
+function padMine(mine){ const R=worpSpec().rec; if(!R||mine===!R.off) return; hRecord(()=>{ if(mine) delete R.off; else R.off=true; }); updHist(); save(); worpShown=''; worpUI(); worpPost(); status(mine?'Your chords play again.':'The pad\'s own chords play. Your take is kept: Mine brings it back.'); }
 function worpSpec(){ const F=S.fx; if(!F.worp||!F.worp.seed) F.worp={seed:worpSeed(),mix:[1,1,1,1],mute:[false,false,false,false]}; return F.worp; }
 function worpCode(W){ return (W.seed>>>0).toString(36).toUpperCase().padStart(7,'0'); }
 const WFLT_OPEN={model:0,cut:1,res:0,drive:0,env:0,lfo:0};
@@ -3711,7 +3743,7 @@ const LEAD_TRIM=1.6;   /* v135: about +7 dB heard (Jesse: lead far too soft; the
    instrument that plays (bell, wood, shaker, triangle, clap); without that, Worp's son clave */
 /* v131: play along from a MIDI keyboard. Your keys play the lead's sound (or the Worp pad when the lead is off) through the running
    engine, so Level, Filter, Reverb and Echo apply; with Worp open over Ngoma, Worp takes the keys. Once allowed, it reconnects by itself. */
-let MIDIK={on:false}, LREC=false;
+let MIDIK={on:false}, LREC=false;   /* LREC: the lead's own line rests while you record (Worp or Ngoma) */
 function lineMine(mine){ const R=leadSpec().rec; if(!R||mine===!R.off) return; hRecord(()=>{ if(mine) delete R.off; else R.off=true; }); updHist(); save(); leadShown=''; leadUI(); if(AG) leadSync(AG); worpPost(); status(mine?'Your line plays again.':'Worp\'s own melody plays. Your line is kept: Mine brings it back.'); }   /* v139: Mine | Worp */
 function recOn(){ const R=S.fx.wlead&&S.fx.wlead.rec; return R&&!R.off?R:null; }   /* v136: rec.off = your line is kept but Worp's own melody plays */
 async function midiConnect(auto){ if(!navigator.requestMIDIAccess){ if(!auto) status('No Web MIDI here. Use Chrome or Edge.'); return; }
@@ -3737,6 +3769,7 @@ function midiKey(E,on,m,v){ const now=AG.ctx.currentTime; if(on){ const t=midiQT
 function ngMidi(e){ const P=$('worpPane'); if(P&&!P.hidden) return; const [st,d1,d2=0]=e.data, cmd=st&0xf0, on=cmd===0x90&&d2>0, off=cmd===0x80||(cmd===0x90&&d2===0); if(!on&&!off) return;
   const d=midiDest();
   if(on&&d==='lead'&&window.WorpEngine){ ensureCtx(); if(actx.state!=='running') actx.resume().catch(()=>{}); if(AG&&AG.lead){ leadEngine(actx,AG,actx.currentTime); leadSync(AG); } if(actx.state!=='running'&&!playing) status('Click anywhere in Ngoma once, then your keys sound (the browser wants one click first).'); }   /* v137: keys work before Play and right after coming back from Worp */
+  if(NREC.st&&NREC.u===d) nrecNote(on,d1,.35+.65*d2/127);   /* v171 */
   if(off){ if(AG) midiKey(null,false,d1); return; }
   const E=AG&&(d==='lead'?AG.wlead:d==='pad'?AG.worp:null); if(!E||!E.noteOn) return; midiKey(E,true,d1,.35+.65*d2/127); }
 function midiAuto(){ try{ if(!MIDIK.on&&navigator.permissions) navigator.permissions.query({name:'midi'}).then(s=>{ if(s.state==='granted') midiConnect(true); }).catch(()=>{}); }catch(e){} }   /* v137: MIDI allowed in Worp counts for Ngoma too */
@@ -3865,10 +3898,10 @@ function lcdSet(id,t){ const e=$(id); if(!e||e.textContent===t) return; const ha
 function leadUI(){ const el=$('leadStrip'); if(!el||!window.WorpEngine) return; if(S.fx.leadOn) leadMeasure(leadSpec()); const W=leadSpec(), key=W.seed+'|'+(W.rec?W.rec.notes.length+(W.rec.off?'o':''):'')+'|'+(W.lock?W.lock.seed:'')+'|'+(W.ps||'')+'|'+(W.name||'')+'|'+W.mute.join()+'|'+W.mix.join()+'|'+JSON.stringify(W.flt||0)+JSON.stringify(W.env||0); if(key===leadShown) return; leadShown=key;
   const P0=WorpEngine.genPatch(W.seed>>>0,'lead'), PS=W.lock?W.lock.seed:W.ps, P=PS!=null&&(PS>>>0)!==(W.seed>>>0)?{...P0,phrase:WorpEngine.genPatch(PS>>>0,'lead').phrase}:P0; lcdSet('leadName',W.name||P.name); $('leadLock').setAttribute('aria-pressed',W.lock?'true':'false'); $('leadCode').textContent='#'+worpCode(W)+' · '+(recOn()?'your line':(WorpEngine.PH_STYLES[P.phrase.style]||'Loop'))+(P.mallet?' · '+P.mallet:''); $('leadCode').title=WorpEngine.phraseDesc(P);
   $('leadMutes').innerHTML=P.layers.map((L,i)=>`<button class="wm" data-i="${i}" aria-pressed="${W.mute[i]?'true':'false'}" title="${WorpEngine.ENG[L.engine]}: click to mute or unmute">${i+1}</button>`).join('');
-  const lb=$('leadLine'); if(lb){ const mine=!!recOn(); lb.querySelectorAll('button').forEach(b=>{ const m=b.dataset.l==='mine'; b.setAttribute('aria-pressed',String(m===mine)); if(m){ b.disabled=!W.rec; b.title=W.rec?'Your line from Worp plays ('+W.rec.notes.length+' notes)':'Record a line of your own first: Open in Worp, then Rec 2 bars'; } }); }
+  const lb=$('leadLine'); if(lb){ const mine=!!recOn(); lb.querySelectorAll('button').forEach(b=>{ const m=b.dataset.l==='mine'; b.setAttribute('aria-pressed',String(m===mine)); if(m){ b.disabled=!W.rec; b.title=W.rec?'Your line plays ('+W.rec.notes.length+' notes)':'Record a line of your own first: Rec 2 bars'; } }); }
   $('leadOpen').href=WORP_URL+'#'+worpToken(W,'lead'); }
 function worpBar(ctx,G,g,t){ if(!window.WorpEngine) return; const P=G.pad, W=wTry(G)||worpSpec(), BL=4*S.res, now=Math.max(ctx.currentTime||0,t), off=ctx instanceof OfflineAudioContext;
-  if(!G.worp) G.worp=WorpEngine.create(ctx,P.bus,{cd:g=>chordAt(g),key:()=>S.key,deg:()=>trDeg(unitTr(S.fx,'pad')),scale:()=>(SCALES[S.scale]||SCALES.mpenta).iv,bpm:()=>S.bpm,t0:()=>G.t0||0,   // v100: Worp's filter comes along (same worklet as Ngoma's master filter)
+  if(!G.worp) G.worp=WorpEngine.create(ctx,P.bus,{cd:g=>chordAt(g),get rec(){ return padRecOn(); },key:()=>S.key,deg:()=>trDeg(unitTr(S.fx,'pad')),scale:()=>(SCALES[S.scale]||SCALES.mpenta).iv,bpm:()=>S.bpm,t0:()=>G.t0||0,   // v100: Worp's filter comes along (same worklet as Ngoma's master filter)
     makeFilter:()=>{ if(!ctx._fok) return null; try{ return new AudioWorkletNode(ctx,'ngoma-filter',{numberOfInputs:2,numberOfOutputs:1,outputChannelCount:[2]}); }catch(e){ return null; } }});
   const E=G.worp, cp=E.patch;
   if(!cp||cp.seed!==(W.seed>>>0)) E.setPatch(W.seed,now,W.mix,W.mute);
@@ -3878,13 +3911,15 @@ function worpBar(ctx,G,g,t){ if(!window.WorpEngine) return; const P=G.pad, W=wTr
   if(g%BL===0){ P.lp.frequency.setTargetAtTime(16000,now,.05); P.lp.Q.setTargetAtTime(.5,now,.05); }   // the breathing filter stays open: Worp moves its own
   const wr=unitWet(S.fx,'pad'), we=unitEcho(S.fx,'pad'), wk=wr+'|'+we; if(E._wk!==wk&&E.setWet){ E._wk=wk; E.setWet(wr,we,now); }
   const mv=S.fx.padMove??.5, mk=mv+'|'+(E.patch?E.patch.seed:0); if(E._mk!==mk&&E.setMove){ E._mk=mk; E.setMove(mv,now); }   // v131: Move on a Worp pad: gate depth, or filter and pitch drift
-  E.step(g,now,BL,grooveOff(g,S,stepDur(S)));
+  if(E.setPhrase) E.setPhrase(W.ps!=null?W.ps:W.seed);   /* v171: the pad's pattern seed */
+  if(!PREC||off) E.step(g,now,BL,grooveOff(g,S,stepDur(S)));   /* while you record chords the pad's own part rests */
   if(off && g===S.bars*4*S.res-1) E.stop(t+stepDur(S));                                              // export: release at the loop end, the tail folds back
 }
 let worpShown='';
 function worpUI(){ const el=$('worpStrip'); if(!el) return; const on=(S.fx.padType|0)===7; el.hidden=!on; if(!on||!window.WorpEngine) return;
-  const W=worpSpec(), key=W.seed+'|'+(W.name||'')+'|'+W.mute.join()+'|'+W.mix.join()+'|'+JSON.stringify(W.flt||0)+JSON.stringify(W.env||0); if(key===worpShown) return; worpShown=key;
-  const P=WorpEngine.genPatch(W.seed>>>0,'pad'); lcdSet('worpName',W.name||P.name); $('worpCode').textContent='#'+worpCode(W)+(P.gate?' · gate':''); if(window._padMoveTitle) window._padMoveTitle(P);
+  const W=worpSpec(), key=W.seed+'|'+(W.ps||'')+'|'+(W.rec?W.rec.notes.length+(W.rec.off?'o':''):'')+'|'+(W.name||'')+'|'+W.mute.join()+'|'+W.mix.join()+'|'+JSON.stringify(W.flt||0)+JSON.stringify(W.env||0); if(key===worpShown) return; worpShown=key;
+  const P=WorpEngine.genPatch(W.seed>>>0,'pad'), PQ=W.ps!=null&&(W.ps>>>0)!==(W.seed>>>0)?WorpEngine.genPatch(W.ps>>>0,'pad'):P; lcdSet('worpName',W.name||P.name); $('worpCode').textContent='#'+worpCode(W)+' · '+(padRecOn()?'your chords':PQ.gate?'gate':'drone');
+  { const pl=$('padLine'); if(pl){ const mine=!!padRecOn(); pl.querySelectorAll('button').forEach(b=>{ const m=b.dataset.l==='mine'; b.setAttribute('aria-pressed',String(m===mine)); if(m){ b.disabled=!W.rec; b.title=W.rec?'Your chords play ('+W.rec.notes.length+' notes)':'Record chords of your own first: Rec 2 bars'; } }); } } if(window._padMoveTitle) window._padMoveTitle(P);
   $('worpMutes').innerHTML=P.layers.map((L,i)=>`<button class="wm" data-i="${i}" aria-pressed="${W.mute[i]?'true':'false'}" title="${WorpEngine.ENG[L.engine]}: click to mute or unmute">${i+1}</button>`).join('');
   $('worpOpen').href=WORP_URL+'#'+worpToken(W); }
 function worpParse(str){ const m=/^#?worp-(pad|lead)-([0-9A-Za-z]{1,8})(?:-([01]{4}))?(?:-([0-9.]+))?(?:-f([0-9.]+))?(?:-e([0-9.]+))?/.exec(str||''); if(!m) return null;
@@ -3924,7 +3959,7 @@ function worpMsg(m,reply){ if(!m||typeof m!=='object') return;
     else { hRecord(()=>{ const rc=S.fx.wlead&&S.fx.wlead.rec; S.fx.wlead=W; if(rc) W.rec=rc; S.fx.leadOn=true; }); updHist(); save(); UPD.forEach(f=>f()); leadUI(); if(AG) leadSync(AG); worpPost(); } return; }
   if(m.t==='edit'||m.t==='audition'){ const W=worpParse(m.token), C=S.fx.worp; if(!W) return; delete W.kind; if(typeof m.name==='string') W.name=m.name.slice(0,48);   // the name as Worp shows it
     if(C&&(C.seed>>>0)===W.seed&&(S.fx.padType|0)===7&&S.fx.padOn){ const was=!!WTRY.W; WTRY.W=null; C.mix=W.mix; C.mute=W.mute; C.flt=W.flt; if(W.env) C.env=W.env; else delete C.env; worpUI(); clearTimeout(worpEditT); worpEditT=setTimeout(save,400); if(was&&AG) padSync(AG); }   // v100: your own pad, tweaked live
-    else { WTRY.W=null; hRecord(()=>{ S.fx.worp=W; S.fx.padOn=true; S.fx.padType=7; }); updHist(); save(); UPD.forEach(f=>f()); worpUI(); if(AG) padSync(AG); worpPost(); } }   // v105: a new sound picked in Worp becomes Ngoma's pad (one undo step per new sound)
+    else { WTRY.W=null; hRecord(()=>{ const rc=S.fx.worp&&S.fx.worp.rec; S.fx.worp=W; if(rc) W.rec=rc; S.fx.padOn=true; S.fx.padType=7; });   /* v171: your recorded chords stay with a new sound */ updHist(); save(); UPD.forEach(f=>f()); worpUI(); if(AG) padSync(AG); worpPost(); } }   // v105: a new sound picked in Worp becomes Ngoma's pad (one undo step per new sound)
   if(m.t==='stop'&&playing) stop();
   if(m.t==='play'&&!playing&&!(M4L&&M4L.on)) start();
   if(m.t==='worp'){ const on=!!m.sounding&&m.kind==='pad', was=worpAud(); WAUD.t=Date.now(); WAUD.on=on; const nb=$('worpnav'); if(nb) nb.classList.toggle('live',!!m.sounding);
@@ -4151,10 +4186,10 @@ function tick(){ const sd=stepDur(S); if(nextT<actx.currentTime-.05){ const k=Ma
   if(vq.length>256) vq.splice(0,vq.length-64);
   while(nextT < actx.currentTime+(STABLE?.3:.2)){   /* v163: 0.2 s ahead (was 0.12), 0.3 s in Stable */
     if(QB.list.length && gStep%(4*S.res)===0){ const r0=S.res; qRun(nextT); if(S.res!==r0) gStep=Math.round(gStep/r0*S.res); }   // queued changes land on the bar line
-    scheduleStep(actx,AG,gStep,nextT,true); nextT+=stepDur(S); gStep++; } }
+    scheduleStep(actx,AG,gStep,nextT,true); nextT+=stepDur(S); gStep++; } if(NREC.st) nrecTick(); }
 function start(){ ensureCtx(); clearTimeout(suspT); if(AG.pad){ const g=AG.pad.gate.gain; g.cancelScheduledValues(actx.currentTime); g.setValueAtTime(1,actx.currentTime); } animLive(); gStep=0; nextT=actx.currentTime+.08; if(M4L.on&&M4L.pos) m4lAlign(M4L.pos.b,S.bpm); AG.t0=nextT-gStep*stepDur(S); capStart(nextT); syncFx(AG); vq.length=0; playing=true; timer=setInterval(tick,25); tick(); worpPost(); requestAnimationFrame(draw); setPlayUI(); }
 let suspT=0;
-function stop(){ playing=false; if(AG&&AG.fld){ fldStopLoop(AG,.6); const fg=AG.fld.gate.gain, n0=actx.currentTime; fg.cancelScheduledValues(n0); fg.setTargetAtTime(0,n0,.25); } if(MORPH.on) morphEnd(false); setTimeout(worpPost,0); if(QB.list.length) qRun(); CAP.stopT=actx?actx.currentTime:0; clearInterval(timer); clearInterval(animTimer); vq.length=0; clearNow(); setPlayUI();
+function stop(){ playing=false; if(NREC.st) nrecStop(false); if(AG&&AG.fld){ fldStopLoop(AG,.6); const fg=AG.fld.gate.gain, n0=actx.currentTime; fg.cancelScheduledValues(n0); fg.setTargetAtTime(0,n0,.25); } if(MORPH.on) morphEnd(false); setTimeout(worpPost,0); if(QB.list.length) qRun(); CAP.stopT=actx?actx.currentTime:0; clearInterval(timer); clearInterval(animTimer); vq.length=0; clearNow(); setPlayUI();
   if(AG&&AG.pad){ const g=AG.pad.gate.gain, n=actx.currentTime; g.cancelScheduledValues(n); g.setTargetAtTime(0,n,.12); }                  // the pad fades out instead of ringing on
   if(AG&&AG.worp) AG.worp.stop(actx.currentTime+.4);
   if(AG&&AG.wlead) AG.wlead.stop(actx.currentTime+.05);
@@ -4640,7 +4675,10 @@ function initControls(){
     document.querySelectorAll('#padseg button').forEach(b=>b.onclick=()=>{ const w=b.dataset.pm==='worp'; if(w===isW()) return;   // v102: Worp or the classic pads
       if(w){ S.fx.padClassic=S.fx.padType|0; S.fx.padType=7; } else S.fx.padType=PAD_ORDER.includes(S.fx.padClassic|0)?(S.fx.padClassic|0):0;
       u(); padSync(AG); save(); });
-    $('worpNew').onclick=()=>{ worpSpec(); hRecord(()=>{ const {name,...rest}=S.fx.worp; S.fx.worp={...rest,seed:worpSeed(),mix:[1,1,1,1],mute:[false,false,false,false]}; });   /* v131: a new pad gets its own name (the old one stuck) */ updHist(); save(); worpUI(); };
+    /* v171 (Jesse: the pad needs New sound and New pattern too). New sound keeps the chords and movement (W.ps), New pattern keeps the sound */
+    $('worpPat').onclick=()=>{ worpSpec(); hRecord(()=>{ S.fx.worp.ps=worpSeed(); }); updHist(); save(); worpShown=''; worpUI(); status(padRecOn()?'New Worp chords on the same sound. You hear them when you switch to Worp; Mine plays your own.':'New chords and movement, same sound.'); };
+    $('padLine').querySelectorAll('button').forEach(b=>b.onclick=()=>padMine(b.dataset.l==='mine')); $('padRec').onclick=()=>nrecToggle('pad'); $('leadRec').onclick=()=>nrecToggle('lead');
+    $('worpNew').onclick=()=>{ worpSpec(); hRecord(()=>{ const {name,...rest}=S.fx.worp, ps=(rest.ps!=null?rest.ps:rest.seed)>>>0; S.fx.worp={...rest,seed:worpSeed(),ps,mix:[1,1,1,1],mute:[false,false,false,false]}; });   /* v131: a new pad gets its own name (the old one stuck) */ updHist(); save(); worpUI(); };
     $('worpMutes').onclick=e=>{ const b=e.target.closest('.wm'); if(!b) return; const W=worpSpec(), i=+b.dataset.i; W.mute[i]=!W.mute[i]; save(); worpUI(); };
     cb.onchange=()=>{ S.fx.padOn=cb.checked; u(); padSync(AG); save(); };
   }

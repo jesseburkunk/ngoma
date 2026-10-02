@@ -205,6 +205,17 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     assert(!r.err, r.err); assert(r.ra > .005 && r.rd > .005 && r.rt > .003, 'silent ' + JSON.stringify(r)); assert(r.pk < 1, 'peak ' + r.pk.toFixed(3)); assert(r.s.jump < .1 + 6 * r.s.step, 'seam ' + JSON.stringify(r.s));
     return 'plain ' + r.ra.toFixed(3) + ', drift ' + r.rd.toFixed(3) + ', tune ' + r.rt.toFixed(3) + ' rms, ' + r.dur.toFixed(0) + ' s recording'; });
 
+  await check('Rec in Ngoma: two bars from MIDI keys land on the grid; pad pattern and recorded chords play', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), w = ms => new Promise(r => setTimeout(r, ms)), keep = JSON.stringify(S.fx), b0 = S.bpm;
+      stop(); await w(200); S.bpm = 170; S.fx.leadOn = true; const W = leadSpec(); delete W.rec; nrecToggle('lead'); const sd = stepDur(S), o = { arm: NREC.st };
+      const at = async st => { while (stepNow() < st) await w(10); };   /* play at step offsets of the take, as a player would */
+      await at(NREC.g0 + 0.15); ngMidi({ data: [0x90, 64, 100] }); await at(NREC.g0 + 2); ngMidi({ data: [0x80, 64, 0] }); await at(NREC.g0 + 8.2); ngMidi({ data: [0x90, 67, 90] }); await at(NREC.g0 + 9); ngMidi({ data: [0x80, 67, 0] });
+      while (NREC.st) await w(50); const R = leadSpec().rec; o.n = R && R.notes.length; o.grid = R && R.notes.map(n => n.s + ':' + n.d).join(','); o.lrec = LREC; stop();
+      S.bpm = b0; S.bars = 1; Object.assign(S.fx, { padOn: true, padType: 7, padLvl: .6, leadOn: false, worp: { seed: 4242, mix: [1, 1, 1, 1], mute: [false, false, false, false] } }); S.renderOnly = -1; const a = await renderLoop(false, 22050);
+      S.fx.worp.ps = 777; const b = await renderLoop(false, 22050); S.fx.worp.rec = { notes: [{ s: 0, d: 16, r: 0, v: .8 }, { s: 0, d: 16, r: 4, v: .8 }, { s: 16, d: 16, r: 5, v: .8 }], bars: 2 }; const c = await renderLoop(false, 22050); S.renderOnly = null;
+      let dab = 0, dac = 0; for (let i = 0; i < a[0].length; i += 5) { dab += Math.abs(a[0][i] - b[0][i]); dac += Math.abs(a[0][i] - c[0][i]); } o.ra = rms(a[0]); o.rc = rms(c[0]); o.dab = dab; o.dac = dac; Object.assign(S.fx, JSON.parse(keep)); return o; }, rmsJS);
+    { const g = String(r.grid || '').split(',').map(x => x.split(':').map(Number)); assert(r.arm === 'arm' && r.n === 2 && g[1][0] - g[0][0] === 8 && g[0][0] <= 1 && g[0][1] >= 1 && g[1][1] >= 1, 'take ' + JSON.stringify(r)); }   /* a busy test browser can play a hair late */ assert(!r.lrec, 'lead left resting');
+    assert(r.ra > .001 && r.rc > .001, 'pad silent ' + JSON.stringify(r)); assert(r.dab > 1 && r.dac > 1, 'pattern or chords did not change the pad ' + JSON.stringify(r)); return 'take ' + r.grid + ', pad pattern and chords sound'; });
+
   await check('Bloom: renders, the tail sings and stays in bounds', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
       Object.assign(S.fx, { rvOn: true, rvType: 'hall', rvLevel: .5 }); const a = await renderLoop(false, 22050); S.fx.rvType = 'bloom'; const b = await renderLoop(false, 22050);
       let pk = 0; for (const v of b[0]) pk = Math.max(pk, Math.abs(v)); const hz = bloomHz(0); Object.assign(S.fx, JSON.parse(keep)); return { ra: rms(a[0]), rb: rms(b[0]), pk, hz }; }, rmsJS);
