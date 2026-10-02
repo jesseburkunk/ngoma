@@ -3945,16 +3945,22 @@ const PL_PRE=[{nm:'Analog',e:8,h:.3,t:.8,m:.5,d:.5,c:.6,tm:.3,g:.55},{nm:'Phase 
   {nm:'Additive',e:12,h:.4,t:.22,m:.3,d:.5,c:.6,tm:.2,g:.66},{nm:'Wavetable',e:13,h:.5,t:.65,m:.5,d:.5,c:.6,tm:.2,g:.9},{nm:'String',e:19,h:.45,t:.85,m:.5,d:.55,c:.6,tm:0,g:.74},{nm:'Modal',e:20,h:.4,t:.45,m:.5,d:.55,c:.6,tm:0,g:.45}];
 const PL_TRIM=1;
 /* v176: every Plaits model the Lead can use, with its measured gain (same RMS as the lab presets); the eight lab ones first */
-const PL_ENG=[[8,'Analog',.55],[1,'Phase distortion',.39],[9,'Waveshaper',.58],[10,'FM',.41],[12,'Additive',.66],[13,'Wavetable',.9],[19,'String',.74],[20,'Modal',.45],[0,'Analog + filter',.43],[5,'Wave terrain',.43],[7,'Chiptune',.23],[11,'Formant',.52],[16,'Swarm',.65]];
+const PL_ENG=[[8,'Analog',.55],[1,'Phase distortion',.39],[9,'Waveshaper',.58],[10,'FM',.41],[12,'Additive',.66],[13,'Wavetable',.9],[19,'String',.74],[20,'Modal',.45],[0,'Analog + filter',.43],[5,'Wave terrain',.43],[11,'Formant',.52],[16,'Swarm',.65]];
 function plPatch(seed){ const s=seed>>>0, q=k=>rnd(s,k,0x91A1), P0=PL_PRE[Math.floor(q(1)*PL_PRE.length)%PL_PRE.length], j=(v,k,w)=>Math.max(.03,Math.min(.97,v+(q(k)-.5)*2*w));
   const P={nm:P0.nm,e:P0.e,h:j(P0.h,2,.12),t:j(P0.t,3,.1),m:j(P0.m,4,.15),d:j(P0.d,5,.08),c:j(P0.c,6,.1),tm:P0.tm,g:P0.g};
   const W=S.fx.wlead, O=W&&(W.seed>>>0)===s&&W.pl; if(O){ ['h','t','m','d','c'].forEach(k=>{ if(isFinite(O[k])) P[k]=O[k]; }); if(isFinite(O.e)){ const E=PL_ENG.find(x=>x[0]===O.e); if(E){ P.e=E[0]; P.nm=E[1]; P.g=E[2]; } } }   /* v176: your knob settings (W.pl) over the seed's */
   return P; }
 /* v176 Move: two slow LFOs per seed (periods in bars, so they drift against each other) move Timbre, Morph and a little of Harmonics,
    computed per step from the step number, so the export moves the same way. Move 0 = still. */
+/* v186 (Jesse: the lead lines no longer sound in tune). Measured with the wasm (pitch of the note against its MIDI pitch): on some models
+   Harmonics moves the pitch. String goes flat above .3 (inharmonic string), Modal is only in tune around .26 to .34, Swarm detunes above
+   .12, Analog and FM jump between intervals (a fourth, a fifth) and glide out of tune in between, Chiptune plays arpeggios (out of the
+   list). The knob keeps its full travel; plHarm maps it onto the part of the range that stays in tune, Analog and FM in steps. */
+function plHarm(e,h){ h=Math.max(0,Math.min(1,h)); if(e===19) return h*.3; if(e===20) return .26+h*.08; if(e===16) return h*.12;
+  if(e===8){ const q=[0,.25,.5,.75,1]; return q[Math.round(h*4)]; } if(e===10){ const q=[0,.25,.55,.75,1]; return q[Math.round(h*4)]; } return h; }
 function plMove(G,g,t){ const Q=G.plaits; if(!Q) return; const mv=S.fx.leadMove??.3, P=plPatch(leadSpec().seed), pr=Q.node.parameters, live=!(G.ctx instanceof OfflineAudioContext), s=leadSpec().seed>>>0;
   const BL=4*S.res, ph=g/BL, r=k=>rnd(s,k,0x3C7), p1=[2,4,8][Math.floor(r(1)*3)%3], p2=[3,6,16][Math.floor(r(2)*3)%3], a=Math.sin(2*Math.PI*(ph/p1+r(3))), b=Math.sin(2*Math.PI*(ph/p2+r(4))), cl=x=>Math.max(0,Math.min(1,x));
-  const v={timb:cl(P.t+mv*.25*a), morph:cl(P.m+mv*.3*b), harm:cl(P.h+mv*.08*(a*b))};
+  const v={timb:cl(P.t+mv*.25*a), morph:cl(P.m+mv*.3*b), harm:plHarm(P.e,P.e===8||P.e===10?P.h:cl(P.h+mv*.08*(a*b)))};
   for(const n in v){ const q=pr.get(n); if(live) q.linearRampToValueAtTime(v[n],Math.max(t,G.ctx.currentTime)); else q.setValueAtTime(v[n],t); } }
 let PL_B=null;
 function plBytes(){ if(!PL_B&&typeof PLAITS_WASM==='string'){ const b=atob(PLAITS_WASM), u=new Uint8Array(b.length); for(let i=0;i<b.length;i++) u[i]=b.charCodeAt(i); PL_B=u.buffer; } return PL_B; }
@@ -3962,7 +3968,7 @@ function plEngine(ctx,G){ if(G.plaits) return G.plaits; if(!ctx._fok||!G.lead||!
   try{ const node=new AudioWorkletNode(ctx,'ngoma-plaits',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],processorOptions:{wasm:plBytes().slice(0)}}); node.connect(G.lead.bus); node.port.onmessage=e=>{ if(e.data&&e.data.err) console.warn('Plaits:',e.data.err); };
     G.plaits={node,cnt:[0,0,0,0,0,0],lv:0,kv:0,pk:''}; }catch(e){ console.warn('Plaits:',e); return null; } return G.plaits; }
 function plSync(G,t){ const Q=G.plaits; if(!Q) return; const P=plPatch(leadSpec().seed), k=JSON.stringify(P); if(Q.pk===k) return; Q.pk=k; const pr=Q.node.parameters, live=!(G.ctx instanceof OfflineAudioContext);
-  [['eng',P.e],['harm',P.h],['timb',P.t],['morph',P.m],['dec',P.d],['col',P.c],['tmod',P.tm]].forEach(([n,v])=>{ const a=pr.get(n); if(live) a.setValueAtTime(v,Math.max(t||0,G.ctx.currentTime)); else a.value=v; }); }
+  [['eng',P.e],['harm',plHarm(P.e,P.h)],['timb',P.t],['morph',P.m],['dec',P.d],['col',P.c],['tmod',P.tm]].forEach(([n,v])=>{ const a=pr.get(n); if(live) a.setValueAtTime(v,Math.max(t||0,G.ctx.currentTime)); else a.value=v; }); }
 function plNote(G,v,t,midi,vel){ const Q=G.plaits; if(!Q||!isFinite(midi)) return; const pr=Q.node.parameters, c=++Q.cnt[v]; t=Math.max(t,G.ctx.currentTime||0);
   pr.get('n'+v).setValueAtTime(midi,t); pr.get('v'+v).setValueAtTime(Math.max(.05,Math.min(1,vel)),t); pr.get('c'+v).setValueAtTime(c,t); }
 function plKeys(G){ return {noteOn:(m,v,t)=>{ const Q=plEngine(G.ctx,G); if(!Q){ loadFilter(G.ctx).then(()=>{ const Q2=plEngine(G.ctx,G); if(!Q2) return; plSync(G,0); plNote(G,3+(Q2.kv++%3),G.ctx.currentTime,m,v); }); return; }   /* v178: the first key, before the worklet has loaded, waits for it instead of being lost */
