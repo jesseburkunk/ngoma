@@ -241,8 +241,9 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       for (const sd of [101, 202, 303]) { S.fx.wlead = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] }; o.pre.push(plPatch(sd).nm); S.renderOnly = -2; const b = await renderLoop(false, 22050); S.renderOnly = null; o.rms.push(+rms(b[0]).toFixed(4));
         if (prev) { let d = 0; for (let i = 0; i < b[0].length; i += 7) d += Math.abs(b[0][i] - prev[i]); o.diff += d; } prev = b[0]; }
       ensureCtx(); await loadFilter(actx); plKeys(AG).noteOn(64, .8, actx.currentTime + .05); o.keys = !!AG.plaits; o.ok = plOn();
+      S.fx.wlead.pl = { e: 13, t: .2 }; o.ovr = plPatch(303).nm === 'Wavetable' && plPatch(303).t === .2; S.fx.leadMove = 1; S.renderOnly = -2; const mvb = await renderLoop(false, 22050); S.renderOnly = null; o.mv = rms(mvb[0]); o.row = !!document.querySelector('#plRow select') && !document.getElementById('plRow').hidden;   /* v176: knobs and Move */
       Object.assign(S.fx, JSON.parse(keep)); return o; }, rmsJS);
-    assert(r.ok && r.rms.every(x => x > .002), 'Plaits lead silent ' + JSON.stringify(r)); assert(r.diff > 1, 'seeds sound the same'); assert(r.keys, 'keys made no Plaits voice');
+    assert(r.ok && r.rms.every(x => x > .002), 'Plaits lead silent ' + JSON.stringify(r)); assert(r.diff > 1, 'seeds sound the same'); assert(r.keys, 'keys made no Plaits voice'); assert(r.ovr && r.row && r.mv > .002, 'Plaits knobs ' + JSON.stringify(r));
     return r.pre.join(', ') + ' · rms ' + r.rms.join(' / '); });
 
   await check('Bloom: renders, the tail sings and stays in bounds', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
