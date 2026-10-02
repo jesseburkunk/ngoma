@@ -5379,7 +5379,7 @@ function jamRec(node,tr){ const r=new AudioWorkletNode(actx,'ngoma-rec',{numberO
 async function jamStart(){ ensureCtx(); if(!actx._fok){ status('Recording needs AudioWorklet, which this browser does not allow here.'); return; }
   const sr=actx.sampleRate, BL=4*S.res, sd=stepDur(S);
   let t=actx.currentTime+.05; if(playing){ const k=(BL-gStep%BL)%BL; t=nextT+k*sd; }   // the next bar line
-  Object.assign(JAM,{on:true,wait:playing,sr,f0:Math.round(t*sr),tr:{mix:jamTrack(),drums:jamTrack(),pad:jamTrack(),lead:jamTrack(),worp:jamTrack()},nodes:[],t,stopF:0,wsr:0});
+  Object.assign(JAM,{on:true,ending:false,wait:playing,sr,f0:Math.round(t*sr),tr:{mix:jamTrack(),drums:jamTrack(),pad:jamTrack(),lead:jamTrack(),worp:jamTrack()},nodes:[],t,stopF:0,wsr:0});
   jamRec(AG.capNode,JAM.tr.mix);
   const dt=actx.createGain(); AG.lanes.forEach(l=>l.p.connect(dt)); JAM.dTap=dt; jamRec(dt,JAM.tr.drums);
   if(AG.pad) jamRec(AG.pad.out,JAM.tr.pad); if(AG.lead) jamRec(AG.lead.out,JAM.tr.lead);
@@ -5389,10 +5389,17 @@ function jamWorp(m){ if(!JAM.on||!JAM.tr) return; if(m.sr&&m.sr!==JAM.sr){ // an
     const q=JAM.sr/m.sr, n=Math.round(m.L.length*q), L=new Float32Array(n), R=new Float32Array(n); for(let i=0;i<n;i++){ const x=i/q, a=Math.floor(x), fr=x-a, b=Math.min(m.L.length-1,a+1); L[i]=m.L[a]+(m.L[b]-m.L[a])*fr; R[i]=m.R[a]+(m.R[b]-m.R[a])*fr; }
     jamPut(JAM.tr.worp,Math.round(m.f*q),L,R); } else jamPut(JAM.tr.worp,m.f,m.L,m.R); }
 function jamUI(){ const b=$('jam'); if(!b) return; b.classList.toggle('on',JAM.on); b.classList.toggle('wait',JAM.on&&actx&&actx.currentTime<JAM.t);
-  if(!JAM.on){ b.textContent='● Rec'; return; } const el=Math.max(0,(actx.currentTime-JAM.t)), mm=Math.floor(el/60), ss=Math.floor(el%60);
-  b.textContent=actx.currentTime<JAM.t?'● Next bar…':'● '+mm+':'+String(ss).padStart(2,'0');
+  if(!JAM.on){ b.textContent='● Rec'; return; } const el=Math.max(0,(actx.currentTime-JAM.t)), mm=Math.floor(el/60), ss=Math.floor(el%60), bars=playing?Math.floor(el/(4*S.res*stepDur(S)))+1:0;
+  b.textContent=actx.currentTime<JAM.t?'● Next bar…':JAM.ending?'● Ends on the bar…':'● '+mm+':'+String(ss).padStart(2,'0')+(bars?' · bar '+bars:'');
   if(el>=JAM.max-.5) jamStop(); }
-async function jamStop(){ if(!JAM.on) return; JAM.on=false; clearInterval(JAM.ui); const stopF=Math.round(actx.currentTime*JAM.sr)-JAM.f0;
+/* v190 (Jesse: Rec in step, so the samples come out cut cleanly): while Ngoma plays, the take also ends on a bar line. Press Stop in
+   the first quarter of a bar and it ends on the bar line you just passed; later in the bar it records on to the next one. The file is
+   then a whole number of bars long, from bar line to bar line. Stopped (not playing) it ends where you press, as before. */
+function jamStop(){ if(!JAM.on||JAM.ending) return; if(!playing||!actx) return jamFinish(null);
+  const sr=JAM.sr, barF=4*S.res*stepDur(S)*sr, el=Math.max(0,Math.round(actx.currentTime*sr)-JAM.f0), bars=el/barF, nb=Math.max(1,bars%1<.25||el>=(JAM.max-1)*sr?Math.floor(bars):Math.ceil(bars)), n=Math.round(nb*barF);
+  if(el>=n) return jamFinish(n);
+  JAM.ending=true; JAM.endN=n; jamUI(); status('Recording ends on the bar line ('+nb+(nb>1?' bars':' bar')+').'); setTimeout(()=>jamFinish(n),Math.max(0,(n-el)/sr*1000)+60); }
+async function jamFinish(nBars){ if(!JAM.on) return; JAM.on=false; JAM.ending=false; clearInterval(JAM.ui); const stopF=nBars!=null?nBars:Math.round(actx.currentTime*JAM.sr)-JAM.f0;
   const msg={t:'rec',on:false}; if(WBC) WBC.postMessage(msg); const f=$('worpFrame'); if(f&&f.src&&f.contentWindow) f.contentWindow.postMessage(msg,'*');
   await new Promise(r=>setTimeout(r,400));   // the last blocks from the worklets and from Worp
   JAM.nodes.forEach(([n,r])=>{ try{ n.disconnect(r); }catch(e){} }); JAM.nodes=[]; if(JAM.dTap){ AG.lanes.forEach(l=>{ try{ l.p.disconnect(JAM.dTap); }catch(e){} }); JAM.dTap=null; }
