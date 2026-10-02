@@ -49,6 +49,12 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
         const m = await renderLoop(false, 22050); S.renderOnly = -2; const l = await renderLoop(false, 22050); S.renderOnly = null; out.push(+(db(p95(l[0])) - db(p95(m[0]))).toFixed(1)); }
       return out; }, rmsJS); assert(r.every(x => x > -16 && x < -3), 'lead vs mix dB ' + r.join(' ')); return 'lead ' + r.join(' / ') + ' dB under mix'; });
 
+  await check('Pad sits in the mix, every Worp sound alike', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), db = v => 20 * Math.log10(v + 1e-9), out = [];
+      S.bars = 2; S.fx.leadOn = false; S.fx.padType = 7; S.fx.padLvl = .35;   /* v192: per-patch trim, about 16 dB under the drums at the default Level */
+      for (const sd of [4242, 5150, 60606]) { S.fx.worp = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] };
+        S.fx.padOn = false; const d = await renderLoop(false, 22050); S.fx.padOn = true; S.renderOnly = -1; const pd = await renderLoop(false, 22050); S.renderOnly = null; out.push(+(db(rms(pd[0])) - db(rms(d[0]))).toFixed(1)); }
+      S.fx.padOn = false; return out; }, rmsJS); assert(r.every(x => x > -21 && x < -11), 'pad vs drums dB ' + r.join(' ')); return 'pad ' + r.join(' / ') + ' dB under drums'; });
+
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
       for (let i = 0; i < MG_MODES.length; i++) { S.fx.mgMode = i; const w = await renderLoop(false, 22050), v = rms(w[0]); if (!(v > .002)) bad.push(MG_NAMES[i] + ':' + (v < 0 ? 'NaN' : v.toFixed(4))); }
       S.fx.mgOn = false; return { n: MG_MODES.length, bad }; }, rmsJS); assert(!r.bad.length, r.bad.join(', ')); return r.n + ' modes'; });

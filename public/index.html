@@ -2649,7 +2649,7 @@ const SW_DEFAULT={bongo:1,shaker:1,conga:1};
 const REV_DEFAULT={surdo:0,tumba:.1,udu:.15,cajon:.08,bendir:.15,djembe:.15,conga:.22,bongo:.2,darbuka:.2,talking:.2,agogo:.18,clave:.3,shaker:.15,tri:.18,tabla:.16,bayan:.12,tamb:.18,palmas:.22};
 const DLY_DEFAULT={clave:.18,agogo:.05,bongo:.08};
 function freshLane(i,res){ const b=res*4, id=INSTR[i].id; return {id,tune:0,decay:.8,level:.8,pan:PAN_DEFAULT[id]||0,push:id==='shaker'?6:0,sw:SW_DEFAULT[id]||0,tvar:.45,drift:false,rev:REV_DEFAULT[id]||0,dly:DLY_DEFAULT[id]||0,blen:b,btpl:'.'.repeat(b),len:b,tpl:'.'.repeat(b),mute:false,solo:false,lock:false,steps:[],eu:null,xs:{}}; }
-const FX_DEFAULT={rvOn:true,rvType:'room',rvSize:1,rvShim:.65,rvPre:12,rvTone:.5,rvLevel:0,dlOn:true,dlTime:'3/16',dlMode:'pp',dlType:'clean',dlHeads:'13',dlFb:.35,dlTone:.45,dlLevel:0,dlAnim:0,eqLow:0,eqMid:0,eqHigh:-2,eqCut:.78,eqRes:0,eqDrive:0,fModel:'clean',fEnv:.3,fEnvSrc:'mix',fLfo:.12,fRate:0,chProg:'drone',chBars:2,chDrums:true,fFree:false,fHz:.4,kitPitch:0,mgOn:false,mgAmt:.4,mgMode:1,mgVer:2,dlSend:0,mgEvery:1,rvEvery:1,dlEvery:1,mgChord:'fifths',mgEcho:0,mgChance:.5,mgHard:.5,padOn:false,padLvl:.22,padMove:.5,padType:7,vetOn:true,vetAmt:.3,width:1,room:.25,mVer:1,padRv:0,padEc:0,leadRv:0,leadEc:0,fldOn:false,fldSrc:'water',fldLvl:.4,fldDist:.35,fldDrift:0,fldTune:0,fldRv:.5,fldEc:.5};   /* v142: a first visit and Refresh! start with drums only and without effects: Pad off (Worp when you switch it on), no reverb, no echo, Phat off (Jesse: it gets busy fast if you don't know what you're doing) */
+const FX_DEFAULT={rvOn:true,rvType:'room',rvSize:1,rvShim:.65,rvPre:12,rvTone:.5,rvLevel:0,dlOn:true,dlTime:'3/16',dlMode:'pp',dlType:'clean',dlHeads:'13',dlFb:.35,dlTone:.45,dlLevel:0,dlAnim:0,eqLow:0,eqMid:0,eqHigh:-2,eqCut:.78,eqRes:0,eqDrive:0,fModel:'clean',fEnv:.3,fEnvSrc:'mix',fLfo:.12,fRate:0,chProg:'drone',chBars:2,chDrums:true,fFree:false,fHz:.4,kitPitch:0,mgOn:false,mgAmt:.4,mgMode:1,mgVer:2,dlSend:0,mgEvery:1,rvEvery:1,dlEvery:1,mgChord:'fifths',mgEcho:0,mgChance:.5,mgHard:.5,padOn:false,padLvl:.35,padMove:.5,padType:7,vetOn:true,vetAmt:.3,width:1,room:.25,mVer:1,padRv:0,padEc:0,leadRv:0,leadEc:0,fldOn:false,fldSrc:'water',fldLvl:.4,fldDist:.35,fldDrift:0,fldTune:0,fldRv:.5,fldEc:.5};   /* v142: a first visit and Refresh! start with drums only and without effects: Pad off (Worp when you switch it on), no reverb, no echo, Phat off (Jesse: it gets busy fast if you don't know what you're doing) */
 const S_DEFAULT={life:.45,scenes:[null,null,null,null,null,null,null,null],sceneCur:-1,bpm:92,res:4,bars:2,key:9,keylock:false,density:.6,mutate:.35,dialog:.25,mutmode:'hyp',swing:.32,groove:'mpc16',humanize:.2,kickroom:false,poly:.25,fat:.25,seed:1,
   fill:false,autofill:8,compact:true,scale:'mpenta',diceAmt:.5,editMode:'hits',stems:false,favs:[],
   preset:'cumbia',trad:'car',midimap:'rack',knobsOpen:true};   // v122: open on Cumbia at 92 BPM, calm, with a kick (the surdo as tambora) and the bongo varying (Jesse: Son had no low end to start from)
@@ -3800,6 +3800,22 @@ function buildPad(ctx,master,rvIn){ const bus=ctx.createGain(), hp=bq(ctx,'highp
   const dub=buildDub(ctx,out,master);
   return {bus,hp,lp,wpk,wsh,cut,hpf,cwc,out,send,gate,echo:{eIn,d,fb,eOut},cw,nz:{g:nzg,w:nzwg},dub}; }
 const PAD_TRIM=[1,.94,1,1.62,1.03,1.41,1.22,1.4];   /* v170: Worp 1.2 -> 1.4, the low end it lost */   // v85: per type, so every type sits at the same level for the same Level setting
+/* v192 pad level per patch (Jesse: the pad sits soft). Worp patches differed by 4 dB and sat about 25 dB under the drums. Every Worp sound is
+   measured once, offline (dry, 4 bars at 16 kHz, Level 35%), and trimmed to the same loudness, the way the lead engines are. Until the
+   measurement is in (a split second) the pad plays untrimmed; an export waits for it. */
+const PN={m:new Map(),busy:new Map(),off:false}, PN_TARGET=.032;
+function pnKey(){ const W=S.fx.worp; return W&&W.seed?[W.seed>>>0,(W.ps??W.seed)>>>0,(W.mix||[]).join(','),(W.mute||[]).map(x=>x?1:0).join('')].join('|'):''; }
+function padNorm(pty){ if(pty!==7||PN.off) return 1; const k=pnKey(); if(!k) return 1; if(PN.m.has(k)) return PN.m.get(k); padMeasure(); return 1; }
+function padMeasure(){ const k=pnKey(); if(!k) return Promise.resolve(1); if(PN.m.has(k)) return Promise.resolve(PN.m.get(k)); if(PN.busy.has(k)) return PN.busy.get(k);
+  const pr=(async()=>{ const sr=16000, sd=stepDur(S), total=4*4*S.res, PRE=.05, oc=new OfflineAudioContext(2,Math.ceil((PRE+total*sd+.5)*sr),sr); await loadFilter(oc);
+    const keep={ro:S.renderOnly,on:S.fx.padOn,ty:S.fx.padType,lv:S.fx.padLvl,bars:S.bars}; let G;
+    try{ S.renderOnly=-1; S.fx.padOn=true; S.fx.padType=7; S.fx.padLvl=.35; S.bars=4; PN.off=true;   // synchronous: the live player never sees these
+      G=buildGraph(oc,{dry:true,export:true}); G.t0=PRE; syncFx(G); for(let g=0;g<total;g++) scheduleStep(oc,G,g,PRE+g*sd,false); }
+    finally{ S.renderOnly=keep.ro; S.fx.padOn=keep.on; S.fx.padType=keep.ty; S.fx.padLvl=keep.lv; S.bars=keep.bars; PN.off=false; }
+    const b=await oc.startRendering(); let e=0, n=0; for(const ch of [0,1]){ const d=b.getChannelData(ch); for(let i=Math.round(PRE*sr);i<d.length;i++){ e+=d[i]*d[i]; n++; } }
+    const r=Math.sqrt(e/Math.max(1,n)), gn=r>1e-5?Math.min(8,Math.max(.5,PN_TARGET/r)):1; PN.m.set(k,gn); if(PN.m.size>64) PN.m.delete(PN.m.keys().next().value);
+    if(AG) padSync(AG); return gn; })().catch(()=>{ PN.m.set(k,1); return 1; }).finally(()=>PN.busy.delete(k));
+  PN.busy.set(k,pr); return pr; }
 function padCutHz(v){ return v>=.995?20000:140*Math.pow(2,v*6.6); }   // 0 = 140 Hz, 1 = open
 /* Pad and Lead controls (v113, v115): Filter (left low-pass, middle open, right high-pass), Reverb and Echo (their own space, apart
    from the drums) and Pitch (0, +5, +7, +12; Worp sounds move +5 and +7 in scale steps, so they stay in key). */
@@ -3817,7 +3833,7 @@ const WTRY={W:null,t:0};
 function wTry(G){ return G===AG && WTRY.W && Date.now()-WTRY.t<6000 ? WTRY.W : null; }
 function padTy(G){ return wTry(G)?7:(S.fx.padType|0); }
 function padLive(G){ const F=S.fx; return (!!F.padOn||!!wTry(G)) && (S.renderOnly==null||S.renderOnly===-1) && (F.padLvl??.35)>.005; }   // -1: the pad stem
-function padSync(G){ const P=G&&G.pad; if(!P) return; const F=S.fx, on=padLive(G), l=F.padLvl??.35, pty=padTy(G); const live=!(G.ctx instanceof OfflineAudioContext), setG=(pr,v)=>{ if(live) pr.setTargetAtTime(v,G.ctx.currentTime,.05); else pr.value=v; }; setG(P.out.gain,on&&!(live&&worpAud())?l*.2*PAD_TRIM[pty]:0);   /* v79: 3 dB softer (Jesse); v112: another 3 dB (Jesse: pad too loud next to the rest) */ setG(P.send.gain,on&&!(live&&worpAud())?.9*Math.min(1,l/.35)*(pty===7?.45:1)*unitWet(F,'pad'):0);
+function padSync(G){ const P=G&&G.pad; if(!P) return; const F=S.fx, on=padLive(G), l=F.padLvl??.35, pty=padTy(G); const live=!(G.ctx instanceof OfflineAudioContext), setG=(pr,v)=>{ if(live) pr.setTargetAtTime(v,G.ctx.currentTime,.05); else pr.value=v; }; const pg=padNorm(pty); setG(P.out.gain,on&&!(live&&worpAud())?l*.2*PAD_TRIM[pty]*pg:0);   /* v79: 3 dB softer (Jesse); v112: another 3 dB (Jesse: pad too loud next to the rest) */ setG(P.send.gain,on&&!(live&&worpAud())?.9*Math.min(1,l/.35)*(pty===7?.45*pg:1)*unitWet(F,'pad'):0);
   if(P.cw) setG(P.cw.gain,on&&pty===6?.8*Math.min(1,l/.35)*unitWet(F,'pad'):0);
   dubSync(G,P.dub,F.padEc??.5,on&&!(live&&worpAud()));
   if(P.cut){ const f=fltHz(unitFlt(F,'pad')), fq=fltQ(unitFlt(F,'pad')); setG(P.cut.frequency,f.lp); setG(P.cut.Q,fq.lq); if(P.hpf){ setG(P.hpf.frequency,f.hp); setG(P.hpf.Q,fq.hq); } if(P.cwc) setG(P.cwc.frequency,Math.min(20000,f.lp*1.2)); }
@@ -5280,7 +5296,7 @@ const EXPORT_SR=48000;   // 48 kHz: Ableton converts to the project rate, the 10
 function loopLen(sr){ return Math.round(S.bars*4*S.res*stepDur(S)*sr); }
 // One seamless loop, exactly as it is exported: rendered offline, tail folded back to the start, pre-roll onto the end.
 async function renderLoop(dry,sr=EXPORT_SR){ S.exporting=true; try{ return await renderLoopX(dry,sr); } finally{ S.exporting=false; varCache.clear(); } }
-async function renderLoopX(dry,sr){ if(S.fx.fldOn) await fldLoad(); if(S.fx.cdOn&&cdSrc()!=='synth') await fldLoad(cdFid()); const total=S.bars*4*S.res, sd=stepDur(S), dur=total*sd, n=loopLen(sr);
+async function renderLoopX(dry,sr){ if(S.fx.padOn&&(S.fx.padType|0)===7) await padMeasure(); if(S.fx.fldOn) await fldLoad(); if(S.fx.cdOn&&cdSrc()!=='synth') await fldLoad(cdFid()); const total=S.bars*4*S.res, sd=stepDur(S), dur=total*sd, n=loopLen(sr);
     const PRE=.05, pn=Math.round(PRE*sr);   // pre-roll: hits pushed early (negative Push, flam grace notes) on step 0 are not lost
   const tail=dry?2:fxTail(); const oc=new OfflineAudioContext(2,pn+Math.ceil((dur+tail)*sr),sr); await loadFilter(oc); const G=buildGraph(oc,{dry,export:true}); G.t0=PRE; magicWorklet(G); syncFx(G); magicSync(G);
       for(let g=0;g<total;g++) scheduleStep(oc,G,g,PRE+g*sd,false);
