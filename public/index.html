@@ -4126,11 +4126,22 @@ function bsSeed(){ return (S.fx.bsSeed??7)>>>0; }
 function bsLive(){ const F=S.fx; return !!F.bsOn && (S.renderOnly==null||S.renderOnly===-5) && (F.bsLvl??.5)>.005; }
 function buildBass(ctx,master){ const o1=ctx.createOscillator(), o2=ctx.createOscillator(), g2=ctx.createGain(), env=ctx.createGain(), hp=bq(ctx,'highpass',28,.6), lp1=bq(ctx,'lowpass',400,.7), lp2=bq(ctx,'lowpass',400,.6), dk=ctx.createGain(), out=ctx.createGain();
   o1.type=o2.type='sine'; o1.frequency.value=55; o2.frequency.value=110; g2.gain.value=0; env.gain.value=0; out.gain.value=0;
-  o1.connect(env); o2.connect(g2).connect(env); const fade=ctx.createGain(); env.connect(fade).connect(hp).connect(lp1).connect(lp2).connect(dk).connect(out).connect(master); o1.start(); o2.start();
-  return {o1,o2,g2,env,fade,lp1,lp2,dk,out,last:-1}; }
+  o1.connect(env); o2.connect(g2).connect(env); const fade=ctx.createGain(), dry=ctx.createGain(), pre=ctx.createGain(), sh=ctx.createWaveShaper(), post=ctx.createGain(), shelf=ctx.createBiquadFilter(), dc=bq(ctx,'highpass',18,.7); shelf.type='lowshelf'; shelf.frequency.value=110; shelf.gain.value=0; sh.oversample='4x'; sh.curve=bsCurve('tape'); post.gain.value=0;
+  env.connect(fade).connect(hp); hp.connect(shelf).connect(pre).connect(sh).connect(post).connect(dc).connect(lp1); lp1.connect(lp2).connect(dk).connect(out).connect(master); o1.start(); o2.start();
+  return {o1,o2,g2,env,fade,dry,pre,sh,post,shelf,lp1,lp2,dk,out,last:-1,ct:'tape'}; }
+/* v211 Saturation (Jesse: a bit of saturation, a few variants, analog modelling, not digital): three curves, 4x oversampled, before the
+   filter as in a real channel. Tape: symmetric and soft. Tube: asymmetric, so even harmonics (warm), with a DC blocker after it.
+   Transformer: the lows pushed into a soft cubic, a fat bloom in the bottom. Drive 0 is clean (the shaper's linear part); the level stays about equal. */
+const BS_SAT=['tape','tube','xfmr'], BS_SATN={tape:'Tape',tube:'Tube',xfmr:'Transformer'};
+function bsCurve(t){ const n=2048, c=new Float32Array(n), f=t==='tube'?(x=>x>=0?Math.tanh(1.25*x):Math.tanh(.8*x)*1.1):t==='xfmr'?(x=>{ const y=Math.max(-1.5,Math.min(1.5,x)); return y-y*y*y/6.75; }):(x=>Math.tanh(x)), F=Math.abs(f(3))||1;
+  for(let i=0;i<n;i++){ const x=i/(n-1)*2-1; c[i]=f(3*x)/F; } return c; }
+function bsSatT(){ const v=S.fx.bsSat; return BS_SAT.includes(v)?v:'tape'; }
+const BS_SLOPE={tape:3.015,tube:3.75,xfmr:3}, BS_COMP={tape:[1,1.4,2.6],tube:[1.15,1.7,3],xfmr:[1,1.2,2.4]};   // slope of each curve at zero; make-up per type at drive 0, .5, 1 (measured, v211)
 function bsSync(G){ const B=G&&G.bs; if(!B) return; const F=S.fx, on=bsLive(), live=!(G.ctx instanceof OfflineAudioContext), set=(p,v)=>{ if(live) p.setTargetAtTime(v,G.ctx.currentTime,.05); else p.value=v; };
   const fv=F.bsFlt??.4, hz=45*Math.pow(2,fv*7.4); set(B.out.gain,on?Math.pow(F.bsLvl??.5,1.5)*BS_TRIM*2.8:0); set(B.g2.gain,(F.bsBody??.25)*.55);
-  set(B.lp1.frequency,hz); set(B.lp2.frequency,Math.min(20000,hz*1.15)); set(B.lp1.Q,.6+7*fv*fv); set(B.lp2.Q,.55); }
+  set(B.lp1.frequency,hz); set(B.lp2.frequency,Math.min(20000,hz*1.15)); set(B.lp1.Q,.6+7*fv*fv); set(B.lp2.Q,.55);
+  if(B.sh){ const ty=bsSatT(), d=F.bsDrv??0, C=BS_COMP[ty], mk=d<.5?C[0]+(C[1]-C[0])*d*2:C[1]+(C[2]-C[1])*(d-.5)*2; if(B.ct!==ty){ B.sh.curve=bsCurve(ty); B.ct=ty; }
+    const pg=.04+1.4*Math.pow(d,1.2); set(B.pre.gain,pg); set(B.post.gain,mk/(pg*BS_SLOPE[ty]));   /* one path: a dry path beside the oversampled shaper cancelled out (its latency), so drive 0 runs the shaper in its clean, linear part */ set(B.shelf.gain,ty==='xfmr'?6*d:0); } }
 /* the figure of one bar: [step in 16ths, length in 16ths, velocity, interval in semitones above the chord root] */
 const BS_BAR=new Map();
 function bsBar(bar){ const sd=bsSeed(), st=bsSty(), m=Math.floor(bar/2)*0+(bar%2), blk=Math.floor(bar/4), k=sd+'|'+st+'|'+m+'|'+(blk%2); let P=BS_BAR.get(k); if(P) return P;
@@ -5153,14 +5164,15 @@ function initControls(){
     const mk=(label,key,def,tt,fm)=>{ const k=makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; bsSync(AG); save(); },fmt:fm||(v=>v+'%'),def:Math.round(def*100)}); k.title=tt+' · drag, double-click resets'; return k; };
     const kl=mk('Level','bsLvl',.5,'Volume of the bass'), kb=mk('Body','bsBody',.25,'The octave above the sine: left a pure sub you feel more than hear, to the right it also comes through on small speakers'),
       kf=mk('Filter','bsFlt',.4,'Low-pass on the bass: closed it is only sub; as you open it the resonance grows and it starts to sing',v=>{ const h=45*Math.pow(2,v/100*7.4); return h>=1000?(h/1000).toFixed(1)+' kHz':Math.round(h)+' Hz'; }),
-      kd=mk('Decay','bsDec',.5,'How long the notes ring: left short and plucked, right long and held');
+      kd=mk('Decay','bsDec',.5,'How long the notes ring: left short and plucked, right long and held'), kdr=mk('Drive','bsDrv',0,'Saturation: at 0 clean; turn it up for warmth and grit, analog style. The level stays about the same');
+    const ksat=makeSegK({label:'Saturation',opts:BS_SAT.map(t=>[t,BS_SATN[t]]),get:bsSatT,set:v=>{ S.fx.bsSat=v; if(!(S.fx.bsDrv>0)) S.fx.bsDrv=.35; bsSync(AG); save(); kdr.upd(); },title:'Tape: soft and round. Tube: warm, with even harmonics. Transformer: a fat bloom in the low end. Picking one with Drive at 0 sets Drive to 35%'});
     const kp=makeSegK({label:'Pitch',opts:[[-12,'−12'],[0,'0'],[12,'+12']],get:()=>[-12,0,12].includes(S.fx.bsTr|0)?(S.fx.bsTr|0):0,set:v=>{ S.fx.bsTr=v; save(); }});
-    [kl,kb,kf,kd].forEach(k=>k.classList.add('big','mgk')); const sr=document.createElement('div'); sr.className='lvw lsound'; sr.append(kl,kb,kf,kd); const mr=document.createElement('div'); mr.className='lvw lmix'; mr.append(kp); const row=$('bsSlot').parentNode; $('bsSlot').replaceWith(sr); row.after(mr);
-    const u=()=>{ cb.checked=!!S.fx.bsOn; U.classList.toggle('off',!S.fx.bsOn); [kl,kb,kf,kd,kp].forEach(k=>k.upd()); bsUI(); }; u(); UPD.push(u);
+    [kl,kb,kf,kd,kdr].forEach(k=>k.classList.add('big','mgk')); const sr=document.createElement('div'); sr.className='lvw lsound'; sr.append(kl,kb,kf,kd,kdr); const mr=document.createElement('div'); mr.className='lvw lmix'; mr.append(ksat,kp); const row=$('bsSlot').parentNode; $('bsSlot').replaceWith(sr); row.after(mr);
+    const u=()=>{ cb.checked=!!S.fx.bsOn; U.classList.toggle('off',!S.fx.bsOn); [kl,kb,kf,kd,kdr,ksat,kp].forEach(k=>k.upd()); bsUI(); }; u(); UPD.push(u);
     cb.onchange=()=>{ S.fx.bsOn=cb.checked; u(); layerFade(AG&&AG.bs,cb.checked,()=>bsSync(AG)); save(); };
     document.querySelectorAll('#bsSty button').forEach(b=>b.onclick=()=>{ hRecord(()=>{ S.fx.bsSty=b.dataset.s; S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('Bass: '+b.textContent+'.'); });
     $('bsNew').onclick=()=>{ hRecord(()=>{ S.fx.bsSeed=worpSeed(); S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('New bass figure, same sound.'); };
-    $('bsSnd').onclick=()=>{ const sd=worpSeed(), r=x=>rnd(sd,x,0xB0DE); hRecord(()=>{ Object.assign(S.fx,{bsSnd:sd,bsOn:true,bsBody:+(.04+.56*r(1)).toFixed(2),bsFlt:+(.15+.6*Math.pow(r(2),1.3)).toFixed(2),bsDec:+(.2+.65*r(3)).toFixed(2)}); S.fx.bsNm={body:S.fx.bsBody,flt:S.fx.bsFlt,dec:S.fx.bsDec}; }); updHist(); save(); u(); bsSync(AG); status('New bass sound: '+bsNm()+'. The figure stays.'); };   /* the name keeps the character it was thrown with, so turning a knob does not rename it */
+    $('bsSnd').onclick=()=>{ const sd=worpSeed(), r=x=>rnd(sd,x,0xB0DE); hRecord(()=>{ Object.assign(S.fx,{bsSnd:sd,bsOn:true,bsBody:+(.04+.56*r(1)).toFixed(2),bsFlt:+(.15+.6*Math.pow(r(2),1.3)).toFixed(2),bsDec:+(.2+.65*r(3)).toFixed(2),bsSat:BS_SAT[Math.floor(r(4)*3)%3],bsDrv:r(5)<.45?0:+(.1+.5*r(6)).toFixed(2)}); S.fx.bsNm={body:S.fx.bsBody,flt:S.fx.bsFlt,dec:S.fx.bsDec}; }); updHist(); save(); u(); bsSync(AG); status('New bass sound: '+bsNm()+'. The figure stays.'); };   /* the name keeps the character it was thrown with, so turning a knob does not rename it */
   }
   { const cb=$('dareOn'), U=$('dareU');   /* v204 Dare */
     const kr=makeKnob({label:'Often',min:0,max:100,step:1,get:()=>Math.round((S.fx.dareRate??.4)*100),set:v=>{ S.fx.dareRate=v/100; save(); },fmt:v=>{ const r=v/100, b=Math.round(40-32*r); return 'every ~'+b+' bars'; },def:40});
@@ -5877,7 +5889,7 @@ function sceneRecall(k){ const sc=S.scenes[k]; if(!sc) return; onBar('scene:'+k,
    model, Magic mode, pad type or Worp pad, tuning) changes halfway. A rhythm on another grid (16ths against triplets) or a
    track whose length differs changes halfway too. The export always renders the scene as stored. */
 const MORPH={on:false};
-const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx','leadRg','leadDr','leadMove','cdLvl','cdAmt','cdSize','cdGap','cdSpace','leadFd','cdFd','cdAtk','tlLvl','tlLead','tlPad','tlCd','tlHold','tlTone','bsLvl','bsBody','bsFlt','bsDec','fldLvl','fldDist','fldDrift','fldTune','fldRv','fldEc','fldFlt'];
+const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx','leadRg','leadDr','leadMove','cdLvl','cdAmt','cdSize','cdGap','cdSpace','leadFd','cdFd','cdAtk','tlLvl','tlLead','tlPad','tlCd','tlHold','tlTone','bsLvl','bsBody','bsFlt','bsDec','bsDrv','fldLvl','fldDist','fldDrift','fldTune','fldRv','fldEc','fldFlt'];
 function morphCap(){ return {lanes:S.lanes.map(L=>{ const o={steps:L.steps.slice(),len:L.len,tpl:L.tpl,btpl:L.btpl,blen:L.blen,eu:L.eu,mute:L.mute,solo:L.solo,tune:L.tune,col:L.col,choke:L.choke};
       MLANE.forEach(f=>o[f]=L[f]); return o; }), fx:JSON.parse(JSON.stringify(S.fx)), fat:S.fat, swing:S.swing, humanize:S.humanize, res:S.res}; }
 function morphStart(sc,k){ const A=morphCap(); hRecord(()=>hApply(sc)); S.sceneCur=k; updHist();
