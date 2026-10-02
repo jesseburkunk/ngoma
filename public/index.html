@@ -2081,7 +2081,7 @@ function releaseAll(t){for(const v of poly.values())v.release(t);poly.clear();[l
       set('per',per);const t0=host.t0?host.t0():0;set('t0',((t0%per)+per)%per)},
   };
 }
-window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom};
+window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt};
 })();
 </script>
 <script>
@@ -2243,6 +2243,18 @@ const PRESETS = [
   {id:'dozzy', trad:'hyp', name:'Lake toms', res:4, tempo:126, free:true, sends:{conga:{rev:.3},talking:{dly:.35}},
    desc:'Hypnotic techno: no snare, rolling toms, and percussion lines of different lengths that drift over each other. The tumba rolls in 16 steps, the conga in 12 and the talking drum glides in 20, so the pattern only lines up again after 15 bars. Put your kick on the beats and let it run. A style sketch, not a transcription.',
    lanes:{tumba:'O..m..O..m..O.m.', conga:'o..m.o..m.O.', talking:'u.........d.........', shaker:'xxXxxxXxxxXxxxXx'}},
+  {id:'deephouse', trad:'hyp', name:'Deep house', res:4, tempo:122, groove:'mpc16', swing:.3, mix:{surdo:.95,palmas:.7,tamb:.55}, sends:{conga:{rev:.25},bongo:{dly:.3}},
+   desc:'Deep house in the Chicago and New York manner: the surdo as a soft four-on-the-floor kick, claps on two and four, an open hat (tamburello) on every offbeat, sixteenth shakers with the offbeat a touch louder, and a conga and bongo loop in the gaps. A style sketch, not a transcription.',
+   lanes:{surdo:'O...O...O...O...', palmas:'....C.......C...', tamb:'..O...O...O...O.', shaker:'xxXxxxXxxxXxxxXx', conga:'...m..O....m.O..', bongo:'.......o.....o.o'}},
+  {id:'minimaltech', trad:'hyp', name:'Minimal techno', res:4, tempo:126, groove:'mpc16', swing:.18, mix:{surdo:.95,conga:.6}, sends:{clave:{dly:.45},cajon:{dly:.3}},
+   desc:'Minimal techno and microhouse, after the Perlon and Cocoon sound of Ricardo Villalobos and his circle: a steady kick on the surdo, a clean offbeat hat, rimshots (clave) that never quite land where you expect, a low conga that sits between the kicks and a ghosted cajón tone, with the delay doing a lot of the work. A style sketch, not a transcription.',
+   lanes:{surdo:'O...O...O...O...', shaker:'..X...X...X...X.', clave:'..x..X.....x..X.', conga:'m.......m..o....', cajon:'.......t......t.'}},
+  {id:'tribaltech', trad:'hyp', name:'Tribal techno', res:4, tempo:130, groove:'mpc16', swing:.12, mix:{surdo:.95,tumba:.75,conga:.65}, sends:{tumba:{rev:.2}},
+   desc:'Tribal techno: four on the floor on the surdo with tom figures in three plus three plus two on the tumba, an answering conga, running sixteenth shakers and a clap-like block on two and four. A style sketch, not a transcription.',
+   lanes:{surdo:'O...O...O...O...', tumba:'O..O..O.O..O..O.', conga:'..o..o....o..o..', shaker:'xxXxxxXxxxXxxxXx', clave:'....W.......W...'}},
+  {id:'microshuffle', trad:'hyp', name:'Microhouse shuffle', res:4, tempo:124, groove:'mpc16', swing:.55, mix:{surdo:.9,palmas:.65}, sends:{bongo:{dly:.4}},
+   desc:'Shuffled microhouse: a kick with a pickup into the next bar, a clap on two and four with a ghost before the second, swung offbeat shakers and small bongo blips. A style sketch, not a transcription.',
+   lanes:{surdo:'O...O...O...O..o', palmas:'....C.....c.C...', shaker:'.x.x.x.x.x.x.x.x', bongo:'.o.....o..o.....'}},
   {id:'minimal', trad:'hyp', name:'Minimal clicks', res:4, tempo:128, sends:{clave:{dly:.5},cajon:{dly:.3}},
    desc:'Minimal techno percussion: dry clicks and rims on the offbeats, a lot of space, and the 3/16 delay doing half the work. Turn up Variation to let single hits wander. A style sketch, not a transcription.',
    lanes:{clave:'..X.......x..X..', shaker:'..x...x...x...X.', tamb:'..c...c...c...c.', cajon:'.......t.....t..', conga:'.....m..........'}},
@@ -3401,8 +3413,11 @@ function resStep(G,g,t,snap){ const R=G.mg&&G.mg.proc; if(!R||!R.res||!(R.ra>0)|
 function resHz(semi,lo=180,hi=720){ let f=mtof(36+S.key+semi); while(f>hi) f/=2; while(f<lo) f*=2; return f; }   // resonators sit in 180..720 Hz: in tune, clear, away from the kick
 function procSync(G,P,a,live,setG){ const R=G.mg.proc, now=G.ctx.currentTime||0, sr=G.ctx.sampleRate;
   const BL=4*S.res, gNow=live&&playing?gStep:0;
-  const ra=(P.res||0)*a, dk=mgDecK(); setG(R.rIn.gain,ra>0?.5:0); setG(R.rOut.gain,ra>0?(.08+.2*ra)*Math.pow(dk,-.6):0);
-  R.ra=ra; R.T60=Math.min(8,(.3+.8*ra)*dk); if(R.res){ R.res.port.postMessage(resMsg(G,gNow-(gNow%(2*BL)),!live)); }   /* v144: the chord comes from resChord */
+  /* v167 (Jesse: Resonate is much less intense since the performance update). The Resonate code did not change, but two things around it
+     took about 3 dB off what it gets to ring on: Weight now starts at 25% (was 60%, about 1.8 dB) and the cached hits come out about 1 dB
+     softer in the resonators. So the return is 2.6 dB louder and it rings a fifth longer, which brings it back where it was. */
+  const ra=(P.res||0)*a, dk=mgDecK(); setG(R.rIn.gain,ra>0?.5:0); setG(R.rOut.gain,ra>0?(.08+.2*ra)*1.35*Math.pow(dk,-.6):0);
+  R.ra=ra; R.T60=Math.min(8,(.3+.8*ra)*dk*1.2); if(R.res){ R.res.port.postMessage(resMsg(G,gNow-(gNow%(2*BL)),!live)); }   /* v144: the chord comes from resChord */
   const ca=(P.comb||0)*a; setG(R.cmIn.gain,ca>0?.5:0); setG(R.cmOut.gain,ca>0?.12+.22*ca:0); R.combFb=ca>0?Math.min(.985,1-(1-(.7+.22*ca))/dk):0;
   combStep(G,gNow-(gNow%(2*BL)),now,!live);
   const aa=(P.air||0)*a; R.aDrv.gain.value=2+10*aa; setG(R.aOut.gain,aa>0?.12+.4*aa:0);
@@ -4051,7 +4066,7 @@ function loadLate(){ LATE.n++; LATE.t=performance.now(); if(!LATE.told&&!STABLE&
 function stableSet(on){ STABLE=!!on; try{ localStorage.setItem('ngoma.stable',STABLE?'1':'0'); }catch(e){} const b=$('stablebtn'); if(b) b.setAttribute('aria-pressed',STABLE?'true':'false');
   if(actx){ const was=playing; if(playing) stop(); clearTimeout(suspT); try{ actx.close(); }catch(e){} actx=null; AG=null; if(was) setTimeout(start,120); }
   status(STABLE?'Stable playback on: a bigger audio buffer, a little more delay on MIDI keys.':'Stable playback off: the shortest delay.'); }
-function ensureCtx(){ if(!actx){ const AC=window.AudioContext||window.webkitAudioContext, LH=STABLE?{latencyHint:'playback'}:{}; if(M4L.on&&M4L.sr>0){ try{ actx=new AC({...LH,sampleRate:M4L.sr}); }catch(e){ actx=new AC(); } } else { try{ actx=new AC(LH); }catch(e){ actx=new AC(); } }   /* v153: inside Live at Live's sample rate (a 48 kHz page in a 44.1 kHz Live ran slow and crackled) */ AG=buildGraph(actx); AG.onCut=showCut; loadFilter(actx).then(ok=>{ if(ok){ attachFilter(AG); magicWorklet(AG); magicSync(AG); } if(!ok){ magicWorklet(AG); magicSync(AG); } capAttach(actx,AG.capNode,ok); }); } if(actx.state!=='running') actx.resume(); }
+function ensureCtx(){ if(!actx){ const AC=window.AudioContext||window.webkitAudioContext, LH=STABLE?{latencyHint:'playback'}:{}; if(M4L.on&&M4L.sr>0){ try{ actx=new AC({...LH,sampleRate:M4L.sr}); }catch(e){ actx=new AC(); } } else { try{ actx=new AC(LH); }catch(e){ actx=new AC(); } }   /* v153: inside Live at Live's sample rate (a 48 kHz page in a 44.1 kHz Live ran slow and crackled) */ AG=buildGraph(actx); AG.onCut=showCut; { const G0=AG, c0=actx; loadFilter(c0).then(ok=>{ if(AG!==G0||actx!==c0) return; if(ok){ attachFilter(G0); magicWorklet(G0); magicSync(G0); } if(!ok){ magicWorklet(G0); magicSync(G0); } capAttach(c0,G0.capNode,ok); }); } }   /* v167: a context that Stable replaced in the meantime no longer puts the new one on the weak fallback combs */ if(actx.state!=='running') actx.resume(); }
 function tick(){ const sd=stepDur(S); if(nextT<actx.currentTime-.05){ const k=Math.ceil((actx.currentTime-nextT)/sd); gStep+=k; nextT+=k*sd; loadLate(); }   // after a throttled timer: skip, do not burst
   if(vq.length>256) vq.splice(0,vq.length-64);
   while(nextT < actx.currentTime+(STABLE?.3:.2)){   /* v163: 0.2 s ahead (was 0.12), 0.3 s in Stable */
@@ -4564,8 +4579,16 @@ function initControls(){
     $('leadLine').querySelectorAll('button').forEach(b=>b.onclick=()=>lineMine(b.dataset.l==='mine'));
     /* v160 (Jesse: often the sound is right and the line is not, or the other way round). The sound and the melody each have their own seed:
        W.seed for the patch, W.ps for the phrase (none = the patch's own). New sound keeps the melody, New pattern keeps the sound. */
-    $('leadNew').onclick=()=>{ const W0=leadSpec(), lk=W0.lock, rc=W0.rec, ps=(W0.ps!=null?W0.ps:W0.seed)>>>0; hRecord(()=>{ S.fx.wlead={seed:worpSeed(),mix:[1,1,1,1],mute:[false,false,false,false],ps}; if(lk) S.fx.wlead.lock=lk; if(rc) S.fx.wlead.rec=rc; }); updHist(); save(); leadUI(); status('New sound, same melody.'); };
-    $('leadPat').onclick=()=>{ hRecord(()=>{ const W=leadSpec(); W.ps=worpSeed(); delete W.lock; }); updHist(); save(); leadShown=''; leadUI(); status(recOn()?'New Worp melody on the same sound. You hear it when you switch to Worp; Mine plays your own line.':'New melody, same sound.'); };
+    /* v166 (Jesse: the chance that a random new lead is good is fairly small): New sound and New pattern now throw eight candidates and keep
+       the best. A line scores well with a moderate number of notes, a span within about two octaves, few big leaps and enough (but not too
+       many) different notes; a sound loses points for sitting an octave low or ringing very long. Still random, just better odds. */
+    const leadLine=(seed,ps)=>{ try{ const P=WorpEngine.genPatch(seed>>>0,'lead'); if(ps!=null&&(ps>>>0)!==(seed>>>0)) P.phrase=WorpEngine.genPatch(ps>>>0,'lead').phrase; const N=128, d=[];
+        for(let i=0;i<N;i++) for(const e of WorpEngine.phraseAt(P,i)) if(!e.v) d.push(e.deg); if(d.length<4) return -9; const dens=d.length/N, span=Math.max(...d)-Math.min(...d), u=new Set(d).size; let lp=0; for(let k=1;k<d.length;k++) if(Math.abs(d[k]-d[k-1])>=4) lp++;
+        return -Math.abs(dens-.3)*4-Math.max(0,span-10)*.25-lp/(d.length-1)*3-(u<3?1.5:0)-Math.max(0,u-9)*.2; }catch(e){ return 0; } };
+    const leadSnd=seed=>{ try{ const P=WorpEngine.genPatch(seed>>>0,'lead'), L=P.layers[0]||{}; return (L.oct<0?-1:0)+((L.decay||0)>1.8?-.5:0)+(L.oct>1?-.5:0); }catch(e){ return 0; } };
+    const best=(n,f)=>{ let b=null, bs=-1e9; for(let k=0;k<n;k++){ const s=worpSeed(), v=f(s)+Math.random()*.3; if(v>bs){ bs=v; b=s; } } return b; };
+    $('leadNew').onclick=()=>{ const W0=leadSpec(), lk=W0.lock, rc=W0.rec, ps=(W0.ps!=null?W0.ps:W0.seed)>>>0; const ns=best(8,leadSnd); hRecord(()=>{ S.fx.wlead={seed:ns,mix:[1,1,1,1],mute:[false,false,false,false],ps}; if(lk) S.fx.wlead.lock=lk; if(rc) S.fx.wlead.rec=rc; }); updHist(); save(); leadUI(); status('New sound, same melody.'); };
+    $('leadPat').onclick=()=>{ const W0=leadSpec(), np=best(8,s=>leadLine(W0.seed,s)); hRecord(()=>{ const W=leadSpec(); W.ps=np; delete W.lock; }); updHist(); save(); leadShown=''; leadUI(); status(recOn()?'New Worp melody on the same sound. You hear it when you switch to Worp; Mine plays your own line.':'New melody, same sound.'); };
     $('midibtn').onclick=()=>midiConnect(false);
     document.querySelectorAll('#midiseg button').forEach(b=>b.onclick=()=>{ S.midiTo=b.dataset.to; midiUI(); save(); status('Your MIDI keys play '+(midiDest()==='pad'?'the Worp pad':midiDest()==='lead'?'the Lead':'nothing yet: switch on the Lead or a Worp pad')+'.'); });
     $('midiq').onclick=()=>{ S.midiQ=!S.midiQ; midiUI(); save(); status(S.midiQ?'Tight: your keys land on the next sixteenth while Ngoma plays.':'Tight off: your keys sound the moment you press them.'); };

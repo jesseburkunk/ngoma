@@ -91,7 +91,7 @@ function create(ctx,OUT,host){
       set('per',per);const t0=host.t0?host.t0():0;set('t0',((t0%per)+per)%per)},
   };
 }
-window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom};
+window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt};
 })();
 """
 ng=os.path.join(HERE,'..','public','index.html')
