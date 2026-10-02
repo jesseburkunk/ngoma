@@ -608,7 +608,17 @@ function genPatch(seed,kind){
      a little less than a lead's, and leads no longer drop an octave. */
   if(!pad){P.filter.cut=Math.min(16000,Math.max(6000,P.filter.cut*3));P.layers.forEach(L=>{if(L.oct<0)L.oct=0})}
   else P.filter.cut=Math.min(12000,Math.max(2000,P.filter.cut*2.2));
+  /* v1.29 (Jesse: pads too often hard, noisy or distorted; he wants warm, glowing pads): no wavefolder on a pad, the noise layer only as a
+     soft ringing tone, little drive, no square waves, gentle detune, a mild FM index on harmonic ratios, a filter that stays open but
+     never whistles or screams, and no bit-crush, ring-mod-like shifter or crushing sonar in the effects. The dice are unchanged; only the
+     outcome is tamed, so a seed keeps its character. */
+  if(pad){P.drive=Math.min(P.drive,.12);P.filter.type='lowpass';P.filter.q=Math.min(P.filter.q,2);P.filter.cut=Math.min(P.filter.cut,6000);
+    P.layers.forEach(L=>{L.fold=0;if(L.engine==='air'){L.level*=.45;L.q=Math.max(L.q,80);L.breath=0}
+      if(L.engine==='saw'){if(L.wave==='square')L.wave='sawtooth';L.detune=Math.min(L.detune,16)}
+      if(L.engine==='fm'){L.index=Math.min(L.index,1.1);if(L.ratio===1.414||L.ratio===2.76||L.ratio===3.5||L.ratio===7)L.ratio=2}});
+    P.fxs.chain=P.fxs.chain.filter(f=>f.type!=='bitplane'&&!(f.type==='shifter'&&f.hz>2));P.fxs.chain.forEach(f=>{if(f.type==='sonar'&&(f.chroma==='crush'||f.chroma==='fold'))f.chroma='lowpass';if(f.type==='rotor')f.q=Math.min(f.q,60)})}
   genMods(r,P);
+  if(pad&&P.xmod){P.xmod.kind='am';P.xmod.depth=Math.min(P.xmod.depth,.45)}
   P.mix=[1,1,1,1];P.mute=[false,false,false,false];
   return P;
 }
