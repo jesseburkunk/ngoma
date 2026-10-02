@@ -5397,9 +5397,12 @@ function jamUI(){ const b=$('jam'); if(!b) return; b.classList.toggle('on',JAM.o
    then a whole number of bars long, from bar line to bar line. Stopped (not playing) it ends where you press, as before. */
 function jamStop(){ if(!JAM.on||JAM.ending) return; if(!playing||!actx) return jamFinish(null);
   const sr=JAM.sr, barF=4*S.res*stepDur(S)*sr, el=Math.max(0,Math.round(actx.currentTime*sr)-JAM.f0), bars=el/barF, nb=Math.max(1,bars%1<.25||el>=(JAM.max-1)*sr?Math.floor(bars):Math.ceil(bars)), n=Math.round(nb*barF);
-  if(el>=n) return jamFinish(n);
-  JAM.ending=true; JAM.endN=n; jamUI(); status('Recording ends on the bar line ('+nb+(nb>1?' bars':' bar')+').'); setTimeout(()=>jamFinish(n),Math.max(0,(n-el)/sr*1000)+60); }
-async function jamFinish(nBars){ if(!JAM.on) return; JAM.on=false; JAM.ending=false; clearInterval(JAM.ui); const stopF=nBars!=null?nBars:Math.round(actx.currentTime*JAM.sr)-JAM.f0;
+  /* v191 (Jesse: yes, fold the tails so the loops go round seamlessly): it records two more seconds after the bar line and lets the take
+     begin with them. The music after the last bar line is the start of the loop coming round again, with the reverb and echo of the
+     last bar still ringing in it, so the file starts the way it sounds when it loops; a short crossfade joins it to the take. */
+  const tf=n+Math.round(Math.min(2,n/sr/2)*sr)<=JAM.max*sr?Math.round(Math.min(2,n/sr/2)*sr):0;
+  JAM.ending=true; JAM.endN=n; jamUI(); status('Recording ends on the bar line ('+nb+(nb>1?' bars':' bar')+'), the tail is folded onto the start.'); setTimeout(()=>jamFinish(n,tf),Math.max(0,(n+tf-el)/sr*1000)+60); }
+async function jamFinish(nBars,tf){ if(!JAM.on) return; JAM.on=false; JAM.ending=false; clearInterval(JAM.ui); JAM.fold=nBars!=null?(tf|0):0; const stopF=nBars!=null?nBars:Math.round(actx.currentTime*JAM.sr)-JAM.f0;
   const msg={t:'rec',on:false}; if(WBC) WBC.postMessage(msg); const f=$('worpFrame'); if(f&&f.src&&f.contentWindow) f.contentWindow.postMessage(msg,'*');
   await new Promise(r=>setTimeout(r,400));   // the last blocks from the worklets and from Worp
   JAM.nodes.forEach(([n,r])=>{ try{ n.disconnect(r); }catch(e){} }); JAM.nodes=[]; if(JAM.dTap){ AG.lanes.forEach(l=>{ try{ l.p.disconnect(JAM.dTap); }catch(e){} }); JAM.dTap=null; }
@@ -5414,7 +5417,8 @@ function jamWav(get,n,sr,gain){ const ba=6, b=new ArrayBuffer(44+n*ba), v=new Da
   const u=new Uint8Array(b); let o=44;
   for(let f=0;f<n;f++){ for(let c=0;c<2;c++){ let x=Math.round(get(f,c)*gain*256); x=Math.max(-8388607,Math.min(8388607,x)); if(x<0) x+=16777216; u[o++]=x&255; u[o++]=(x>>8)&255; u[o++]=(x>>16)&255; } }
   return u; }   /* v189: bytes, like every other file the zip gets (a Blob made the zip list sizes of 0: Archive Utility error 79) */
-function jamFiles(T,n){ const sr=JAM.sr, at=(tr,f,c)=>{ const k=Math.floor(f/sr), b=tr.b[k]; return b?b[(f-k*sr)*2+c]:0; }, out=[];
+function jamFiles(T,n){ const sr=JAM.sr, raw=(tr,f,c)=>{ const k=Math.floor(f/sr), b=tr.b[k]; return b?b[(f-k*sr)*2+c]:0; }, out=[], TF=Math.min(JAM.fold|0,n), X=Math.min(TF,Math.round(.05*sr));
+  const at=TF>0?(tr,f,c)=>{ if(f>=TF) return raw(tr,f,c); const post=raw(tr,n+f,c); if(f<TF-X) return post; const x=(f-(TF-X))/X; return post*Math.cos(x*Math.PI/2)+raw(tr,f,c)*Math.sin(x*Math.PI/2); }:raw;   /* v191: the folded start */
   // mix: Ngoma's output plus Worp, kept under 0 dBFS
   let pk=1; if(T.worp.any){ for(let f=0;f<n;f++) for(let c=0;c<2;c++){ const x=Math.abs(at(T.mix,f,c)+at(T.worp,f,c)); if(x>pk) pk=x; } }
   const mg=Math.min(1,32000/pk);

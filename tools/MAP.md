@@ -51,7 +51,7 @@ backup > build (python read-modify-write on the Mac, assert each replace matches
 
 <!-- AUTO: below this line tools/map.py writes; do not edit by hand -->
 
-## Ngoma: public/index.html (5655 lines)
+## Ngoma: public/index.html (5659 lines)
 
 - **script starts** (line 13): (no functions)
 - **Knobs with character (v71): a ribbed skirt that turns (after the Rogan knobs of the Prophe** (line 431): (no functions)
@@ -81,13 +81,13 @@ backup > build (python read-modify-write on the Mac, assert each replace matches
 - **Capture: keep what you just heard** (line 5292): capAttach 5297, capStart 5305, capLog 5306, capWindow 5307, capAudio 5313, capMidi 5317, capture 5327
 - **Delivery: a folder you picked (no zip), or a zip download** (line 5340): idb 5342, kvSet 5343, kvGet 5344, outUI 5345, outPick 5346, outReady 5347, writeFiles 5348, deliver 5350, resampleTo 5357
 - **Drag WAV: the mix is rendered while you hover, so it is ready when you drag** (line 5359): dwKey 5361, dwPrepare 5362
-- **Jam recording (v101): press ● Rec, play for up to 12 minutes, press again. It starts on th** (line 5367): jamTrack 5374, jamPut 5375, jamRec 5377, jamStart 5379, jamWorp 5388, jamUI 5391, jamStop 5398, jamFinish 5402, jamWav 5412, jamFiles 5417
-- **Blackbox (v95): its own folder and names made for a small screen. Tempo (three digits, so ** (line 5424): bbUI 5428, bbPick 5429, bbName 5430, bbSend 5434, exportLoop 5454
-- **Max for Live bridge (v77). Inside the Ngoma device (jweb~ in Live) Live's transport drives** (line 5495): m4lAlign 5498, m4lInit 5502
-- **Changes on the next bar (v88). While playing, a new rhythm, Surprise, Reset, New variant, ** (line 5534): onBar 5538, qRun 5542, qMark 5544, qDraw 5547
-- **Scenes (v91): eight slots that keep the whole state (the same snapshot as ← →: pattern, ki** (line 5552): scenesRender 5554, sceneStore 5565, sceneClear 5566, sceneRecall 5567
-- **Morph (v104): a scene grows out of what plays now over 1, 2, 4 or 8 bars. The scene is app** (line 5570): morphCap 5579, morphStart 5581, morphSet 5590, morphInd 5607, morphSnap 5609, scBase 5613, scEdited 5614, morphStep 5617, morphEnd 5619, morphUI 5627, setView 5639
-- **script starts** (line 5652): (no functions)
+- **Jam recording (v101): press ● Rec, play for up to 12 minutes, press again. It starts on th** (line 5367): jamTrack 5374, jamPut 5375, jamRec 5377, jamStart 5379, jamWorp 5388, jamUI 5391, jamStop 5398, jamFinish 5405, jamWav 5415, jamFiles 5420
+- **Blackbox (v95): its own folder and names made for a small screen. Tempo (three digits, so ** (line 5428): bbUI 5432, bbPick 5433, bbName 5434, bbSend 5438, exportLoop 5458
+- **Max for Live bridge (v77). Inside the Ngoma device (jweb~ in Live) Live's transport drives** (line 5499): m4lAlign 5502, m4lInit 5506
+- **Changes on the next bar (v88). While playing, a new rhythm, Surprise, Reset, New variant, ** (line 5538): onBar 5542, qRun 5546, qMark 5548, qDraw 5551
+- **Scenes (v91): eight slots that keep the whole state (the same snapshot as ← →: pattern, ki** (line 5556): scenesRender 5558, sceneStore 5569, sceneClear 5570, sceneRecall 5571
+- **Morph (v104): a scene grows out of what plays now over 1, 2, 4 or 8 bars. The scene is app** (line 5574): morphCap 5583, morphStart 5585, morphSet 5594, morphInd 5611, morphSnap 5613, scBase 5617, scEdited 5618, morphStep 5621, morphEnd 5623, morphUI 5631, setView 5643
+- **script starts** (line 5656): (no functions)
 
 ## Worp: public/worp/index.html (1905 lines)
 
