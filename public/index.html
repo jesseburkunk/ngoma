@@ -924,7 +924,7 @@ input,select{accent-color:var(--accent)}
     </div>
     <div class="fxg magic bsu" id="bsU">
       <div class="fxh"><span class="lbl" title="Bass: a sub bass under the drums, a sine with a touch of body, playing slow dub figures in your key that follow the chords and step aside when the surdo hits">Bass</span><label class="chk"><input id="bsOn" type="checkbox"> On</label></div>
-      <div class="fxc"><div class="wstrip wtop" id="bsStrip"><button class="btn" id="bsNew" type="button" title="New pattern: another bass figure in the same style (the old one stays in undo)">New pattern</button><span class="seg" id="bsSty" role="group" aria-label="Style" title="The kind of figure: One drop leaves the one empty, Steppers plays every beat, Offbeat plays between the beats, Half-time is slow and long"><button data-s="drop">One drop</button><button data-s="step">Steppers</button><button data-s="off">Offbeat</button><button data-s="half">Half-time</button></span><span class="wname lcd" data-lcd="BASS"><b id="bsName"></b><small id="bsInfo"></small></span></div>
+      <div class="fxc"><div class="wstrip wtop" id="bsStrip"><button class="btn" id="bsSnd" type="button" title="New sound: another bass sound (Body, Filter and Decay together, with its own name); the figure stays">New sound</button><button class="btn" id="bsNew" type="button" title="New pattern: another bass figure in the same style; the sound stays (the old one stays in undo)">New pattern</button><span class="seg" id="bsSty" role="group" aria-label="Style" title="The kind of figure: One drop leaves the one empty, Steppers plays every beat, Offbeat plays between the beats, Half-time is slow and long"><button data-s="drop">One drop</button><button data-s="step">Steppers</button><button data-s="off">Offbeat</button><button data-s="half">Half-time</button></span><span class="wname lcd" data-lcd="BASS"><b id="bsName"></b><small id="bsInfo"></small></span></div>
         <div class="knrow"><div id="bsSlot"></div></div></div>
     </div>
     <div class="fxg magic leadu" id="leadU">
@@ -4095,8 +4095,8 @@ function bsStep(ctx,G,g,t){ const B=G.bs; if(!B||!bsLive()) return; const F=S.fx
   const t0=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)), dec=F.bsDec??.5, len=Math.min(gap-.012,Math.max(.06,Math.round(x[1]/q)*sd*(.4+1.2*dec))), pk=x[2];
   B.o1.frequency.setTargetAtTime(f,t0,.004); B.o2.frequency.setTargetAtTime(2*f,t0,.004);
   B.env.gain.setTargetAtTime(pk,t0,.0035); B.env.gain.setTargetAtTime(pk*(.55+.4*dec),t0+.04,.08+.3*dec); B.env.gain.setTargetAtTime(0,t0+len,.025+.05*dec); }
-function bsUI(){ const n=$('bsName'), i=$('bsInfo'); if(!n||!window.WorpEngine) return; const nm=WorpEngine.genName(bsSeed(),0), st={drop:'one drop',step:'steppers',off:'offbeat',half:'half-time'}[bsSty()], P=bsBar(0).concat(bsBar(1));
-  const k=st+' · '+P.length+' notes in 2 bars'; if(n.textContent!==nm) n.textContent=nm; if(i.textContent!==k) i.textContent=k;
+function bsUI(){ const n=$('bsName'), i=$('bsInfo'); if(!n||!window.WorpEngine) return; const nm=WorpEngine.genName((S.fx.bsSnd??3)>>>0,0), st={drop:'one drop',step:'steppers',off:'offbeat',half:'half-time'}[bsSty()], P=bsBar(0).concat(bsBar(1));
+  const k=st+' · #'+bsSeed().toString(36).toUpperCase().slice(0,5)+' · '+P.length+' notes';   /* v201 (Jesse: a name but no way to pick another patch): the name is the sound, the code the figure */ if(n.textContent!==nm) n.textContent=nm; if(i.textContent!==k) i.textContent=k;
   document.querySelectorAll('#bsSty button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.s===bsSty()))); }
 function fltQ(v){ return {lq:v<-.005?.7+4.2*Math.pow(-v,1.4):.5, hq:v>.005?.8+3.4*Math.pow(v,1.4):.6}; }   /* v142: the layer filter resonates more the further you turn it (Jesse: it sounded dry) */
 function buildLead(ctx,master,rvIn){ const bus=ctx.createGain(), cut=bq(ctx,'lowpass',20000,.5), hpf=bq(ctx,'highpass',10,.6), out=ctx.createGain(), send=ctx.createGain(); out.gain.value=0; send.gain.value=0; const pk=ctx.createDynamicsCompressor(); pk.threshold.value=-14; pk.knee.value=6; pk.ratio.value=4; pk.attack.value=.003; pk.release.value=.12; const lc=bq(ctx,'highpass',170,.7), pres=bq(ctx,'peaking',2800,.9); pres.gain.value=2.5; bus.connect(cut).connect(hpf).connect(lc).connect(pres).connect(out).connect(pk).connect(master); out.connect(send).connect(rvIn);
@@ -4897,7 +4897,7 @@ function layersLayout(){ const lab=k=>{ const e=k.querySelector('.kl'); return e
      the display after it, and the playing tools (Rec, Mine | Auto, Lock) in their own group at the end */
   const grp=(stripId,gen,rec)=>{ const st=$(stripId); if(!st) return; const G=document.createElement('span'), R=document.createElement('span'); G.className='sgrp sgen'; R.className='sgrp srec';
     gen.forEach((id,i)=>{ const e=$(id); if(e){ G.append(e); if(i===0) e.classList.add('primary'); } }); rec.forEach(id=>{ const e=$(id); if(e) R.append(e); }); st.prepend(G); if(R.children.length) st.append(R); };
-  grp('leadStrip',['leadNew','leadPat'],['leadRec','leadLine','leadLock']); grp('worpStrip',['worpNew','worpPat'],['padRec','padLine']); grp('cdStrip',['cdNew','cdSrc'],[]); grp('bsStrip',['bsNew','bsSty'],[]);
+  grp('leadStrip',['leadNew','leadPat'],['leadRec','leadLine','leadLock']); grp('worpStrip',['worpNew','worpPat'],['padRec','padLine']); grp('cdStrip',['cdNew','cdSrc'],[]); grp('bsStrip',['bsSnd','bsNew','bsSty'],[]);
   unit('padU',['Level','Move'],['Filter','Reverb','Echo','Pitch']);
   unit('fldU',['Level','Distance','Drift','Tune'],['Filter','Reverb','Echo']);
   const pl=document.querySelector('#plRow .lvw'), mg=document.querySelector('#leadU .mgw'), vary=mg&&[...mg.querySelectorAll('.knob')].find(k=>lab(k)==='Vary'), mel=document.querySelector('#lvRow .lvw');
@@ -5045,7 +5045,8 @@ function initControls(){
     const u=()=>{ cb.checked=!!S.fx.bsOn; U.classList.toggle('off',!S.fx.bsOn); [kl,kb,kf,kd,kp].forEach(k=>k.upd()); bsUI(); }; u(); UPD.push(u);
     cb.onchange=()=>{ S.fx.bsOn=cb.checked; u(); bsSync(AG); save(); };
     document.querySelectorAll('#bsSty button').forEach(b=>b.onclick=()=>{ hRecord(()=>{ S.fx.bsSty=b.dataset.s; S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('Bass: '+b.textContent+'.'); });
-    $('bsNew').onclick=()=>{ hRecord(()=>{ S.fx.bsSeed=worpSeed(); S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('New bass figure: '+WorpEngine.genName(bsSeed(),0)+'.'); };
+    $('bsNew').onclick=()=>{ hRecord(()=>{ S.fx.bsSeed=worpSeed(); S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('New bass figure, same sound.'); };
+    $('bsSnd').onclick=()=>{ const sd=worpSeed(), r=x=>rnd(sd,x,0xB0DE); hRecord(()=>{ Object.assign(S.fx,{bsSnd:sd,bsOn:true,bsBody:+(.04+.56*r(1)).toFixed(2),bsFlt:+(.15+.6*Math.pow(r(2),1.3)).toFixed(2),bsDec:+(.2+.65*r(3)).toFixed(2)}); }); updHist(); save(); u(); bsSync(AG); status('New bass sound: '+WorpEngine.genName(sd,0)+'. The figure stays.'); };
   }
   { const cb=$('tlOn'), U=$('tlU');   /* v197 Tape loop */
     const mk=(label,key,def,tt)=>{ const k=makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; tlSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)}); k.title=tt+' · drag, double-click resets'; return k; };
