@@ -1238,7 +1238,7 @@ THE SOFTWARE.</pre></details>
 
 <section class="g-sec" id="g-layers">
   <h2>Layers</h2>
-  <p class="g-p">What plays with the drums, always in your key, scale and chords, and in the swing of the drums. Each layer has its own On switch, its own colour and a display with the name of its sound; <i>New sound</i> throws another sound, <i>New pattern</i> another part on the same sound. The drums stay the heart: start with them, then add one layer at a time.</p>
+  <p class="g-p">What plays with the drums, always in your key, scale and chords, and in the swing of the drums. Each layer has its own On switch, its own colour and a display with the name of its sound; <i>New sound</i> throws another sound, <i>New pattern</i> another part on the same sound. Switched on while Ngoma plays, a layer (and Magic) fades in over two bars, so you can bring it in like on a mixer; switched off, it rings out over a bar. The drums stay the heart: start with them, then add one layer at a time.</p>
   <dl>
     <dt>Pad</dt><dd>A soft layer under the drums. On a Worp pad, <i>New sound</i> keeps the chords and movement and <i>New pattern</i> keeps the sound; <i>Rec 2 bars</i> counts in for two bars (clicks, beats counting down) and records two bars of chords from your MIDI keys, and <i>Mine | Worp</i> switches between your take and the pad's own. <i>Worp</i> throws a new patch from Ngoma's sister synth; <i>Classic</i> has six pads of its own.<details class="g-more"><summary>More</summary><p><b>Worp:</b> every throw is a patch of up to four sources with slow modulation that keeps re-patching itself. <i>New</i> throws another, the numbered buttons mute its layers, ← undoes a new sound. Every Worp pad is measured once and set to the same level, so a new sound never comes in much softer or louder.</p><p><b>Classic types:</b> <i>Bed</i>, one chord per bar. <i>Loops</i>, five tone fragments on their own lengths, like a Buddha Machine. <i>Tides</i>, a four-voice chord whose voices swell on their own cycles. <i>Echoes</i>, two short phrases into a darkening tape echo. <i>Seasons</i> and <i>Cloud</i>, a slow chord walk with shared notes held, as a warm pad or a cloud of grains.</p><p><b>Knobs:</b> <i>Level</i> (0 is really off), <i>Move</i> (how far the filter breathes, or how deep a Worp gate dips), <i>Filter</i> (low-pass to the left, high-pass to the right), <i>Reverb</i> and <i>Echo</i>, and <i>Pitch</i> (up a fourth, a fifth or an octave). Off at the first start.</p></details></dd>
     <dt>Bass</dt><dd>A sub bass under the drums: a sine with a touch of its octave, playing slow dub figures in your key that follow the chords and step aside when the surdo hits. Off by default.<details class="g-more"><summary>More</summary><p><b>Styles:</b> <i>One drop</i> leaves the one empty, <i>Steppers</i> plays every beat, <i>Offbeat</i> plays between the beats, <i>Half-time</i> is slow and long. <i>New pattern</i> throws another figure in the style, <i>New sound</i> another sound with its own name.</p><p><b>Knobs:</b> <i>Level</i>, <i>Body</i> (the octave above the sine: left you feel it, right you also hear it on small speakers), <i>Filter</i> (closed it is only sub; as you open it the resonance grows and it starts to sing), <i>Decay</i> and <i>Pitch</i>. The bass gets its own stem in the export and in Rec.</p></details></dd>
@@ -3550,7 +3550,8 @@ function mgP(){ const F=S.fx; if(!F.mgOn) return null; const P=MG_MODES[F.mgMode
 function buildMagic(ctx,master,lanes,rvIn){
   const an=ctx.createAnalyser(); an.fftSize=512;
   // Cosmos: two loops, fed by the drum mix (not the master, so it never hears itself twice)
-  const cIn=ctx.createGain(); cIn.gain.value=0; lanes.forEach(l=>(l.mG||l.p).connect(cIn));
+  const mfade=ctx.createGain(); lanes.forEach(l=>(l.mG||l.p).connect(mfade));   /* v209: the fade when Magic is switched on or off while playing */
+  const cIn=ctx.createGain(); cIn.gain.value=0; mfade.connect(cIn);
   const sp=ctx.createChannelSplitter(2), cw=ctx.createGain(), crv=ctx.createGain(); cw.gain.value=0; crv.gain.value=0; cIn.connect(sp); cw.connect(master); cw.connect(an); if(rvIn) cw.connect(crv).connect(rvIn);
   const cos=[0,1].map(k=>{ const sum=ctx.createGain(), d=ctx.createDelay(30), gate=ctx.createGain(), hp=bq(ctx,'highpass',320,.6), lp=bq(ctx,'lowpass',5200,.5), sh=ctx.createWaveShaper(),
       self=ctx.createGain(), cross=ctx.createGain(), pan=ctx.createStereoPanner(), o=ctx.createOscillator(), og=ctx.createGain(), m=ctx.createOscillator(), mg=ctx.createGain();
@@ -3560,7 +3561,7 @@ function buildMagic(ctx,master,lanes,rvIn){
     return {sum,d,gate,lp,self,cross,og}; });
   cos[0].cross.connect(cos[1].sum); cos[1].cross.connect(cos[0].sum); cos.forEach(c=>c.lp.connect(c.cross));   // blur: each loop leaks into the other
   // sound processors, in parallel on the drum mix (lanes, not the master)
-  const mIn=ctx.createGain(); lanes.forEach(l=>(l.mG||l.p).connect(mIn));
+  const mIn=ctx.createGain(); mfade.connect(mIn);
   // Resonate and Comb: tuned combs in an AudioWorklet (made in magicWorklet once the module has loaded)
   const rIn=ctx.createGain(), rHp=bq(ctx,'highpass',150,.5), rLp=bq(ctx,'lowpass',5000,.5), rOut=ctx.createGain(), rLo=bq(ctx,'lowpass',5500,.5); rIn.gain.value=0; rOut.gain.value=0;
   mIn.connect(rIn).connect(rHp).connect(rLp); rLo.connect(rOut).connect(master); rOut.connect(an);
@@ -3581,7 +3582,7 @@ function buildMagic(ctx,master,lanes,rvIn){
   lanes.forEach(l=>l.p.connect(gIn)); gIn.connect(gD); gD.connect(gFb).connect(gD); gD.connect(gHp); gHp.connect(gBp).connect(gCr).connect(gLp); gHp.connect(gCl).connect(gLp); gLp.connect(gPan).connect(gOut).connect(master); gOut.connect(an); if(rvIn) gOut.connect(gRv).connect(rvIn);
   /* v144 Magic Echo: its own dub echo on what Magic adds (not on the dry drums) */
   const eBus=ctx.createGain(); [rOut,cmOut,aOut,fOut,gOut].forEach(n=>n.connect(eBus)); const echo=buildDub(ctx,eBus,master);
-  return {an,cIn,cw,crv,cos,echo,gl:{gIn,gD,gFb,gBp,gCl,gCr,gLp,gPan,gOut,until:0},proc:{rIn,rLp,rLo,rOut,res,cmIn,cmLp,cmOut,comb,aDrv,aOut,fIn,fOut,f1,f2}};
+  return {fade:mfade,an,cIn,cw,crv,cos,echo,gl:{gIn,gD,gFb,gBp,gCl,gCr,gLp,gPan,gOut,until:0},proc:{rIn,rLp,rLo,rOut,res,cmIn,cmLp,cmOut,comb,aDrv,aOut,fIn,fOut,f1,f2}};
 }
 function presetTrim(){ const d=(typeof PRESET_TRIM!=='undefined'&&PRESET_TRIM[S.preset])||0; return Math.pow(10,d/20); }
 function magicSync(G){ if(G.master) G.master.gain.value=.9*presetTrim(); const M=G.mg; if(!M) return; const X=mgP(), P=X?X.P:{}, a=X?X.a:0;
@@ -3848,17 +3849,17 @@ function padRare(ctx,P,g,now,root,degs,bar,mv,salt){ const b=g/(4*S.res)|0, q=i=
 function buildPad(ctx,master,rvIn){ const bus=ctx.createGain(), hp=bq(ctx,'highpass',110,.6), lp=bq(ctx,'lowpass',900,2.2), out=ctx.createGain(), send=ctx.createGain();
   out.gain.value=0; send.gain.value=0; const gate=ctx.createGain(), cut=bq(ctx,'lowpass',20000,.5);   // v85: Cutoff knob, after the breathing filter, also on the reverb send
   const hpf=bq(ctx,'highpass',10,.6), wpk=bq(ctx,'peaking',2000,.6), wsh=bq(ctx,'highshelf',5000,.7); wpk.gain.value=0; wsh.gain.value=0;   /* v170: presence and air, Worp pads only */
-  bus.connect(gate).connect(hp).connect(lp).connect(wpk).connect(wsh).connect(cut).connect(hpf).connect(out).connect(master); hpf.connect(send).connect(rvIn);
+  const fade=ctx.createGain(); bus.connect(fade); fade.connect(gate).connect(hp).connect(lp).connect(wpk).connect(wsh).connect(cut).connect(hpf).connect(out).connect(master); hpf.connect(send).connect(rvIn);
   // tape echo for Echoes: before the gate, so Stop fades the repeats too; every repeat comes back darker and with a little wow
   const eIn=ctx.createGain(), d=ctx.createDelay(12), fb=ctx.createGain(), fl=bq(ctx,'lowpass',2600,.5), fh=bq(ctx,'highpass',160,.5), eOut=ctx.createGain(), w=ctx.createOscillator(), wg=ctx.createGain();
   eIn.gain.value=0; fb.gain.value=0; eOut.gain.value=0; w.frequency.value=.21; wg.gain.value=.004; w.connect(wg).connect(d.delayTime); w.start();
-  bus.connect(eIn).connect(d).connect(fl).connect(fh).connect(fb).connect(d); fh.connect(eOut).connect(gate);
+  fade.connect(eIn).connect(d).connect(fl).connect(fh).connect(fb).connect(d); fh.connect(eOut).connect(gate);
   const cw=ctx.createGain(); cw.gain.value=0; const cwl=bq(ctx,'lowpass',3200,.5), cwc=bq(ctx,'lowpass',20000,.5); cw.connect(cwl).connect(cwc).connect(rvIn);   // Cloud: its grains also go straight into the reverb, a little darker
   // v85: a very light noise bed for the drone types, like tape hiss and air, shaped soft and slow (Bed stays without it)
   const nz=ctx.createBufferSource(); nz.buffer=noiseBuf(ctx); nz.loop=true; const nzh=bq(ctx,'highpass',250,.5), nzl=bq(ctx,'lowpass',2800,.5), nzg=ctx.createGain(); nzg.gain.value=0;
   const nzw=ctx.createOscillator(), nzwg=ctx.createGain(); nzw.frequency.value=.05; nzwg.gain.value=0; nzw.connect(nzwg).connect(nzg.gain); nzw.start(); nz.connect(nzh).connect(nzl).connect(nzg).connect(bus); nz.start();
   const dub=buildDub(ctx,out,master);
-  return {bus,hp,lp,wpk,wsh,cut,hpf,cwc,out,send,gate,echo:{eIn,d,fb,eOut},cw,nz:{g:nzg,w:nzwg},dub}; }
+  return {bus,fade,hp,lp,wpk,wsh,cut,hpf,cwc,out,send,gate,echo:{eIn,d,fb,eOut},cw,nz:{g:nzg,w:nzwg},dub}; }
 const PAD_TRIM=[1,.94,1,1.62,1.03,1.41,1.22,1.4];   /* v170: Worp 1.2 -> 1.4, the low end it lost */   // v85: per type, so every type sits at the same level for the same Level setting
 /* v192 pad level per patch (Jesse: the pad sits soft). Worp patches differed by 4 dB and sat about 25 dB under the drums. Every Worp sound is
    measured once, offline (dry, 4 bars at 16 kHz, Level 35%), and trimmed to the same loudness, the way the lead engines are. Until the
@@ -4125,8 +4126,8 @@ function bsSeed(){ return (S.fx.bsSeed??7)>>>0; }
 function bsLive(){ const F=S.fx; return !!F.bsOn && (S.renderOnly==null||S.renderOnly===-5) && (F.bsLvl??.5)>.005; }
 function buildBass(ctx,master){ const o1=ctx.createOscillator(), o2=ctx.createOscillator(), g2=ctx.createGain(), env=ctx.createGain(), hp=bq(ctx,'highpass',28,.6), lp1=bq(ctx,'lowpass',400,.7), lp2=bq(ctx,'lowpass',400,.6), dk=ctx.createGain(), out=ctx.createGain();
   o1.type=o2.type='sine'; o1.frequency.value=55; o2.frequency.value=110; g2.gain.value=0; env.gain.value=0; out.gain.value=0;
-  o1.connect(env); o2.connect(g2).connect(env); env.connect(hp).connect(lp1).connect(lp2).connect(dk).connect(out).connect(master); o1.start(); o2.start();
-  return {o1,o2,g2,env,lp1,lp2,dk,out,last:-1}; }
+  o1.connect(env); o2.connect(g2).connect(env); const fade=ctx.createGain(); env.connect(fade).connect(hp).connect(lp1).connect(lp2).connect(dk).connect(out).connect(master); o1.start(); o2.start();
+  return {o1,o2,g2,env,fade,lp1,lp2,dk,out,last:-1}; }
 function bsSync(G){ const B=G&&G.bs; if(!B) return; const F=S.fx, on=bsLive(), live=!(G.ctx instanceof OfflineAudioContext), set=(p,v)=>{ if(live) p.setTargetAtTime(v,G.ctx.currentTime,.05); else p.value=v; };
   const fv=F.bsFlt??.4, hz=45*Math.pow(2,fv*7.4); set(B.out.gain,on?Math.pow(F.bsLvl??.5,1.5)*BS_TRIM*2.8:0); set(B.g2.gain,(F.bsBody??.25)*.55);
   set(B.lp1.frequency,hz); set(B.lp2.frequency,Math.min(20000,hz*1.15)); set(B.lp1.Q,.6+7*fv*fv); set(B.lp2.Q,.55); }
@@ -4195,13 +4196,19 @@ function dareStop(){ if(DARE.cur&&AG) dareEnd(AG,actx.currentTime); DARE.next=-1
 function dareUI(){ const n=$('dareName'), i=$('dareInfo'); if(!n) return; const c=DARE.cur, L=DARE.last;
   const a=c?c.k.name:!S.fx.dareOn?'Off':L?L.k.name:'Waiting', b=c?(c.info||c.k.info)+(c.kept?' · kept':' · '+Math.max(1,c.end-Math.max(0,DARE.bar))+(c.end-DARE.bar===1?' bar':' bars')):!S.fx.dareOn?'the machine keeps to your plan':!playing?'starts when Ngoma plays':DARE.next>0?'next in '+Math.max(1,DARE.next-DARE.bar)+' bars':'listening';
   if(n.textContent!==a) lcdSet('dareName',a); if(i.textContent!==b) i.textContent=b; const kb=$('dareKeep'); if(kb) kb.disabled=!(c&&c.k.keep&&!c.kept); const ab=$('dareAgain'); if(ab) ab.disabled=!L||!S.fx.dareOn; const nb=$('dareNow'); if(nb) nb.disabled=!S.fx.dareOn; }
+/* v209 (Jesse: when you switch an instrument on while jamming, it should not come in at full volume): a layer switched on fades in from
+   silence over two bars; switched off, its notes stop and what still rings fades out over a bar. Only while Ngoma plays; a scene, a preset
+   or undo still switch at once. The fade sits at the layer's input, so its reverb and echoes follow. */
+function layerFade(u,on,sync){ if(!AG||!u||!u.fade||!playing){ sync(); return; } const f=u.fade.gain, now=actx.currentTime, bar=4*60/S.bpm, v=f.value; clearTimeout(u._ft); f.cancelScheduledValues(now);
+  if(on){ f.setValueAtTime(u._fo?v:0,now); u._fo=false; sync(); f.linearRampToValueAtTime(1,now+2*bar); }
+  else { f.setValueAtTime(v,now); f.linearRampToValueAtTime(0,now+bar); u._fo=true; u._ft=setTimeout(()=>{ u._fo=false; sync(); const t=actx.currentTime; f.cancelScheduledValues(t); f.setValueAtTime(0,t); f.setValueAtTime(1,t+.35); },bar*1000+40); } }
 function fltQ(v){ return {lq:v<-.005?.7+4.2*Math.pow(-v,1.4):.5, hq:v>.005?.8+3.4*Math.pow(v,1.4):.6}; }   /* v142: the layer filter resonates more the further you turn it (Jesse: it sounded dry) */
-function buildLead(ctx,master,rvIn){ const bus=ctx.createGain(), cut=bq(ctx,'lowpass',20000,.5), hpf=bq(ctx,'highpass',10,.6), out=ctx.createGain(), send=ctx.createGain(); out.gain.value=0; send.gain.value=0; const pk=ctx.createDynamicsCompressor(); pk.threshold.value=-14; pk.knee.value=6; pk.ratio.value=4; pk.attack.value=.003; pk.release.value=.12; const lc=bq(ctx,'highpass',170,.7), pres=bq(ctx,'peaking',2800,.9); pres.gain.value=2.5; bus.connect(cut).connect(hpf).connect(lc).connect(pres).connect(out).connect(pk).connect(master); out.connect(send).connect(rvIn);
+function buildLead(ctx,master,rvIn){ const bus=ctx.createGain(), cut=bq(ctx,'lowpass',20000,.5), hpf=bq(ctx,'highpass',10,.6), out=ctx.createGain(), send=ctx.createGain(); out.gain.value=0; send.gain.value=0; const pk=ctx.createDynamicsCompressor(); pk.threshold.value=-14; pk.knee.value=6; pk.ratio.value=4; pk.attack.value=.003; pk.release.value=.12; const lc=bq(ctx,'highpass',170,.7), pres=bq(ctx,'peaking',2800,.9); pres.gain.value=2.5; const fade=ctx.createGain(); bus.connect(fade).connect(cut).connect(hpf).connect(lc).connect(pres).connect(out).connect(pk).connect(master); out.connect(send).connect(rvIn);
   /* v165 (Jesse: the lead should cut through the mix better; is it wide enough?): the low end out below 170 Hz, +2.5 dB presence at 2.8 kHz, and two short
      delays (11 and 17 ms) panned left and right at a low level, so the lead gets width without moving off centre */
   const wL=ctx.createDelay(.05), wR=ctx.createDelay(.05), gL=ctx.createGain(), gR=ctx.createGain(), pL=ctx.createStereoPanner(), pR=ctx.createStereoPanner(); wL.delayTime.value=.011; wR.delayTime.value=.017; gL.gain.value=gR.gain.value=.22; pL.pan.value=-.85; pR.pan.value=.85;
   pres.connect(wL).connect(gL).connect(pL).connect(out); pres.connect(wR).connect(gR).connect(pR).connect(out);
-  const dub=buildDub(ctx,out,master); return {bus,cut,hpf,out,send,pk,dub,lc,pres}; }   /* v135: pk = peak tamer, the louder struck leads must not push the master over the limiter */   // v108: Cutoff, like the pad's
+  const dub=buildDub(ctx,out,master); return {bus,fade,cut,hpf,out,send,pk,dub,lc,pres}; }   /* v135: pk = peak tamer, the louder struck leads must not push the master over the limiter */   // v108: Cutoff, like the pad's
 /* ---------- Field (v168; Jesse: a layer of field recordings, open material, in the spirit of Chris Watson and Jake Muir) ----------
    A recording plays under the drums as a loop: a place, not an instrument. Distance pushes it away (darker, quieter, more reverb). Drift
    lets it come apart into slow overlapping grains at lower speeds, seeded per beat, so the export sounds the same. Tune sends it through
@@ -4239,9 +4246,9 @@ function fldOwnLoad(){ if(FLD.ownP) return FLD.ownP; return FLD.ownP=(async()=>{
     try{ FLD.own=fldNorm(await fldDecode(o.ab.slice(0))); FLD.ownName=o.name||'Your file'; fldUI(); if(AG) fldSync(AG); return FLD.own; }catch(e){ return null; } })(); }
 async function fldOwnSet(file){ try{ const ab=await file.arrayBuffer(), b=await fldDecode(ab.slice(0)); FLD.own=fldNorm(b); FLD.ownName=file.name.replace(/\.[^.]+$/,'').slice(0,60); FLD.ownP=Promise.resolve(FLD.own); kvSet('fldOwn',{name:FLD.ownName,ab}); return true; }catch(e){ return false; } }
 function buildField(ctx,master,rvIn){ const lg=ctx.createGain(), gg=ctx.createGain(), hp=bq(ctx,'highpass',70,.7), lp=bq(ctx,'lowpass',16000,.5), dry=ctx.createGain(), bank=ctx.createGain(), duck=ctx.createGain(), out=ctx.createGain(), send=ctx.createGain();
-  gg.gain.value=0; bank.gain.value=0; out.gain.value=0; send.gain.value=0; lg.connect(hp); gg.connect(hp); hp.connect(dry).connect(lp); const bp=[];
+  gg.gain.value=0; bank.gain.value=0; out.gain.value=0; send.gain.value=0; const fade=ctx.createGain(); lg.connect(fade); gg.connect(fade); fade.connect(hp); hp.connect(dry).connect(lp); const bp=[];
   for(let k=0;k<5;k++){ const f=bq(ctx,'bandpass',440,14); hp.connect(f); f.connect(bank); bp.push(f); } bank.connect(lp); const gate=ctx.createGain(), cut=bq(ctx,'lowpass',20000,.5), hpf=bq(ctx,'highpass',10,.6); lp.connect(cut).connect(hpf).connect(duck).connect(gate).connect(out).connect(master);   /* v170: Filter, as on Pad and Lead */   /* gate: Stop fades the grains too */ out.connect(send).connect(rvIn);
-  const dub=buildDub(ctx,out,master); return {lg,gg,hp,lp,cut,hpf,dry,bank,bp,duck,gate,out,send,dub,loop:null,id:'',on:false}; }
+  const dub=buildDub(ctx,out,master); return {lg,gg,fade,hp,lp,cut,hpf,dry,bank,bp,duck,gate,out,send,dub,loop:null,id:'',on:false}; }
 function fldLive(){ const F=S.fx; return !!F.fldOn && (S.renderOnly==null||S.renderOnly===-3) && (F.fldLvl??.4)>.005; }   /* -3: the field stem */
 function fldHz(g){ const sc=padSc(), n=sc.length, d=chordAt(g), R=[[180,900],[180,900],[180,900],[900,2400],[2400,6000]]; return [d,d+2,d+4,d+n,d+n+2].map((x,k)=>{ let f=mtof(48+S.key+sc[((x%n)+n)%n]+12*Math.floor(x/n)); while(f>R[k][1]) f/=2; while(f<R[k][0]) f*=2; return f; }); }   /* three tones low, one in the middle, one high, so insects and wind can sing too */
 function fldStopLoop(G,fade){ const P=G&&G.fld, L=P&&P.loop; if(!L) return; const n=G.ctx.currentTime; try{ L.fg.gain.cancelScheduledValues(n); L.fg.gain.setTargetAtTime(0,n,fade/3); L.s.stop(n+fade+.1); }catch(e){} P.loop=null; }
@@ -4275,7 +4282,7 @@ function fldUI(){ const sel=$('fldSel'), nm=$('fldName'), cr=$('fldCred'); if(!s
    pings, or grains cut from a field recording), placed on the sixteenths of a two-bar motif that comes back with small changes, mostly in
    the gaps of the drums. Everything is seeded by the step, so the export sounds as you hear it. ---------- */
 const CD_TRIM=1.6, CD_KINDS=['click','blip','tick','crackle','squelch','ping'], CD_NORM={click:3.5,blip:.92,tick:3.3,crackle:1.7,squelch:2.25,ping:.75,grain:11};   /* measured: each kind at about the same loudness */
-function buildCandy(ctx,master,rvIn){ const bus=ctx.createGain(), hp=bq(ctx,'highpass',160,.7), out=ctx.createGain(), send=ctx.createGain(); out.gain.value=0; send.gain.value=0; bus.connect(hp).connect(out).connect(master); out.connect(send).connect(rvIn); const dub=buildDub(ctx,out,master); return {bus,out,send,dub}; }
+function buildCandy(ctx,master,rvIn){ const bus=ctx.createGain(), hp=bq(ctx,'highpass',160,.7), out=ctx.createGain(), send=ctx.createGain(); out.gain.value=0; send.gain.value=0; const fade=ctx.createGain(); bus.connect(fade).connect(hp).connect(out).connect(master); out.connect(send).connect(rvIn); const dub=buildDub(ctx,out,master); return {bus,fade,out,send,dub}; }
 function cdLive(){ const F=S.fx; return !!F.cdOn && (S.renderOnly==null||S.renderOnly===-4) && (F.cdLvl??.5)>.005; }
 function cdSeed(){ return (S.fx.cdSeed??1)>>>0; }
 function cdSrc(){ const v=S.fx.cdSrc; return v==='synth'||v==='field'?v:'both'; }
@@ -5128,7 +5135,7 @@ function initControls(){
     $('padLine').querySelectorAll('button').forEach(b=>b.onclick=()=>padMine(b.dataset.l==='mine')); $('padRec').onclick=()=>nrecToggle('pad'); $('leadRec').onclick=()=>nrecToggle('lead');
     $('worpNew').onclick=()=>{ worpSpec(); hRecord(()=>{ const {name,...rest}=S.fx.worp, ps=(rest.ps!=null?rest.ps:rest.seed)>>>0; S.fx.worp={...rest,seed:worpSeed(),ps,mix:[1,1,1,1],mute:[false,false,false,false]}; });   /* v131: a new pad gets its own name (the old one stuck) */ updHist(); save(); worpUI(); };
     $('worpMutes').onclick=e=>{ const b=e.target.closest('.wm'); if(!b) return; const W=worpSpec(), i=+b.dataset.i; W.mute[i]=!W.mute[i]; save(); worpUI(); };
-    cb.onchange=()=>{ S.fx.padOn=cb.checked; u(); padSync(AG); save(); };
+    cb.onchange=()=>{ S.fx.padOn=cb.checked; u(); layerFade(AG&&AG.pad,cb.checked,()=>padSync(AG)); save(); };
   }
   { const cb=$('cdOn'), U=$('cdU');   /* v180 Candy */
     const mk=(label,key,def,tt)=>{ const k=makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; cdSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)}); k.title=tt+' · drag, double-click resets'; return k; };
@@ -5136,7 +5143,7 @@ function initControls(){
       kg=mk('Gaps','cdGap',.7,'How much the candy keeps out of the way of the drums: to the right it plays mostly where the drums rest'), kat=mk('Attack','cdAtk',0,'How the sounds start: left with a hard transient, to the right they fade in. Each sound has its own share, so halfway some still click and others swell'), ks=mk('Space','cdSpace',.3,'Reverb, and above a quarter a dub echo'), kfd=mk('F.Delay','cdFd',0,'Filter delay, the same one as the Lead: three repeats on tempo, each through its own drifting band-pass');
     [kl,ka,kz,kat,kg].forEach(k=>k.classList.add('big','mgk')); const sr=document.createElement('div'); sr.className='lvw lsound'; sr.append(kl,ka,kz,kat,kg); const mr=document.createElement('div'); mr.className='lvw lmix'; mr.append(ks,kfd); const row=$('cdSlot').parentNode; $('cdSlot').replaceWith(sr); row.after(mr);
     const u=()=>{ cb.checked=!!S.fx.cdOn; U.classList.toggle('off',!S.fx.cdOn); [kl,ka,kz,kat,kg,ks,kfd].forEach(k=>k.upd()); cdUI(); }; u(); UPD.push(u);
-    cb.onchange=()=>{ S.fx.cdOn=cb.checked; u(); cdSync(AG); save(); };
+    cb.onchange=()=>{ S.fx.cdOn=cb.checked; u(); layerFade(AG&&AG.cd,cb.checked,()=>cdSync(AG)); save(); };
     document.querySelectorAll('#cdSrc button').forEach(b=>b.onclick=()=>{ S.fx.cdSrc=b.dataset.s; cdSync(AG); save(); cdUI(); status(b.dataset.s==='synth'?'Candy: synthesized sounds only.':b.dataset.s==='field'?'Candy: grains of the field recording.':'Candy: synthesized sounds and grains.'); });
     { const sel=$('cdRec'); sel.innerHTML='<option value="">As Texture</option>'+FLD_SRC.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join(''); const su=()=>{ sel.value=S.fx.cdRec&&FLD_SRC.some(x=>x[0]===S.fx.cdRec)?S.fx.cdRec:''; sel.disabled=cdSrc()==='synth'; }; su(); UPD.push(su);
       sel.onchange=()=>{ S.fx.cdRec=sel.value||null; CD_PAL.clear(); save(); cdSync(AG); cdUI(); status('Candy grains from '+(sel.value?fldInfo(sel.value)[1]:'the Texture recording')+'.'); }; document.querySelectorAll('#cdSrc button').forEach(b=>b.addEventListener('click',su)); }
@@ -5150,7 +5157,7 @@ function initControls(){
     const kp=makeSegK({label:'Pitch',opts:[[-12,'−12'],[0,'0'],[12,'+12']],get:()=>[-12,0,12].includes(S.fx.bsTr|0)?(S.fx.bsTr|0):0,set:v=>{ S.fx.bsTr=v; save(); }});
     [kl,kb,kf,kd].forEach(k=>k.classList.add('big','mgk')); const sr=document.createElement('div'); sr.className='lvw lsound'; sr.append(kl,kb,kf,kd); const mr=document.createElement('div'); mr.className='lvw lmix'; mr.append(kp); const row=$('bsSlot').parentNode; $('bsSlot').replaceWith(sr); row.after(mr);
     const u=()=>{ cb.checked=!!S.fx.bsOn; U.classList.toggle('off',!S.fx.bsOn); [kl,kb,kf,kd,kp].forEach(k=>k.upd()); bsUI(); }; u(); UPD.push(u);
-    cb.onchange=()=>{ S.fx.bsOn=cb.checked; u(); bsSync(AG); save(); };
+    cb.onchange=()=>{ S.fx.bsOn=cb.checked; u(); layerFade(AG&&AG.bs,cb.checked,()=>bsSync(AG)); save(); };
     document.querySelectorAll('#bsSty button').forEach(b=>b.onclick=()=>{ hRecord(()=>{ S.fx.bsSty=b.dataset.s; S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('Bass: '+b.textContent+'.'); });
     $('bsNew').onclick=()=>{ hRecord(()=>{ S.fx.bsSeed=worpSeed(); S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('New bass figure, same sound.'); };
     $('bsSnd').onclick=()=>{ const sd=worpSeed(), r=x=>rnd(sd,x,0xB0DE); hRecord(()=>{ Object.assign(S.fx,{bsSnd:sd,bsOn:true,bsBody:+(.04+.56*r(1)).toFixed(2),bsFlt:+(.15+.6*Math.pow(r(2),1.3)).toFixed(2),bsDec:+(.2+.65*r(3)).toFixed(2)}); S.fx.bsNm={body:S.fx.bsBody,flt:S.fx.bsFlt,dec:S.fx.bsDec}; }); updHist(); save(); u(); bsSync(AG); status('New bass sound: '+bsNm()+'. The figure stays.'); };   /* the name keeps the character it was thrown with, so turning a knob does not rename it */
@@ -5190,7 +5197,7 @@ function initControls(){
     [kl,kc,kd,kr,kt,kx,ke].forEach(k=>k.classList.add('big','mgk')); const wr=document.createElement('div'); wr.className='mgw'; wr.append(kl,kc,kd,kr,kt,kx,ke); $('fldSlot').replaceWith(wr);
     FLD_SRC.forEach(([id,nm,ds])=>{ const o=document.createElement('option'); o.value=id; o.textContent=nm; o.title=ds; sel.append(o); }); { const o=document.createElement('option'); o.value='own'; o.textContent='Your file'; sel.append(o); }
     const u=()=>{ cb.checked=!!S.fx.fldOn; U.classList.toggle('off',!S.fx.fldOn); [kl,kc,kd,kr,kt,kx,ke].forEach(k=>k.upd()); fldUI(); }; u(); UPD.push(u);
-    cb.onchange=()=>{ S.fx.fldOn=cb.checked; u(); if(cb.checked) fldLoad(); fldSync(AG); save(); };
+    cb.onchange=()=>{ S.fx.fldOn=cb.checked; u(); if(cb.checked) fldLoad(); layerFade(AG&&AG.fld,cb.checked,()=>fldSync(AG)); save(); };
     sel.onchange=()=>{ const v=sel.value; if(v==='own'&&!FLD.own){ fldUI(); $('fldIn').click(); return; } hRecord(()=>{ S.fx.fldSrc=v; S.fx.fldOn=true; }); updHist(); save(); u(); fldLoad(); fldSync(AG); };
     $('fldFile').onclick=()=>$('fldIn').click();
     $('fldIn').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return; if(f.size>80e6){ status('That file is too big for Texture (over 80 MB).'); return; }
@@ -5210,7 +5217,7 @@ function initControls(){
     kl.title='Volume of the lead · drag, double-click resets'; kc.title='Filter on the lead: left a low-pass (darker, softer), right a high-pass (thinner), middle open · drag, double-click opens it'; kx.title='How much reverb the lead gets, its own and Ngoma\'s, apart from the drums · drag, double-click resets'; ke.title='How much echo the lead gets: its own delay and echoing effects (Halo repeats, Sonar). At 0 there is no echo at all · drag, double-click resets'; kp.title='Pitch: up a fourth, a fifth or an octave, in scale steps so the line stays in key';
     [kl,kz,kc,kx,ke,kfd,kp].forEach(k=>k.classList.add('big','mgk')); kc.classList.add('bi'); const wr=document.createElement('div'); wr.className='mgw'; const gap=document.createElement('div'); gap.className='knob slot-gap'; gap.setAttribute('aria-hidden','true'); wr.append(kl,kz,kc,kx,ke,kfd,kp); $('leadSlot').replaceWith(wr);
     const u=()=>{ cb.checked=!!S.fx.leadOn; U.classList.toggle('off',!S.fx.leadOn); kl.upd(); kz.upd(); kc.upd(); kx.upd(); ke.upd(); kfd.upd(); kp.upd(); leadUI(); }; u(); UPD.push(u);
-    cb.onchange=()=>{ S.fx.leadOn=cb.checked; u(); leadSync(AG); save(); };
+    cb.onchange=()=>{ S.fx.leadOn=cb.checked; u(); layerFade(AG&&AG.lead,cb.checked,()=>leadSync(AG)); save(); };
     { /* v176: the Plaits sound, in the Lead itself (Jesse: no separate place for the details). The knobs as on the module; they keep to this sound (W.pl), New sound starts fresh */
       const W0=()=>leadSpec(), cur=()=>plPatch(W0().seed), setPl=(k,v)=>{ const W=W0(); W.pl=Object.assign({},W.pl||{},{[k]:v}); if(AG&&AG.plaits) plSync(AG,AG.ctx.currentTime); leadShown=''; leadUI(); save(); };
       const km=makeSelK({label:'Model',opts:PL_ENG.map(x=>[x[0],x[1]]),get:()=>cur().e,set:v=>{ setPl('e',+v); pu(); }});
@@ -5287,7 +5294,7 @@ function initControls(){
     [km,kw,kd,ke,kx,kc,kh,kg].forEach(k=>k.classList.add('big','mgk')); const wr=document.createElement('div'); wr.className='mgw'; wr.append(km,kw,kd,ke,kx,kc,kh,kg); $('mgSlot').replaceWith(wr);
     const kupd=kw.upd; kw.upd=()=>{ kupd(); km.upd(); kd.upd(); ke.upd(); kx.upd(); kc.upd(); kh.upd(); kg.upd(); const MP=MG_MODES[S.fx.mgMode|0]||{}, br=!!MP.br; ke.classList.toggle('dis',br); kx.classList.toggle('dis',br); kc.hidden=!MP.res; kh.hidden=kg.hidden=!MP.gl; kd.hidden=!!MP.gl;   /* Ghosts have no ring: Decay makes room for Chance and Hard */ ke.title=br?'Breath works on timing, not as a send; Every has nothing to choose here':'Which drum hits go into Magic: all, or only every 2nd to 8th hit of the whole kit. The rest stays dry · drag, double-click resets'; const P=MG_MODES[S.fx.mgMode|0]||{}, on=!!(P.res||P.comb||P.cos); kd.classList.toggle('dis',!on); kd.title=on?'How long Resonate rings and how long Comb and Cosmos keep repeating. Longer is quieter per ring, so it does not swamp the drums · drag, double-click resets':'Decay works with Resonate, Comb and Cosmos; '+(MG_NAMES[S.fx.mgMode|0]||'this mode')+' has no ring or repeats to set'; };   // v124: Decay greys out where it does nothing
     const u=()=>{ cb.checked=!!S.fx.mgOn; U.classList.toggle('off',!S.fx.mgOn); kw.upd(); }; u(); UPD.push(u);
-    cb.onchange=()=>{ S.fx.mgOn=cb.checked; u(); if(AG) magicSync(AG); save(); }; }
+    cb.onchange=()=>{ S.fx.mgOn=cb.checked; u(); layerFade(AG&&AG.mg,cb.checked,()=>{ if(AG) magicSync(AG); }); save(); }; }
   { // Space (Simple view): one knob for reverb return and the delay send. It writes the real settings, so Full shows the result.
     const dlFrom=v=>v<=70 ? .08*v/70 : .08+(v-70)/30*.22;
     const ks=makeKnob({label:'Space',min:0,max:100,step:1,get:()=>Math.round((S.fx.rvOn?S.fx.rvLevel:0)*100),
