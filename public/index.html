@@ -899,9 +899,9 @@ input,select{accent-color:var(--accent)}
         <div class="wstrip" id="leadStrip"><button class="btn" id="leadLock" aria-pressed="false" title="Lock the line: the lead keeps playing these bars exactly as they are">Lock</button><span class="seg lineseg" id="leadLine" role="group" aria-label="Which line the lead plays" title="Mine: the line you recorded in Worp (Rec 2 bars). Worp: the melody Worp makes itself. Your line stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Worp</button></span><button class="btn" id="leadNew" title="New sound: another Worp lead, playing the same melody (the old one stays in undo)">New sound</button><button class="btn" id="leadPat" title="New pattern: another melody, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="LEAD"><b id="leadName"></b><small id="leadCode"></small></span><span class="wms" id="leadMutes" aria-label="Mute lead layers"></span><a class="btn wportal" id="leadOpen" href="worp/" target="worp" rel="opener" title="Open this lead in Worp, over Ngoma: every sound you pick there and every change plays in Ngoma"><span class="wpo">Open in</span><span class="wpw">WORP</span></a></div></div>
     </div>
     <div class="fxg magic fldu" id="fldU">
-      <div class="fxh"><span class="lbl" title="A field recording under the drums: a place, not an instrument. With Tune it sings your chords">Field</span><label class="chk"><input id="fldOn" type="checkbox"> On</label></div>
+      <div class="fxh"><span class="lbl" title="Texture: a field recording far under the drums, a place rather than an instrument. With Tune it sings your chords">Texture</span><label class="chk"><input id="fldOn" type="checkbox"> On</label></div>
       <div class="fxc"><div class="knrow"><div id="fldSlot"></div></div>
-        <div class="wstrip" id="fldStrip"><select id="fldSel" aria-label="Recording" title="Which recording plays"></select><button class="btn" id="fldFile" type="button" title="Play your own recording (wav, mp3, m4a, ogg). It stays in this browser">Your file…</button><input type="file" id="fldIn" accept="audio/*" hidden><span class="wname lcd" data-lcd="FIELD"><b id="fldName"></b><small id="fldCred"></small></span></div></div>
+        <div class="wstrip" id="fldStrip"><select id="fldSel" aria-label="Recording" title="Which recording plays"></select><button class="btn" id="fldFile" type="button" title="Play your own recording (wav, mp3, m4a, ogg). It stays in this browser">Your file…</button><input type="file" id="fldIn" accept="audio/*" hidden><span class="wname lcd" data-lcd="TEXTURE"><b id="fldName"></b><small id="fldCred"></small></span></div></div>
     </div>
     <div class="fxg magic" id="spaceU">
       <div class="fxh"><span class="lbl" title="How much room is around the drums: reverb and echo together">Space</span></div>
@@ -1166,7 +1166,7 @@ input,select{accent-color:var(--accent)}
   <dl>
     <dt>Pad</dt><dd>A soft layer under the drums. <i>Worp</i> throws a new patch from Ngoma's sister synth; <i>Classic</i> has six pads of its own.<details class="g-more"><summary>More</summary><p><b>Worp:</b> every throw is a patch of up to four sources with slow modulation that keeps re-patching itself. <i>New</i> throws another, the numbered buttons mute its layers, <i>Open in Worp</i> opens Worp over Ngoma while Ngoma keeps playing (<i>Ngoma</i> or Esc brings you back). Whatever you pick or change there plays here at once; ← undoes a new sound.</p><p><b>Classic types:</b> <i>Bed</i>, one chord per bar. <i>Loops</i>, five tone fragments on their own lengths, like a Buddha Machine. <i>Tides</i>, a four-voice chord whose voices swell on their own cycles. <i>Echoes</i>, two short phrases into a darkening tape echo. <i>Seasons</i> and <i>Cloud</i>, a slow chord walk with shared notes held, as a warm pad or a cloud of grains.</p><p><b>Knobs:</b> <i>Level</i> (0 is really off), <i>Move</i> (how far the filter breathes, or how deep a Worp gate dips), <i>Filter</i> (low-pass to the left, high-pass to the right), <i>Reverb</i> and <i>Echo</i>, and <i>Pitch</i> (up a fourth, a fifth or an octave). Off at the first start.</p></details></dd>
     <dt>Lead</dt><dd>A struck or plucked melody from Worp, in time and with the swing of the drums. Off by default.<details class="g-more"><summary>More</summary><p>Every lead has one of nine ways of making its line, shown next to its code: <i>Bounce</i> (after Dillon Bastan's Bouncy Notes), <i>Anchor</i> (the rhythm of the tradition's timeline), <i>Triplets</i>, <i>Loop</i>, <i>Phase</i> (after Steve Reich), <i>Modules</i> (after Terry Riley's In C), <i>Additive</i> (after Philip Glass), <i>Isorhythm</i> and <i>Pulse</i> (after Music for 18 Musicians). The sounds: marimba, vibraphone, kalimba, balafon, soft electric piano, reed, celesta or music box.</p><p><b>Knobs:</b> <i>Level</i>, <i>Complexity</i> (left repeats longer and stays on the grid, right moves on sooner and bounces freely), <i>Filter</i>, <i>Reverb</i>, <i>Echo</i> and <i>Pitch</i>. <i>New sound</i> throws another sound and keeps the melody, <i>New pattern</i> another melody on the same sound, <i>Lock</i> keeps the current bars exactly as they are.</p><p><b>Your own line:</b> <i>Rec 2 bars</i> in Worp records one (a count-in, then two bars, quantized with the drums' swing). <b>Mine | Worp</b> switches between your line and Worp's.</p></details></dd>
-    <dt>Field</dt><dd>A field recording under the drums: a place rather than an instrument, in the spirit of Chris Watson and Jake Muir. Off by default.<details class="g-more"><summary>More</summary><p>Seven recordings by Félix Blume, all CC0 (public domain): a castle moat through hydrophones, a forest at night in Mexico, wind in a wire fence, dawn in the Amazon, ice on an alpine lake, a night in Port-au-Prince with the city far away, and a contact microphone on a bat nest. <i>Your file…</i> plays your own recording; it stays in this browser.</p><p><b>Distance</b> pushes the place away: darker, quieter, more reverb. <b>Drift</b> lets the recording come apart into slow, overlapping grains at lower speeds, so it floats instead of running. <b>Tune</b> sends it through narrow filters on the tones of the current chord, so wind, water or insects start to sing the harmony. The low drums duck it a little. Everything is seeded, so the export sounds as you hear it, and loops without a seam.</p></details></dd>
+    <dt>Texture</dt><dd>A field recording far under the drums, as a background texture: a place rather than an instrument, in the spirit of Chris Watson and Jake Muir. Off by default.<details class="g-more"><summary>More</summary><p>Seven recordings by Félix Blume, all CC0 (public domain): a castle moat through hydrophones, a forest at night in Mexico, wind in a wire fence, dawn in the Amazon, ice on an alpine lake, a night in Port-au-Prince with the city far away, and a contact microphone on a bat nest. <i>Your file…</i> plays your own recording; it stays in this browser.</p><p><b>Filter</b> darkens it (left) or thins it out of the way of the drums (right). <b>Distance</b> pushes the place away: darker, quieter, more reverb. <b>Drift</b> lets the recording come apart into slow, overlapping grains at lower speeds, so it floats instead of running. <b>Tune</b> sends it through narrow filters on the tones of the current chord, so wind, water or insects start to sing the harmony. The low drums duck it a little. Everything is seeded, so the export sounds as you hear it, and loops without a seam.</p></details></dd>
     <dt>Magic</dt><dd>Seven characters that work on the sound, not the rhythm. <i>Amount</i> says how far; everything stays in tune and in the export.<details class="g-more"><summary>More</summary><p><b>Breath</b>: gentle life in timing and dynamics. <b>Resonate</b>: sympathetic strings on your key that ring with every stroke; <i>Chord</i> picks their notes (and with Chords on they follow the scheme). <b>Comb</b>: a tuned comb that moves to another note every two bars. <b>Air</b>: harmonics and sheen on top. <b>Formant</b>: two vowel filters, as if the kit speaks. <b>Cosmos</b>: a drifting echo after the SOMA Cosmos, two echo lines that drift apart and meet again. <b>Ghosts</b>: a tiny grain of a hit comes back a few steps later, quiet and far left or right.</p><p><b>Decay</b> sets how long Resonate rings and Comb and Cosmos repeat. <b>Every</b> sends only every 2nd to 8th hit into Magic; the rest stays dry. <b>Echo</b> gives Magic its own dub echo. With Ghosts, <b>Chance</b> sets how often and <b>Hard</b> how present.</p></details></dd>
   </dl>
 </section>
@@ -2544,7 +2544,7 @@ let oOpen=()=>{}, oHas=()=>false;
 const M4L={on:false,lat:.021,off:0,sr:48000,pos:null,e:0,ran:false};
 try{ const raw=localStorage.getItem('ngoma.v1'); if(raw){ const o=JSON.parse(raw); if(o && o.lanes){ S=Object.assign(S,o); S.lanes=lanesFrom(o.lanes,S.res||4); restored=true; } } }catch(e){}
 // v117: older Pad/Lead settings once converted: Cutoff (1 = open) becomes the left half of Filter, FX becomes Reverb and Echo
-function migrateFx(F){ if(!F) return F; if(F.rvShim==null) F.rvShim=.65;   /* v162 */ if(F.mVer!==1){ F.vetOn=true; F.vetAmt=.3; if(F.room==null) F.room=.25; if(F.width==null) F.width=1; F.mVer=1; }   /* v148: Phat became Master, on at 30% */ ['pad','lead'].forEach(u=>{ const c=F[u+'Cut'], x=F[u+'Fx'];
+function migrateFx(F){ if(!F) return F; if(F.rvShim==null) F.rvShim=.65;   /* v162 */ if(F.dlCrv!==1){ if(F.dlLevel>0) F.dlLevel=+Math.sqrt(F.dlLevel).toFixed(3); F.dlCrv=1; }   /* v170: Delay Return on a curve, saved sound unchanged */ if(F.mVer!==1){ F.vetOn=true; F.vetAmt=.3; if(F.room==null) F.room=.25; if(F.width==null) F.width=1; F.mVer=1; }   /* v148: Phat became Master, on at 30% */ ['pad','lead'].forEach(u=>{ const c=F[u+'Cut'], x=F[u+'Fx'];
     if(c!=null&&F[u+'Flt']==null) F[u+'Flt']=c<.995?-(1-c):0; if(x!=null){ if(F[u+'Rv']==null) F[u+'Rv']=x; if(F[u+'Ec']==null) F[u+'Ec']=x; }
     delete F[u+'Cut']; delete F[u+'Fx']; }); return F; }
 function migrateSnap(js){ try{ const o=JSON.parse(js); if(!o||!o.fx) return js; migrateFx(o.fx); return JSON.stringify(o); }catch(e){ return js; } }
@@ -3639,7 +3639,8 @@ function padRare(ctx,P,g,now,root,degs,bar,mv,salt){ const b=g/(4*S.res)|0, q=i=
     gn.gain.setValueAtTime(0,now); gn.gain.linearRampToValueAtTime(.04,now+bar); gn.gain.linearRampToValueAtTime(0,now+bar*2+2); nz.connect(bp).connect(gn); } }
 function buildPad(ctx,master,rvIn){ const bus=ctx.createGain(), hp=bq(ctx,'highpass',110,.6), lp=bq(ctx,'lowpass',900,2.2), out=ctx.createGain(), send=ctx.createGain();
   out.gain.value=0; send.gain.value=0; const gate=ctx.createGain(), cut=bq(ctx,'lowpass',20000,.5);   // v85: Cutoff knob, after the breathing filter, also on the reverb send
-  const hpf=bq(ctx,'highpass',10,.6); bus.connect(gate).connect(hp).connect(lp).connect(cut).connect(hpf).connect(out).connect(master); hpf.connect(send).connect(rvIn);
+  const hpf=bq(ctx,'highpass',10,.6), wpk=bq(ctx,'peaking',2000,.6), wsh=bq(ctx,'highshelf',5000,.7); wpk.gain.value=0; wsh.gain.value=0;   /* v170: presence and air, Worp pads only */
+  bus.connect(gate).connect(hp).connect(lp).connect(wpk).connect(wsh).connect(cut).connect(hpf).connect(out).connect(master); hpf.connect(send).connect(rvIn);
   // tape echo for Echoes: before the gate, so Stop fades the repeats too; every repeat comes back darker and with a little wow
   const eIn=ctx.createGain(), d=ctx.createDelay(12), fb=ctx.createGain(), fl=bq(ctx,'lowpass',2600,.5), fh=bq(ctx,'highpass',160,.5), eOut=ctx.createGain(), w=ctx.createOscillator(), wg=ctx.createGain();
   eIn.gain.value=0; fb.gain.value=0; eOut.gain.value=0; w.frequency.value=.21; wg.gain.value=.004; w.connect(wg).connect(d.delayTime); w.start();
@@ -3649,8 +3650,8 @@ function buildPad(ctx,master,rvIn){ const bus=ctx.createGain(), hp=bq(ctx,'highp
   const nz=ctx.createBufferSource(); nz.buffer=noiseBuf(ctx); nz.loop=true; const nzh=bq(ctx,'highpass',250,.5), nzl=bq(ctx,'lowpass',2800,.5), nzg=ctx.createGain(); nzg.gain.value=0;
   const nzw=ctx.createOscillator(), nzwg=ctx.createGain(); nzw.frequency.value=.05; nzwg.gain.value=0; nzw.connect(nzwg).connect(nzg.gain); nzw.start(); nz.connect(nzh).connect(nzl).connect(nzg).connect(bus); nz.start();
   const dub=buildDub(ctx,out,master);
-  return {bus,hp,lp,cut,hpf,cwc,out,send,gate,echo:{eIn,d,fb,eOut},cw,nz:{g:nzg,w:nzwg},dub}; }
-const PAD_TRIM=[1,.94,1,1.62,1.03,1.41,1.22,1.2];   // v85: per type, so every type sits at the same level for the same Level setting
+  return {bus,hp,lp,wpk,wsh,cut,hpf,cwc,out,send,gate,echo:{eIn,d,fb,eOut},cw,nz:{g:nzg,w:nzwg},dub}; }
+const PAD_TRIM=[1,.94,1,1.62,1.03,1.41,1.22,1.4];   /* v170: Worp 1.2 -> 1.4, the low end it lost */   // v85: per type, so every type sits at the same level for the same Level setting
 function padCutHz(v){ return v>=.995?20000:140*Math.pow(2,v*6.6); }   // 0 = 140 Hz, 1 = open
 /* Pad and Lead controls (v113, v115): Filter (left low-pass, middle open, right high-pass), Reverb and Echo (their own space, apart
    from the drums) and Pitch (0, +5, +7, +12; Worp sounds move +5 and +7 in scale steps, so they stay in key). */
@@ -3672,7 +3673,11 @@ function padSync(G){ const P=G&&G.pad; if(!P) return; const F=S.fx, on=padLive(G
   if(P.cw) setG(P.cw.gain,on&&pty===6?.8*Math.min(1,l/.35)*unitWet(F,'pad'):0);
   dubSync(G,P.dub,F.padEc??.5,on&&!(live&&worpAud()));
   if(P.cut){ const f=fltHz(unitFlt(F,'pad')), fq=fltQ(unitFlt(F,'pad')); setG(P.cut.frequency,f.lp); setG(P.cut.Q,fq.lq); if(P.hpf){ setG(P.hpf.frequency,f.hp); setG(P.hpf.Q,fq.hq); } if(P.cwc) setG(P.cwc.frequency,Math.min(20000,f.lp*1.2)); }
-  if(P.hp) setG(P.hp.frequency,pty===0?110:38);
+  if(P.hp) setG(P.hp.frequency,pty===0?110:pty===7?160:38);
+  /* v170 (Jesse: a Worp pad at high level hardly comes through, it sounds muffled). Its patches put half their energy under 200 Hz, where the
+     kick and surdo are, and little in 1 to 4 kHz, so the drums mask it. A Worp pad now loses the low end under 160 Hz and gets +5 dB of
+     presence around 2 kHz and +3 dB of air above 5 kHz; the level trim makes up for the lows taken out. */
+  if(P.wpk){ setG(P.wpk.gain,pty===7?5:0); setG(P.wsh.gain,pty===7?3:0); }
   if(P.nz){ const nv=on&&pty!==0&&pty!==7?.010*(F.padNoise??1):0; setG(P.nz.g.gain,nv); setG(P.nz.w.gain,nv*.5); }                                                   // v85: Bed as it was; the other types reach down into the low end
   const E=P.echo, ec=on&&pty===4, mv=F.padMove??.5; if(E){ setG(E.eIn.gain,ec?.8:0); setG(E.fb.gain,ec?.6+.15*mv:0); setG(E.eOut.gain,ec?Math.min(1.2,unitEcho(F,'pad')/.6):0);
     const dt=Math.min(11.5,6*S.res*stepDur(S)); if(live) E.d.delayTime.setTargetAtTime(dt,G.ctx.currentTime,.1); else E.d.delayTime.value=dt; }
@@ -3782,7 +3787,7 @@ const FLD_SRC=[
  ['ice','Lake ice','Ice melting and crackling on the surface of an alpine lake in Switzerland.',133754,-2.2,-1.8],
  ['city','Far city','A night in Port-au-Prince, Haiti: crickets, dogs, voices, and the city very far away.',395939,-1.3,3.2],
  ['bats','Bat nest','A contact microphone on a nest as hundreds of bats fly out at twilight, southern France.',245811,-5.1,-0.3]];
-const FLD={buf:{},load:{},own:null,ownName:'',ownP:null,err:''}, FLD_TRIM=1.9, FLD_BANK=3.2;   /* per recording: level and Tune trim in dB, measured (K-weighted) so each sits about 14 LU under the drums at 40% */
+const FLD={buf:{},load:{},own:null,ownName:'',ownP:null,err:''}, FLD_TRIM=.3, FLD_BANK=3.2;   /* v170 (Jesse: at 9% already loud, which was about 18 LU under the drums; it is a background texture): 100% now sits about 13 LU under the drums, 40% about 25, 9% about 44, measured through the full master chain */   /* per recording: level and Tune trim in dB, measured (K-weighted) so each sits about 14 LU under the drums at 40% */
 function fldTrim(k){ const I=fldInfo(fldId()); return I?Math.pow(10,(I[4+k]||0)/20):1; }
 function fldId(){ const id=S.fx.fldSrc||'water'; return id==='own'||FLD_SRC.some(x=>x[0]===id)?id:'water'; }
 function fldInfo(id){ return FLD_SRC.find(x=>x[0]===id)||null; }
@@ -3805,14 +3810,15 @@ function fldOwnLoad(){ if(FLD.ownP) return FLD.ownP; return FLD.ownP=(async()=>{
 async function fldOwnSet(file){ try{ const ab=await file.arrayBuffer(), b=await fldDecode(ab.slice(0)); FLD.own=fldNorm(b); FLD.ownName=file.name.replace(/\.[^.]+$/,'').slice(0,60); FLD.ownP=Promise.resolve(FLD.own); kvSet('fldOwn',{name:FLD.ownName,ab}); return true; }catch(e){ return false; } }
 function buildField(ctx,master,rvIn){ const lg=ctx.createGain(), gg=ctx.createGain(), hp=bq(ctx,'highpass',70,.7), lp=bq(ctx,'lowpass',16000,.5), dry=ctx.createGain(), bank=ctx.createGain(), duck=ctx.createGain(), out=ctx.createGain(), send=ctx.createGain();
   gg.gain.value=0; bank.gain.value=0; out.gain.value=0; send.gain.value=0; lg.connect(hp); gg.connect(hp); hp.connect(dry).connect(lp); const bp=[];
-  for(let k=0;k<5;k++){ const f=bq(ctx,'bandpass',440,14); hp.connect(f); f.connect(bank); bp.push(f); } bank.connect(lp); const gate=ctx.createGain(); lp.connect(duck).connect(gate).connect(out).connect(master);   /* gate: Stop fades the grains too */ out.connect(send).connect(rvIn);
-  const dub=buildDub(ctx,out,master); return {lg,gg,hp,lp,dry,bank,bp,duck,gate,out,send,dub,loop:null,id:'',on:false}; }
+  for(let k=0;k<5;k++){ const f=bq(ctx,'bandpass',440,14); hp.connect(f); f.connect(bank); bp.push(f); } bank.connect(lp); const gate=ctx.createGain(), cut=bq(ctx,'lowpass',20000,.5), hpf=bq(ctx,'highpass',10,.6); lp.connect(cut).connect(hpf).connect(duck).connect(gate).connect(out).connect(master);   /* v170: Filter, as on Pad and Lead */   /* gate: Stop fades the grains too */ out.connect(send).connect(rvIn);
+  const dub=buildDub(ctx,out,master); return {lg,gg,hp,lp,cut,hpf,dry,bank,bp,duck,gate,out,send,dub,loop:null,id:'',on:false}; }
 function fldLive(){ const F=S.fx; return !!F.fldOn && (S.renderOnly==null||S.renderOnly===-3) && (F.fldLvl??.4)>.005; }   /* -3: the field stem */
 function fldHz(g){ const sc=padSc(), n=sc.length, d=chordAt(g), R=[[180,900],[180,900],[180,900],[900,2400],[2400,6000]]; return [d,d+2,d+4,d+n,d+n+2].map((x,k)=>{ let f=mtof(48+S.key+sc[((x%n)+n)%n]+12*Math.floor(x/n)); while(f>R[k][1]) f/=2; while(f<R[k][0]) f*=2; return f; }); }   /* three tones low, one in the middle, one high, so insects and wind can sing too */
 function fldStopLoop(G,fade){ const P=G&&G.fld, L=P&&P.loop; if(!L) return; const n=G.ctx.currentTime; try{ L.fg.gain.cancelScheduledValues(n); L.fg.gain.setTargetAtTime(0,n,fade/3); L.s.stop(n+fade+.1); }catch(e){} P.loop=null; }
 function fldSync(G){ const P=G&&G.fld; if(!P) return; const F=S.fx, b=fldBuf(), on=fldLive()&&!!b, l=F.fldLvl??.4, d=F.fldDist??.35, dr=F.fldDrift??0, tu=F.fldTune??0;
   const live=!(G.ctx instanceof OfflineAudioContext), setG=(pr,v)=>{ if(live) pr.setTargetAtTime(v,G.ctx.currentTime,.08); else pr.value=v; };
-  P.on=on; setG(P.out.gain,on?l*FLD_TRIM*(b._g||1)*fldTrim(0)*(1-.45*d):0); setG(P.send.gain,on?(.12+.55*d)*unitWet(F,'fld'):0); setG(P.lp.frequency,16000*Math.pow(1000/16000,d));
+  P.on=on; setG(P.out.gain,on?Math.pow(l,1.5)*FLD_TRIM*(b._g||1)*fldTrim(0)*(1-.45*d):0);   /* v170: Level on a curve, so the low half of the knob is usable */
+  { const f=fltHz(unitFlt(F,'fld')), fq=fltQ(unitFlt(F,'fld')); setG(P.cut.frequency,f.lp); setG(P.cut.Q,fq.lq); setG(P.hpf.frequency,f.hp); setG(P.hpf.Q,fq.hq); } setG(P.send.gain,on?(.12+.55*d)*unitWet(F,'fld'):0); setG(P.lp.frequency,16000*Math.pow(1000/16000,d));
   setG(P.lg.gain,1-.85*dr); setG(P.gg.gain,1.5*dr); setG(P.dry.gain,1-.8*tu); setG(P.bank.gain,FLD_BANK*fldTrim(1)*tu); dubSync(G,P.dub,F.fldEc??.5,on);
   if(live&&P.loop&&(!on||P.id!==fldKey())) fldStopLoop(G,on?1.5:.4);   /* off, or another recording: the old one fades, the new one starts on the next step */
   if(F.fldOn&&!b) fldLoad(); }
@@ -4055,7 +4061,7 @@ function syncFx(G){
       h.w.gain.value=ti*(.0022+F.dlAnim*.004); h.f.gain.value=ti*.0006; h.lp.frequency.value=1600+F.dlTone*4200; });
     T.tLp.frequency.value=1600+F.dlTone*4200; T.init=true; }
   D.pL.l.frequency.value=D.pR.l.frequency.value=1800+F.dlTone*8000;
-  D.ret.gain.value=(G.dry||!F.dlOn)?0:F.dlLevel*.8;
+  D.ret.gain.value=(G.dry||!F.dlOn)?0:F.dlLevel*F.dlLevel*.8;   /* v170: on a curve */
   if(G.dlAll) G.dlAll.gain.value=(G.dry||!F.dlOn)?0:(F.dlSend??.08);
   D.wow.forEach(g=>g.gain.value=.0011+F.dlAnim*.0045);
 }
@@ -4607,7 +4613,7 @@ function initControls(){
   const rt=$('rvType'); Object.entries(RV_TYPES).forEach(([k,v])=>{ const o=document.createElement('option'); o.value=k; o.textContent=v.name+' · '+v.rt+' s'; rt.append(o); });
   const dt=$('dlTime'); Object.keys(DL_TIMES).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=k==='3/16'?'3/16 dotted':k==='1/8T'?'1/8 triplet':k;   /* v150: short enough for four fields on one line */ dt.append(o); });
   let irT; const fxSync=(heavy)=>{ animLive(); if(heavy){ clearTimeout(irT); irT=setTimeout(()=>syncGraph(AG),120); } else syncGraph(AG); $('rvOn').closest('.fxg').classList.toggle('off',!S.fx.rvOn); $('dlOn').closest('.fxg').classList.toggle('off',!S.fx.dlOn); save(); };
-  const fsel=(id,key,heavy)=>{ const el=$(id); el.value=S.fx[key]; UPD.push(()=>el.value=S.fx[key]); el.onchange=()=>{ S.fx[key]=el.value; fxSync(heavy); }; };
+  const fsel=(id,key,heavy)=>{ const el=$(id); el.value=S.fx[key]; UPD.push(()=>el.value=S.fx[key]); el.onchange=()=>{ S.fx[key]=el.value; fxSync(heavy); if(key==='rvType') UPD.forEach(f=>f()); }; };   /* v170: Length shows the new type's seconds */
   const fchk=(id,key)=>{ const el=$(id); el.checked=S.fx[key]; UPD.push(()=>el.checked=S.fx[key]); el.onchange=()=>{ S.fx[key]=el.checked; fxSync(); }; };
   const frng=(id,key,scale,fmt,heavy)=>{ const el=$(id), m=el.closest('.macro'), lab=m.querySelector('label');
     const kw=makeKnob({label:lab.textContent,min:+el.min,max:+el.max,step:1,get:()=>Math.round(S.fx[key]*scale),
@@ -4641,21 +4647,23 @@ function initControls(){
   { const cb=$('fldOn'), U=$('fldU'), sel=$('fldSel');   /* v168 Field */
     const mk=(label,key,def,sync=true)=>makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; if(sync) fldSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)});
     const kl=mk('Level','fldLvl',.4), kd=mk('Distance','fldDist',.35), kr=mk('Drift','fldDrift',0), kt=mk('Tune','fldTune',0);
+    const kc=makeKnob({label:'Filter',min:-100,max:100,step:1,get:()=>Math.round(unitFlt(S.fx,'fld')*100),set:v=>{ S.fx.fldFlt=v/100; fldSync(AG); save(); },fmt:fltFmt,def:0});
+    kc.title='Filter on the texture: left a low-pass (darker), right a high-pass (thinner, out of the way of the drums), middle open · drag, double-click opens it'; kc.classList.add('bi');
     const kx=makeKnob({label:'Reverb',min:0,max:100,step:1,get:()=>Math.round(unitWet(S.fx,'fld')/1.2*100),set:v=>{ S.fx.fldRv=v/100; fldSync(AG); save(); },fmt:v=>v+'%',def:50});
     const ke=makeKnob({label:'Echo',min:0,max:100,step:1,get:()=>Math.round(unitEcho(S.fx,'fld')/1.2*100),set:v=>{ S.fx.fldEc=v/100; fldSync(AG); save(); },fmt:v=>v+'%',def:50});
     kl.title='Volume of the recording · drag, double-click resets'; kd.title='How far away the place is: darker, quieter and more reverb to the right · drag, double-click resets';
     kr.title='To the left the recording runs as it was made; to the right it comes apart into slow, overlapping grains at lower speeds and floats · drag, double-click resets';
     kt.title='Sends the recording through narrow filters on the tones of the current chord, so the place starts to sing the harmony · drag, double-click resets';
     kx.title='How much reverb the recording gets, apart from the drums · drag, double-click resets'; ke.title='A dub echo on the recording. At 50% and below there is none · drag, double-click resets';
-    [kl,kd,kr,kt,kx,ke].forEach(k=>k.classList.add('big','mgk')); const wr=document.createElement('div'); wr.className='mgw'; wr.append(kl,kd,kr,kt,kx,ke); $('fldSlot').replaceWith(wr);
+    [kl,kc,kd,kr,kt,kx,ke].forEach(k=>k.classList.add('big','mgk')); const wr=document.createElement('div'); wr.className='mgw'; wr.append(kl,kc,kd,kr,kt,kx,ke); $('fldSlot').replaceWith(wr);
     FLD_SRC.forEach(([id,nm,ds])=>{ const o=document.createElement('option'); o.value=id; o.textContent=nm; o.title=ds; sel.append(o); }); { const o=document.createElement('option'); o.value='own'; o.textContent='Your file'; sel.append(o); }
-    const u=()=>{ cb.checked=!!S.fx.fldOn; U.classList.toggle('off',!S.fx.fldOn); [kl,kd,kr,kt,kx,ke].forEach(k=>k.upd()); fldUI(); }; u(); UPD.push(u);
+    const u=()=>{ cb.checked=!!S.fx.fldOn; U.classList.toggle('off',!S.fx.fldOn); [kl,kc,kd,kr,kt,kx,ke].forEach(k=>k.upd()); fldUI(); }; u(); UPD.push(u);
     cb.onchange=()=>{ S.fx.fldOn=cb.checked; u(); if(cb.checked) fldLoad(); fldSync(AG); save(); };
     sel.onchange=()=>{ const v=sel.value; if(v==='own'&&!FLD.own){ fldUI(); $('fldIn').click(); return; } hRecord(()=>{ S.fx.fldSrc=v; S.fx.fldOn=true; }); updHist(); save(); u(); fldLoad(); fldSync(AG); };
     $('fldFile').onclick=()=>$('fldIn').click();
-    $('fldIn').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return; if(f.size>80e6){ status('That file is too big for Field (over 80 MB).'); return; }
-      status('Reading '+f.name+'…'); const ok=await fldOwnSet(f); if(!ok){ status('Field could not read that file. Try wav, mp3, m4a or ogg.'); fldUI(); return; }
-      hRecord(()=>{ S.fx.fldSrc='own'; S.fx.fldOn=true; }); updHist(); save(); u(); fldSync(AG); status('Field plays your file: '+FLD.ownName+'. It stays in this browser.'); };
+    $('fldIn').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return; if(f.size>80e6){ status('That file is too big for Texture (over 80 MB).'); return; }
+      status('Reading '+f.name+'…'); const ok=await fldOwnSet(f); if(!ok){ status('Texture could not read that file. Try wav, mp3, m4a or ogg.'); fldUI(); return; }
+      hRecord(()=>{ S.fx.fldSrc='own'; S.fx.fldOn=true; }); updHist(); save(); u(); fldSync(AG); status('Texture plays your file: '+FLD.ownName+'. It stays in this browser.'); };
     if(S.fx.fldOn) fldLoad(); }
   { const cb=$('leadOn'), U=$('leadU');   // v106
     const kl=makeKnob({label:'Level',min:0,max:100,step:1,get:()=>Math.round((S.fx.leadLvl??.5)*100),set:v=>{ S.fx.leadLvl=v/100; leadSync(AG); save(); },fmt:v=>v+'%',def:50});
@@ -4720,7 +4728,7 @@ function initControls(){
   ['rvEvery','dlEvery'].forEach(id=>{ const el=$(id); if(!el) return; EV_OPTS.forEach(v=>{ const o=document.createElement('option'); o.value=String(v); o.textContent=v===1?'All hits':'Every '+evLbl(v); el.append(o); });
     const u=()=>{ el.value=String(evN(id)); }; u(); UPD.push(u); el.onchange=()=>{ S.fx[id]=+el.value; save(); }; });   /* v143 */
   { const vis=()=>{ const tp=S.fx.dlType==='tape'; document.querySelector('.dlheads').hidden=!tp; document.querySelector('.dlmode').hidden=tp; }; vis(); UPD.push(vis); $('dlType').addEventListener('change',vis); }
-  frng('rvSize','rvSize',100,v=>Math.round(v*100)+'%',true); frng('rvPre','rvPre',1,v=>Math.round(v)+' ms'); frng('rvTone','rvTone',100,v=>v<.34?'dark':v>.66?'bright':'neutral',true);
+  frng('rvSize','rvSize',100,v=>{ const s=((RV_TYPES[S.fx.rvType]||RV_TYPES.room).rt||1)*v; return (s<10?s.toFixed(1):Math.round(s))+' s'; },true);   /* v170: in seconds (the type's tail times Length) */ frng('rvPre','rvPre',1,v=>Math.round(v)+' ms'); frng('rvTone','rvTone',100,v=>v<.34?'dark':v>.66?'bright':'neutral',true);
   { const shk=frng('rvShim','rvShim',100,v=>v>.005?Math.round(v*100)+'%':'off'); const shv=()=>{ shk.hidden=S.fx.rvType!=='bloom'; }; shv(); UPD.push(shv); $('rvType').addEventListener('change',shv); }   /* v162: Shimmer, only with Bloom */
   frng('rvLevel','rvLevel',100,v=>Math.round(v*100)+'%'); frng('dlSend','dlSend',100,v=>Math.round(v*100)+'%'); frng('dlFb','dlFb',100,v=>Math.round(v*100)+'%'); frng('dlTone','dlTone',100,v=>v<.34?'dark':v>.66?'bright':'neutral'); frng('dlLevel','dlLevel',100,v=>Math.round(v*100)+'%'); frng('dlAnim','dlAnim',100,v=>v?Math.round(v*100)+'%':'off');
   const db=v=>(v>0?'+':'')+Math.round(v)+' dB';
@@ -5121,7 +5129,7 @@ async function exportLoop(){
         status('Rendering stem '+INSTR[i].name+'…'); S.renderOnly=i; try{ stems.push({id:INSTR[i].id,ch:await render(false)}); } finally{ S.renderOnly=null; } }
       if(S.fx.padOn && (S.fx.padLvl??.35)>.005){ status('Rendering stem Pad…'); S.renderOnly=-1; try{ stems.push({id:'pad',ch:await render(false)}); } finally{ S.renderOnly=null; } }
       if(S.fx.leadOn && (S.fx.leadLvl??.5)>.005){ status('Rendering stem Lead…'); S.renderOnly=-2; try{ stems.push({id:'lead',ch:await render(false)}); } finally{ S.renderOnly=null; } }
-      if(S.fx.fldOn && (S.fx.fldLvl??.4)>.005){ status('Rendering stem Field…'); S.renderOnly=-3; try{ stems.push({id:'field',ch:await render(false)}); } finally{ S.renderOnly=null; } } }
+      if(S.fx.fldOn && (S.fx.fldLvl??.4)>.005){ status('Rendering stem Texture…'); S.renderOnly=-3; try{ stems.push({id:'field',ch:await render(false)}); } finally{ S.renderOnly=null; } } }
     for(let k=stems.length-1;k>=0;k--){ let pk=0; stems[k].ch.forEach(c=>{ for(let i=0;i<n;i++) pk=Math.max(pk,Math.abs(c[i])); }); if(pk<1e-5) stems.splice(k,1); }   // a track that ends up silent (e.g. every stroke on the beat with Leave room for kick) gets no empty file
     status('Setting the level…');
     const lu=loudness(wet,sr), tp=Math.max(...[wet,dry,...stems.map(x=>x.ch)].filter(Boolean).map(truePeak));
@@ -5231,7 +5239,7 @@ function sceneRecall(k){ const sc=S.scenes[k]; if(!sc) return; onBar('scene:'+k,
    model, Magic mode, pad type or Worp pad, tuning) changes halfway. A rhythm on another grid (16ths against triplets) or a
    track whose length differs changes halfway too. The export always renders the scene as stored. */
 const MORPH={on:false};
-const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx','fldLvl','fldDist','fldDrift','fldTune','fldRv','fldEc'];
+const MLANE=['level','decay','pan','rev','dly','push','tvar'], MFX=['vetAmt','width','room','rvPre','rvTone','rvLevel','rvShim','dlFb','dlTone','dlLevel','dlAnim','dlSend','eqLow','eqMid','eqHigh','eqCut','eqRes','eqDrive','fEnv','fLfo','fHz','mgAmt','padLvl','padMove','padNoise','leadLvl','padFlt','leadFlt','padRv','padEc','leadRv','leadEc','mgDec','leadCx','fldLvl','fldDist','fldDrift','fldTune','fldRv','fldEc','fldFlt'];
 function morphCap(){ return {lanes:S.lanes.map(L=>{ const o={steps:L.steps.slice(),len:L.len,tpl:L.tpl,btpl:L.btpl,blen:L.blen,eu:L.eu,mute:L.mute,solo:L.solo,tune:L.tune,col:L.col,choke:L.choke};
       MLANE.forEach(f=>o[f]=L[f]); return o; }), fx:JSON.parse(JSON.stringify(S.fx)), fat:S.fat, swing:S.swing, humanize:S.humanize, res:S.res}; }
 function morphStart(sc,k){ const A=morphCap(); hRecord(()=>hApply(sc)); S.sceneCur=k; updHist();
