@@ -603,6 +603,11 @@ function genPatch(seed,kind){
   // barely resonant filter, triangle instead of saw underneath and a mild FM index
   if(!pad){P.fxs.chain=[];P.fxs.mix=0;P.filter.q=Math.min(P.filter.q,1.1);P.filter.env=Math.min(P.filter.env,1.5);if(P.filter.type==='bandpass')P.filter.type='lowpass';P.filter.lfoDepth=Math.min(P.filter.lfoDepth,300);
     P.layers.forEach((L,i)=>{if(!i)return;if(L.engine==='air')L.level=0;if(L.engine==='saw'){L.wave='triangle';L.n=Math.min(L.n,2);L.detune=Math.min(L.detune,6)}if(L.engine==='fm'){L.index=Math.min(L.index,2);L.idxSus=Math.min(L.idxSus||0,.3)}})}
+  /* v1.28 (Jesse: leads and pads sound dull and closed, as if the highs are cut off; measured: centroid about 400 Hz, under 1% above
+     2 kHz). The soft limits were too strict, and Ngoma's layer Filter darkens a sound when you want it: the patch filter opens up, a pad's
+     a little less than a lead's, and leads no longer drop an octave. */
+  if(!pad){P.filter.cut=Math.min(16000,Math.max(6000,P.filter.cut*3));P.layers.forEach(L=>{if(L.oct<0)L.oct=0})}
+  else P.filter.cut=Math.min(12000,Math.max(2000,P.filter.cut*2.2));
   genMods(r,P);
   P.mix=[1,1,1,1];P.mute=[false,false,false,false];
   return P;
@@ -1500,7 +1505,7 @@ async function initMIDI(){
   }catch(e){midiStatus('MIDI blocked in this view. Open the standalone page in Chrome.')}
 }
 function onMidi(e){
-  if(EMBED&&!PANEL)return;   // v1.16: with Worp closed over Ngoma, Ngoma plays your keys
+  if(EMBED&&!e.fwd)return;   /* v1.28 (Jesse: MIDI works in Ngoma, not after switching to Worp): inside Ngoma, Ngoma passes your keys on while the panel is open; Worp's own MIDI access in the panel did not always get them */
   const[st,d1,d2=0]=e.data,cmd=st&0xf0;
   const isOn=cmd===0x90&&d2>0,isOff=cmd===0x80||(cmd===0x90&&d2===0);
   if(learn){if(isOn||(cmd===0xB0&&d2>0)){midiMap[learn]={type:isOn?'note':'cc',num:d1};learn=null;save();renderLearn()}return}
@@ -1585,12 +1590,13 @@ let toastT=0;function toast(msg){const t=$('#toast');t.textContent=msg;t.hidden=
 function focusNgoma(){try{if(window.opener&&!window.opener.closed){window.opener.focus();return true}}catch(e){}return false}
 // Ngoma talks to Worp in two ways: postMessage when Worp runs inside Ngoma (the Worp panel), and a BroadcastChannel when
 // Worp runs in its own tab. The messages are the same.
-const EMBED=window.parent!==window;
+const EMBED=window.parent!==window;let MIDIFWD=false;
 function toNgoma(m){if(EMBED){try{window.parent.postMessage(m,'*')}catch(e){}}else if(BC)BC.postMessage(m)}
 function onHostMsg(m){
   if(!m||typeof m!=='object')return;
   if(m.t==='load'){const h=parseToken('#'+m.token);if(h){if(h.kind!==state.mode)setMode(h.kind);setFLT(h.flt||FLT_OPEN);setENV(h.env);const P=fromHist(h);uniqueName(P);setPatch(P)}return}
   if(m.t==='rec'){m.on?recStart(m.epoch):recStop();return}
+  if(m.t==='midi'){if(!MIDIFWD){MIDIFWD=true;try{midiStatus('Your keys, via Ngoma',true)}catch(x){}}onMidi({data:m.data,fwd:true});return}
   if(m.t==='panel'){PANEL=!!m.open;if(PANEL){}else{LINK.armed=false;if(S.playing&&cur().kind==='pad')stopPlay()}renderLive();return}
   if(m.t==='got'){clearTimeout(useT);toast('Sent to Ngoma. It plays there now.');return}
   if(m.t!=='state')return;const was=ngomaOpen();

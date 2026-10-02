@@ -44,7 +44,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
 
   await check('Lead sounds and sits in the mix', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), db = v => 20 * Math.log10(v + 1e-9), out = [];
       S.bars = 2; S.fx.leadOn = true; S.fx.leadLvl = .5;
-      for (const sd of [4242, 12163, 20084]) { S.fx.wlead = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] };
+      for (const sd of [4242, 12163, 20084]) { S.fx.wlead = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] }; await leadMeasure(S.fx.wlead);   /* v174: with its per-patch gain, as it plays live */
         const m = await renderLoop(false, 22050); S.renderOnly = -2; const l = await renderLoop(false, 22050); S.renderOnly = null; out.push(+(db(rms(l[0])) - db(rms(m[0]))).toFixed(1)); }
       return out; }, rmsJS); assert(r.every(x => x > -16 && x < -3), 'lead vs mix dB ' + r.join(' ')); return 'lead ' + r.join(' / ') + ' dB under mix'; });
 
@@ -86,10 +86,11 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
   await check('Worp panel: keys play Ngoma lead, record a line on the grid, Mine | Worp', async () => {
     await p.evaluate(() => { S.fx.leadOn = true; if (!playing) start(); worpPanel(true, worpToken(leadSpec(), 'lead')); }); await p.waitForTimeout(2500);
     const f = p.frames().find(x => x.url().includes('/worp')); assert(f, 'no Worp frame'); f.page();
-    const r1 = await f.evaluate(async () => { initAudio(); onMidi({ data: [0x90, 67, 110] }); const routed = KEYS_NG.size; await new Promise(r => setTimeout(r, 200)); onMidi({ data: [0x80, 67, 0] }); return { routed, kind: cur().kind }; });
-    assert(r1.kind === 'lead' && r1.routed === 1, 'keys not routed to Ngoma');
+    await f.evaluate(() => initAudio()); await p.evaluate(() => ngMidi({ data: [0x90, 67, 110] })); await p.waitForTimeout(200);   /* v174: the keys come in through Ngoma, which passes them to the panel */
+    const r1 = await f.evaluate(() => ({ routed: KEYS_NG.size, kind: cur().kind, fwd: MIDIFWD })); await p.evaluate(() => ngMidi({ data: [0x80, 67, 0] }));
+    assert(r1.kind === 'lead' && r1.routed === 1 && r1.fwd, 'keys not routed to Ngoma ' + JSON.stringify(r1));
     await f.evaluate(() => recLine()); const wait = await f.evaluate(() => REC.start - ctx.currentTime); await p.waitForTimeout(wait * 1000 + 300);
-    await f.evaluate(async () => { const w = ms => new Promise(r => setTimeout(r, ms)); await w(90); onMidi({ data: [0x90, 64, 100] }); await w(250); onMidi({ data: [0x80, 64, 0] }); await w(330); onMidi({ data: [0x90, 67, 90] }); await w(120); onMidi({ data: [0x80, 67, 0] }); });
+    await f.evaluate(async () => { const w = ms => new Promise(r => setTimeout(r, ms)); await w(90); onMidi({ fwd: true, data: [0x90, 64, 100] }); await w(250); onMidi({ fwd: true, data: [0x80, 64, 0] }); await w(330); onMidi({ fwd: true, data: [0x90, 67, 90] }); await w(120); onMidi({ fwd: true, data: [0x80, 67, 0] }); });
     const endIn = await f.evaluate(() => REC.end - ctx.currentTime); await p.waitForTimeout(endIn * 1000 + 1200);
     const r2 = await p.evaluate(() => { const R = leadSpec().rec, sg = document.getElementById('leadLine'), mine = sg.querySelector('[data-l=mine]'), wo = sg.querySelector('[data-l=worp]');
       const a = { n: R && R.notes.length, shown: !sg.hidden && !mine.disabled, grid: R && R.notes.every(x => Math.abs(x.s - Math.round(x.s)) < .34 && Math.abs(x.d - Math.round(x.d)) < 1e-6)   /* v167: an offbeat lands on the drums' swing (7.16 with swing), which is on the grid as Ngoma plays it */ , notes: R && JSON.stringify(R.notes) };

@@ -805,6 +805,10 @@ input,select{accent-color:var(--accent)}
 /* v165: eleven traditions on one line */
 .tab{padding:7px 7px;font-size:13.5px}
 @media (max-width:1100px){.tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}}
+/* v174 (Jesse: the Texture knobs do not sit on one row): Texture has seven knobs, the shared grid has five plus one */
+.zlayers #fldU .mgw{grid-template-columns:repeat(7,84px)!important}
+@media (max-width:900px){.zlayers #fldU .mgw{grid-template-columns:repeat(7,68px)!important}}
+@media (max-width:560px){.zlayers #fldU .mgw{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
 /* v173 Lead v2 row */
 .lvrow{margin-top:10px}.lvw{display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px 22px}.lvw .knob.dim{opacity:.38}
 .lvw .knob.segk,.lvw .knob.selk{width:auto}.lvw .selk select{min-width:128px;height:30px}
@@ -1421,6 +1425,11 @@ function genPatch(seed,kind){
   // barely resonant filter, triangle instead of saw underneath and a mild FM index
   if(!pad){P.fxs.chain=[];P.fxs.mix=0;P.filter.q=Math.min(P.filter.q,1.1);P.filter.env=Math.min(P.filter.env,1.5);if(P.filter.type==='bandpass')P.filter.type='lowpass';P.filter.lfoDepth=Math.min(P.filter.lfoDepth,300);
     P.layers.forEach((L,i)=>{if(!i)return;if(L.engine==='air')L.level=0;if(L.engine==='saw'){L.wave='triangle';L.n=Math.min(L.n,2);L.detune=Math.min(L.detune,6)}if(L.engine==='fm'){L.index=Math.min(L.index,2);L.idxSus=Math.min(L.idxSus||0,.3)}})}
+  /* v1.28 (Jesse: leads and pads sound dull and closed, as if the highs are cut off; measured: centroid about 400 Hz, under 1% above
+     2 kHz). The soft limits were too strict, and Ngoma's layer Filter darkens a sound when you want it: the patch filter opens up, a pad's
+     a little less than a lead's, and leads no longer drop an octave. */
+  if(!pad){P.filter.cut=Math.min(16000,Math.max(6000,P.filter.cut*3));P.layers.forEach(L=>{if(L.oct<0)L.oct=0})}
+  else P.filter.cut=Math.min(12000,Math.max(2000,P.filter.cut*2.2));
   genMods(r,P);
   P.mix=[1,1,1,1];P.mute=[false,false,false,false];
   return P;
@@ -2308,8 +2317,8 @@ const PRESETS = [
   {id:'minimaltech', trad:'hyp', name:'Minimal techno', res:4, tempo:126, groove:'mpc16', swing:.18, mix:{surdo:.95,conga:.6}, sends:{clave:{dly:.45},cajon:{dly:.3}},
    desc:'Minimal techno and microhouse, after the Perlon and Cocoon sound of Ricardo Villalobos and his circle: a steady kick on the surdo, a clean offbeat hat, rimshots (clave) that never quite land where you expect, a low conga that sits between the kicks and a ghosted cajón tone, with the delay doing a lot of the work. A style sketch, not a transcription.',
    lanes:{surdo:'O...O...O...O...', shaker:'..X...X...X...X.', clave:'..x..X.....x..X.', conga:'m.......m..o....', cajon:'.......t......t.'}},
-  {id:'tribaltech', trad:'hyp', name:'Tribal techno', res:4, tempo:130, groove:'mpc16', swing:.12, mix:{surdo:.95,tumba:.75,conga:.65}, sends:{tumba:{rev:.2}},
-   desc:'Tribal techno: four on the floor on the surdo with tom figures in three plus three plus two on the tumba, an answering conga, running sixteenth shakers and a clap-like block on two and four. A style sketch, not a transcription.',
+  {id:'tribaltech', trad:'hyp', name:'Percussive techno', res:4, tempo:130, groove:'mpc16', swing:.12, mix:{surdo:.95,tumba:.75,conga:.65}, sends:{tumba:{rev:.2}},
+   desc:'Percussive techno: four on the floor on the surdo with tom figures in three plus three plus two on the tumba, an answering conga, running sixteenth shakers and a clap-like block on two and four. A style sketch, not a transcription.',
    lanes:{surdo:'O...O...O...O...', tumba:'O..O..O.O..O..O.', conga:'..o..o....o..o..', shaker:'xxXxxxXxxxXxxxXx', clave:'....W.......W...'}},
   {id:'microshuffle', trad:'hyp', name:'Microhouse shuffle', res:4, tempo:124, groove:'mpc16', swing:.55, mix:{surdo:.9,palmas:.65}, sends:{bongo:{dly:.4}},
    desc:'Shuffled microhouse: a kick with a pickup into the next bar, a clap on two and four with a ghost before the second, swung offbeat shakers and small bongo blips. A style sketch, not a transcription.',
@@ -3821,7 +3830,7 @@ function midiQT(now){ if(!S.midiQ||!playing||!actx) return now; const sd=stepDur
 const MHELD=new Map();
 function midiKey(E,on,m,v){ const now=AG.ctx.currentTime; if(on){ const t=midiQT(now); MHELD.set(m,{E,t}); E.noteOn(m,v,t); }
   else { const h=MHELD.get(m); MHELD.delete(m); const E2=h?h.E:E; if(E2&&E2.noteOff) E2.noteOff(m,Math.max(now,h?h.t+.06:now)); } }
-function ngMidi(e){ const P=$('worpPane'); if(P&&!P.hidden) return; const [st,d1,d2=0]=e.data, cmd=st&0xf0, on=cmd===0x90&&d2>0, off=cmd===0x80||(cmd===0x90&&d2===0); if(!on&&!off) return;
+function ngMidi(e){ const P=$('worpPane'); if(P&&!P.hidden){ try{ $('worpFrame').contentWindow.postMessage({t:'midi',data:Array.from(e.data)},'*'); }catch(x){} return; }   /* v174: Worp over Ngoma gets your keys from Ngoma */ const [st,d1,d2=0]=e.data, cmd=st&0xf0, on=cmd===0x90&&d2>0, off=cmd===0x80||(cmd===0x90&&d2===0); if(!on&&!off) return;
   const d=midiDest();
   if(on&&d==='lead'&&window.WorpEngine){ ensureCtx(); if(actx.state!=='running') actx.resume().catch(()=>{}); if(AG&&AG.lead){ leadEngine(actx,AG,actx.currentTime); leadSync(AG); } if(actx.state!=='running'&&!playing) status('Click anywhere in Ngoma once, then your keys sound (the browser wants one click first).'); }   /* v137: keys work before Play and right after coming back from Worp */
   if(NREC.st&&NREC.u===d) nrecNote(on,d1,.35+.65*d2/127);   /* v171 */
