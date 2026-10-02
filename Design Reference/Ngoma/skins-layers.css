@@ -88,3 +88,18 @@ body.sk-lead-d #leadU select{background:#1d1e20!important;border:1px solid #5557
 /* ---------- the switcher of this preview ---------- */
 .skbar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:9999;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:8px 12px;border-radius:12px;background:rgba(18,17,15,.94);border:1px solid #3a3833;box-shadow:0 10px 30px rgba(0,0,0,.6);font:12px system-ui,sans-serif;color:#ece6da}
 .skbar b{font-weight:600;margin-right:2px}.skbar button{font:inherit;color:#ece6da;background:#2a2925;border:1px solid #3a3833;border-radius:6px;padding:4px 9px;cursor:pointer}.skbar button[aria-pressed="true"]{background:#ff6a2b;border-color:#ff6a2b;color:#fff}
+
+/* ---------- SUBTIEL (v182 proef): every layer the same Ngoma panel, only its own colour: a faint tint of the panel, the LED, the
+   knob arcs and the display. Pad warm amber, Lead cool blue, Candy green, Texture sand, after the group colours low/mid/high. ---------- */
+body.sk-tint #padU{--ua:#e6ae2c}
+body.sk-tint #leadU{--ua:#76a6d6}
+body.sk-tint #cdU{--ua:#5fbf8e}
+body.sk-tint #fldU{--ua:#c9b48a}
+body.sk-tint :is(#padU,#leadU,#cdU,#fldU){background:linear-gradient(180deg,color-mix(in srgb,var(--ua) 7%,#181715),color-mix(in srgb,var(--ua) 4%,#161513))!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ua) 14%,transparent),inset 0 1px 3px rgba(0,0,0,.5)!important}
+body.sk-tint :is(#padU,#leadU,#cdU,#fldU) .fxh .lbl{color:color-mix(in srgb,var(--ua) 70%,#ece6da)!important}
+body.sk-tint :is(#padU,#leadU,#cdU,#fldU) .fxh .lbl::before{background:var(--ua)!important;box-shadow:0 0 6px var(--ua)!important}
+body.sk-tint :is(#padU,#leadU,#cdU,#fldU) .kn{--kc:var(--ua)}
+body.sk-tint :is(#padU,#leadU,#cdU,#fldU) .wname.lcd{--lcd:color-mix(in srgb,var(--ua) 75%,#fff)}
+body.sk-tint :is(#padU,#leadU,#cdU,#fldU) .wname.lcd b,body.sk-tint :is(#padU,#leadU,#cdU,#fldU) .wname.lcd small{color:var(--lcd)!important;text-shadow:0 0 6px color-mix(in srgb,var(--ua) 45%,transparent)!important}
+body.sk-tint :is(#padU,#leadU,#cdU,#fldU) .seg button[aria-pressed="true"],body.sk-tint :is(#padU,#leadU,#cdU,#fldU) .kseg button[aria-pressed="true"]{box-shadow:inset 0 -2px 0 var(--ua)!important}
+body.sk-tint :is(#padU,#leadU,#cdU,#fldU) .lmix{border-left-color:color-mix(in srgb,var(--ua) 22%,transparent)!important}

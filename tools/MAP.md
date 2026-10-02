@@ -51,7 +51,7 @@ backup > build (python read-modify-write on the Mac, assert each replace matches
 
 <!-- AUTO: below this line tools/map.py writes; do not edit by hand -->
 
-## Ngoma: public/index.html (5608 lines)
+## Ngoma: public/index.html (5607 lines)
 
 - **script starts** (line 13): (no functions)
 - **Knobs with character (v71): a ribbed skirt that turns (after the Rogan knobs of the Prophe** (line 431): (no functions)
@@ -76,18 +76,18 @@ backup > build (python read-modify-write on the Mac, assert each replace matches
 - **Field (v168; Jesse: a layer of field recordings, open material, in the spirit of Chris Wat** (line 3981): fldTrim 3996, fldId 3997, fldInfo 3998, fldKey 3999, fldBuf 4000, fldNorm 4001, fldDecode 4003, fldLoad 4004, fldOwnLoad 4013, fldOwnSet 4015, buildField 4016, fldLive 4020, fldHz 4021, fldStopLoop 4022, fldSync 4023, fldWalk 4030, fldStep 4031, fldDuck 4043, fldUI 4044
 - **Candy (v180; Jesse: ear candy instead of a big texture: small sounds without a key that ma** (line 4048): buildCandy 4053, cdLive 4054, cdSeed 4055, cdSrc 4056, cdFid 4057, cdBuf 4058, cdSync 4059, cdPalette 4063, cdHit 4068, cdStep 4077, cdUI 4084, leadLive 4086, leadSpec 4087, leadSync 4088, leadBar 4090, lcdSet 4093, leadUI 4094, worpBar 4098, worpUI 4114, worpParse 4120, worpUse 4126, worpHash 4128, WBC 4131, ctxEpoch 4132, worpState 4134, worpPost 4137, worpMsg 4142, worpPanel 4161, padBar 4167, buildGraph 4193, buildRoom 4223, roomSync 4228, clipCurve 4230, vetOn 4232, vetAmt 4233, VET_TRIM 4234, masterCurve 4238, buildVet 4239, vetSync 4253, shaperCurve 4257, lfoHz 4259, lfoPeriod 4260, cutPos 4261, cutHz 4262, syncFx 4263, pv 4293, syncGraph 4294, animCurve 4300, animValues 4302, applyAnim 4304, animLive 4310, fxTail 4312, flamGuard 4325, mgQ 4330, scheduleStep 4331, evN 4357, hitGate 4358, AUD 4367, STABLE 4368, loadLate 4369, stableSet 4370, ensureCtx 4373, tick 4374, start 4379, stop 4381, setDrop 4386, setDrumsOff 4389, dropApply 4390, dropMask 4395, preview 4396, $ 4403, mvolGain 4405, setMvol 4406, initMvol 4410, flashLed 4416
 - **First visit: invite to press Play, then one next step** (line 4422): onbSave 4425, hintShow 4426, hintHide 4427, onbInit 4428, onbPlayed 4430, onbActed 4431, setPlayUI 4433, clearNow 4434, showDrift 4435, magicGlow 4443
-- **Scope: a quiet oscilloscope in the house colours** (line 4450): scopeInit 4454, scopeCalm 4458, scopeCols 4459, scopeHit 4460, scopeWake 4461, scopeGrid 4462, scopeTrace 4465, scopeIdle 4467, scopeFrame 4468, draw 4487, makeSegK 4518, makeSelK 4522, makeKnob 4526, editX 4552, kfoldSeen 4562, kfoldHint 4563, laneRow 4567, paintPending 4647, paintCell 4649, editCell 4665, euRow 4677, renderLanes 4692, renderStyles 4704, initTips 4733, initValues 4748, bindMacro 4749, layersLayout 4756, initControls 4772, status 5123, afterLoad 5124, updHist 5125, renderFavs 5126, inflate 5137, loadShared 5138, fileBase 5143
-- **EXPORT: WAV** (line 5148): wavBytes 5150, kCoefs 5162, loudness 5167, truePeak 5177, midiBytes 5183, midiBytesX 5184, chLen 5211, chordMidiBytes 5212, CRC 5219, crc32 5220, zipBlob 5221, loopLen 5241, renderLoop 5243, renderLoopX 5244
-- **Capture: keep what you just heard** (line 5253): capAttach 5258, capStart 5266, capLog 5267, capWindow 5268, capAudio 5274, capMidi 5278, capture 5288
-- **Delivery: a folder you picked (no zip), or a zip download** (line 5301): idb 5303, kvSet 5304, kvGet 5305, outUI 5306, outPick 5307, outReady 5308, writeFiles 5309, deliver 5311, resampleTo 5317
-- **Drag WAV: the mix is rendered while you hover, so it is ready when you drag** (line 5319): dwKey 5321, dwPrepare 5322
-- **Jam recording (v101): press ● Rec, play for up to 12 minutes, press again. It starts on th** (line 5327): jamTrack 5334, jamPut 5335, jamRec 5337, jamStart 5339, jamWorp 5348, jamUI 5351, jamStop 5355, jamWav 5365, jamFiles 5370
-- **Blackbox (v95): its own folder and names made for a small screen. Tempo (three digits, so ** (line 5377): bbUI 5381, bbPick 5382, bbName 5383, bbSend 5387, exportLoop 5407
-- **Max for Live bridge (v77). Inside the Ngoma device (jweb~ in Live) Live's transport drives** (line 5448): m4lAlign 5451, m4lInit 5455
-- **Changes on the next bar (v88). While playing, a new rhythm, Surprise, Reset, New variant, ** (line 5487): onBar 5491, qRun 5495, qMark 5497, qDraw 5500
-- **Scenes (v91): eight slots that keep the whole state (the same snapshot as ← →: pattern, ki** (line 5505): scenesRender 5507, sceneStore 5518, sceneClear 5519, sceneRecall 5520
-- **Morph (v104): a scene grows out of what plays now over 1, 2, 4 or 8 bars. The scene is app** (line 5523): morphCap 5532, morphStart 5534, morphSet 5543, morphInd 5560, morphSnap 5562, scBase 5566, scEdited 5567, morphStep 5570, morphEnd 5572, morphUI 5580, setView 5592
-- **script starts** (line 5605): (no functions)
+- **Scope: a quiet oscilloscope in the house colours** (line 4450): scopeInit 4454, scopeCalm 4458, scopeCols 4459, scopeHit 4460, scopeWake 4461, scopeGrid 4462, scopeTrace 4465, scopeIdle 4467, scopeFrame 4468, draw 4487, makeSegK 4518, makeSelK 4522, makeKnob 4526, editX 4552, kfoldSeen 4562, kfoldHint 4563, laneRow 4567, paintPending 4647, paintCell 4649, editCell 4665, euRow 4677, renderLanes 4692, renderStyles 4704, initTips 4733, initValues 4748, bindMacro 4749, layersLayout 4756, initControls 4771, status 5122, afterLoad 5123, updHist 5124, renderFavs 5125, inflate 5136, loadShared 5137, fileBase 5142
+- **EXPORT: WAV** (line 5147): wavBytes 5149, kCoefs 5161, loudness 5166, truePeak 5176, midiBytes 5182, midiBytesX 5183, chLen 5210, chordMidiBytes 5211, CRC 5218, crc32 5219, zipBlob 5220, loopLen 5240, renderLoop 5242, renderLoopX 5243
+- **Capture: keep what you just heard** (line 5252): capAttach 5257, capStart 5265, capLog 5266, capWindow 5267, capAudio 5273, capMidi 5277, capture 5287
+- **Delivery: a folder you picked (no zip), or a zip download** (line 5300): idb 5302, kvSet 5303, kvGet 5304, outUI 5305, outPick 5306, outReady 5307, writeFiles 5308, deliver 5310, resampleTo 5316
+- **Drag WAV: the mix is rendered while you hover, so it is ready when you drag** (line 5318): dwKey 5320, dwPrepare 5321
+- **Jam recording (v101): press ● Rec, play for up to 12 minutes, press again. It starts on th** (line 5326): jamTrack 5333, jamPut 5334, jamRec 5336, jamStart 5338, jamWorp 5347, jamUI 5350, jamStop 5354, jamWav 5364, jamFiles 5369
+- **Blackbox (v95): its own folder and names made for a small screen. Tempo (three digits, so ** (line 5376): bbUI 5380, bbPick 5381, bbName 5382, bbSend 5386, exportLoop 5406
+- **Max for Live bridge (v77). Inside the Ngoma device (jweb~ in Live) Live's transport drives** (line 5447): m4lAlign 5450, m4lInit 5454
+- **Changes on the next bar (v88). While playing, a new rhythm, Surprise, Reset, New variant, ** (line 5486): onBar 5490, qRun 5494, qMark 5496, qDraw 5499
+- **Scenes (v91): eight slots that keep the whole state (the same snapshot as ← →: pattern, ki** (line 5504): scenesRender 5506, sceneStore 5517, sceneClear 5518, sceneRecall 5519
+- **Morph (v104): a scene grows out of what plays now over 1, 2, 4 or 8 bars. The scene is app** (line 5522): morphCap 5531, morphStart 5533, morphSet 5542, morphInd 5559, morphSnap 5561, scBase 5565, scEdited 5566, morphStep 5569, morphEnd 5571, morphUI 5579, setView 5591
+- **script starts** (line 5604): (no functions)
 
 ## Worp: public/worp/index.html (1900 lines)
 
