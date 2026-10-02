@@ -109,6 +109,15 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       document.getElementById('tlOn').click(); S.bpm = bpm0; Object.assign(S.fx, JSON.parse(keep)); syncGraph(AG); return { on, clr, L }; }, rmsJS);
     assert(r.on > .005 && r.clr < r.on * .1, JSON.stringify(r)); return 'loop ' + r.L.toFixed(2) + ' s, back at rms ' + r.on.toFixed(3) + ', after Clear ' + r.clr.toFixed(4); });
 
+  await check('Dare: a move starts on a bar line, ends by itself, Keep makes it stay, Stop puts things back', async () => { const r = await p.evaluate(async () => { const w = ms => new Promise(r => setTimeout(r, ms)), keep = JSON.stringify(S.fx), bpm0 = S.bpm, key0 = S.key, log = [];
+      const was = playing; S.bpm = 200; syncGraph(AG); if (!playing) start(); await w(200); document.getElementById('dareOn').click();
+      const run = async id => { const K = DARE_K.find(k => k.id === id); DARE.last = { k: K, c: { r: .3 } }; DARE.again = true; let c = null; for (let i = 0; i < 40 && !c; i++) { await w(50); if (DARE.cur && DARE.cur.k === K) c = DARE.cur; } if (!c) return id + ':nostart'; let e = false; for (let i = 0; i < 100 && !e; i++) { await w(50); if (!DARE.cur) e = true; } return id + ':' + (e ? 'ok' : 'stuck'); };
+      for (const id of ['silence', 'half', 'fifth']) log.push(await run(id));
+      const keyBack = S.key === key0, dg = AG.dareG.gain.value; DARE.last = { k: DARE_K.find(k => k.id === 'fifth'), c: { r: .3 } }; DARE.again = true; for (let i = 0; i < 40 && !DARE.cur; i++) await w(50);
+      document.getElementById('dareKeep').click(); await w(1300); const kept = S.key !== key0; document.getElementById('dareOn').click(); if (!was) stop(); S.key = key0; S.bpm = bpm0; Object.assign(S.fx, JSON.parse(keep)); syncGraph(AG); UPD.forEach(f => f());
+      return { log, keyBack, dg, kept }; });
+    assert(r.log.every(x => x.endsWith(':ok')) && r.keyBack && r.dg > .99 && r.kept, JSON.stringify(r)); return r.log.join(', ') + ', Keep holds'; });
+
   await check('Drums off silences every drum, M toggles it', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), w = ms => new Promise(r => setTimeout(r, ms)), lvl = () => { const a = new Float32Array(2048); AG.scopeTap.aL.getFloatTimeDomainData(a); return rms(a); };
       const lo = S.fx.leadOn, po = S.fx.padOn; S.fx.leadOn = false; S.fx.padOn = false; syncGraph(AG); leadSync(AG); padSync(AG); await w(600); let on = 0; for (let k = 0; k < 6; k++) { await w(80); on = Math.max(on, lvl()); }   /* v167: the loudest of a few looks, one look can fall between two hits */
       document.getElementById('drumsoff').click(); await w(2500); let off = 0; for (let k = 0; k < 6; k++) { await w(100); off = Math.max(off, lvl()); }   /* reverb and echo tails may still ring out */ 
@@ -228,8 +237,10 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     return r.hit + ' hits from ' + r.size + ' buffers, ' + r.miss + ' synthesised while filling'; });
 
   await check('Load budget: layers do not cost more than they should', async () => { const r = await p.evaluate(async () => { const keep = JSON.stringify(S.fx), b0 = S.bars; S.bars = 2;
-      const t = async fn => { Object.assign(S.fx, JSON.parse(keep)); fn && fn(); let best = 1e9; for (let k = 0; k < 3; k++) {   /* v192: best of 3, two runs swung between 2.2 and 3.4 on the same build */ const t0 = performance.now(); await renderLoop(false, 48000); best = Math.min(best, performance.now() - t0); } return best; };
-      const d = await t(), all = await t(() => { S.fx.padOn = true; S.fx.padType = 7; S.fx.leadOn = true; S.fx.mgOn = true; S.fx.mgMode = 1; S.fx.rvType = 'bloom'; S.fx.rvLevel = .3; });
+      /* v204: drums alone and everything on measured in turns (best of 4 each), so a slow moment on the machine hits both alike; one at a time swung 2.2 to 3.4 */
+      const once = async fn => { Object.assign(S.fx, JSON.parse(keep)); fn && fn(); const t0 = performance.now(); await renderLoop(false, 48000); return performance.now() - t0; };
+      const allOn = () => { S.fx.padOn = true; S.fx.padType = 7; S.fx.leadOn = true; S.fx.mgOn = true; S.fx.mgMode = 1; S.fx.rvType = 'bloom'; S.fx.rvLevel = .3; };
+      await once(allOn); let d = 1e9, all = 1e9; for (let k = 0; k < 4; k++) { d = Math.min(d, await once()); all = Math.min(all, await once(allOn)); }
       Object.assign(S.fx, JSON.parse(keep)); S.bars = b0; return { d, all, x: all / d, rt: d / 1000 / (2 * 4 * 60 / S.bpm) }; });
     assert(r.x < 3.3, 'everything on costs ' + r.x.toFixed(2) + ' x the drums alone (budget 3.3)'); return 'all on ' + r.x.toFixed(2) + ' x drums, drums ' + r.rt.toFixed(2) + ' x real time here'; });
 

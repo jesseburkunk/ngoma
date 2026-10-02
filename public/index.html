@@ -811,15 +811,15 @@ input,select{accent-color:var(--accent)}
 @media (max-width:560px){.zlayers #fldU .mgw{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
 /* v183 Subtle (Jesse chose it): every layer the same Ngoma panel, only its own colour: a faint tint of the panel, the LED, the knob arcs,
    the display and the New button. Pad warm amber, Lead cool blue, Candy green, Texture sand, after the group colours low/mid/high. */
-#padU{--ua:#e6ae2c}#leadU{--ua:#76a6d6}#cdU{--ua:#5fbf8e}#fldU{--ua:#c9b48a}#tlU{--ua:#b48ccf}#bsU{--ua:#d27a5c}
-:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU){background:linear-gradient(180deg,color-mix(in srgb,var(--ua) 7%,#181715),color-mix(in srgb,var(--ua) 4%,#161513))!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ua) 14%,transparent),inset 0 1px 3px rgba(0,0,0,.5)!important}
-:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU) .fxh .lbl{color:color-mix(in srgb,var(--ua) 70%,#ece6da)!important}
-:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU) .fxh .lbl::before{background:var(--ua)!important;box-shadow:0 0 6px var(--ua)!important}
-:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU) .kn{--kc:var(--ua)}
-:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU) .wname.lcd{--lcd:color-mix(in srgb,var(--ua) 75%,#fff)}
-:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU) .wname.lcd b,:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU) .wname.lcd small{color:var(--lcd)!important;text-shadow:0 0 6px color-mix(in srgb,var(--ua) 45%,transparent)!important}
-:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU) .seg button[aria-pressed="true"],:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU) .kseg button[aria-pressed="true"]{box-shadow:inset 0 -2px 0 var(--ua)!important}
-:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU) .lmix{border-left-color:color-mix(in srgb,var(--ua) 22%,transparent)!important}
+#padU{--ua:#e6ae2c}#leadU{--ua:#76a6d6}#cdU{--ua:#5fbf8e}#fldU{--ua:#c9b48a}#tlU{--ua:#b48ccf}#bsU{--ua:#d27a5c}#dareU{--ua:#e05a7a}
+:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU){background:linear-gradient(180deg,color-mix(in srgb,var(--ua) 7%,#181715),color-mix(in srgb,var(--ua) 4%,#161513))!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ua) 14%,transparent),inset 0 1px 3px rgba(0,0,0,.5)!important}
+:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU) .fxh .lbl{color:color-mix(in srgb,var(--ua) 70%,#ece6da)!important}
+:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU) .fxh .lbl::before{background:var(--ua)!important;box-shadow:0 0 6px var(--ua)!important}
+:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU) .kn{--kc:var(--ua)}
+:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU) .wname.lcd{--lcd:color-mix(in srgb,var(--ua) 75%,#fff)}
+:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU) .wname.lcd b,:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU) .wname.lcd small{color:var(--lcd)!important;text-shadow:0 0 6px color-mix(in srgb,var(--ua) 45%,transparent)!important}
+:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU) .seg button[aria-pressed="true"],:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU) .kseg button[aria-pressed="true"]{box-shadow:inset 0 -2px 0 var(--ua)!important}
+:is(#padU,#bsU,#leadU,#cdU,#fldU,#tlU,#dareU) .lmix{border-left-color:color-mix(in srgb,var(--ua) 22%,transparent)!important}
 .zlayers .wstrip .sgrp{display:inline-flex;align-items:center;gap:6px;flex-wrap:nowrap}.zlayers .wstrip.wtop{padding-right:34px;flex-wrap:wrap;row-gap:8px}
 .zlayers .wstrip .srec{margin-left:auto;padding-left:14px;border-left:1px solid color-mix(in srgb,var(--ua,#a59f92) 22%,transparent)}
 .zlayers .wstrip .btn.primary{background:var(--ua,#ff6a2b)!important;border-color:var(--ua,#ff6a2b)!important;color:#141310!important;font-weight:650;box-shadow:0 0 14px -4px var(--ua,#ff6a2b)!important}
@@ -946,6 +946,11 @@ input,select{accent-color:var(--accent)}
       <div class="fxh"><span class="lbl" title="Tape loop, after Frippertronics (Robert Fripp and Brian Eno, two tape machines): a long loop that keeps what you send into it and plays it back on every pass, a little darker each time, so layers pile up and drift against the bars. Live and in Rec only; a loop export leaves it out">Tape loop</span><label class="chk"><input id="tlOn" type="checkbox"> On</label></div>
       <div class="fxc"><div class="wstrip wtop" id="tlStrip"><span class="seg" id="tlLen" role="group" aria-label="Loop length" title="Length of the loop in bars. Not a whole number, so each pass lands somewhere else in the bar. Changing it while it plays bends the tape like a slowing machine"></span><button class="btn" id="tlClear" type="button" title="Erase the tape: the loop goes quiet, the sends stay as they are">Clear</button></div>
         <div class="knrow"><div id="tlSlot"></div></div></div>
+    </div>
+    <div class="fxg magic dareu" id="dareU">
+      <div class="fxh"><span class="lbl" title="Dare: now and then the machine steps in for a few bars and does something you would not have done: a breakdown, a bar of silence, half-time drums, a shift up a fifth, the tape at half speed, an echo throw. Keep makes it stay (undo takes it back), Again plays the last one once more. Live only">Dare</span><label class="chk"><input id="dareOn" type="checkbox"> On</label></div>
+      <div class="fxc"><div class="wstrip wtop" id="dareStrip"><button class="btn" id="dareKeep" type="button" title="Keep: what the machine just did stays (undo takes it back)">Keep</button><button class="btn" id="dareAgain" type="button" title="Again: the last dare once more, from the next bar">Again</button><button class="btn" id="dareNow" type="button" title="Now: a dare from the next bar">Now</button><span class="wname lcd" data-lcd="DARE"><b id="dareName"></b><small id="dareInfo"></small></span></div>
+        <div class="knrow"><div id="dareSlot"></div></div></div>
     </div>
     <div class="fxg magic" id="spaceU">
       <div class="fxh"><span class="lbl" title="How much room is around the drums: reverb and echo together">Space</span></div>
@@ -4138,6 +4143,49 @@ function bsStep(ctx,G,g,t){ const B=G.bs; if(!B||!bsLive()) return; const F=S.fx
 function bsUI(){ const n=$('bsName'), i=$('bsInfo'); if(!n||!window.WorpEngine) return; const nm=bsNm(), st={drop:'one drop',step:'steppers',off:'offbeat',half:'half-time'}[bsSty()], P=bsBar(0).concat(bsBar(1));
   const k=st+' · #'+bsSeed().toString(36).toUpperCase().slice(0,5)+' · '+P.length+' notes';   /* v201 (Jesse: a name but no way to pick another patch): the name is the sound, the code the figure */ if(n.textContent!==nm) n.textContent=nm; if(i.textContent!==k) i.textContent=k;
   document.querySelectorAll('#bsSty button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.s===bsSty()))); }
+/* v204 Dare (Jesse: give the vibe machine an avant-garde edge, the unexpected, serendipity; "shit, that's good"). Now and then, at a
+   bar line, the machine takes over for a few bars with one bounded move that bends the groove instead of breaking it. Live only and
+   seeded per bar. Keep turns the move into real settings (one undo step); Again repeats the last move; Now asks for one. */
+const DARE={next:-1,cur:null,last:null,again:false,now:false,bar:-1};
+const DARE_K=[
+ {id:'break',name:'Breakdown',info:'the drums step out',len:[2,4],w:1.2,ok:()=>true,
+  start:(G,t)=>G.lanes.forEach(l=>l.dg.gain.setTargetAtTime(0,t,.01)), end:(G,t)=>G.lanes.forEach((l,i)=>l.dg.gain.setTargetAtTime(drumsOff||dropped[i]?0:1,t,.006)), keep:()=>setDrumsOff(true)},
+ {id:'strip',name:'Strip',info:'only bass and texture remain',len:[2,4],w:.8,ok:()=>!!S.fx.bsOn,
+  start:(G,t,c)=>{ c.v=[]; G.lanes.forEach(l=>l.dg.gain.setTargetAtTime(0,t,.01)); [G.pad&&G.pad.gate,G.lead&&G.lead.out,G.cd&&G.cd.out].forEach(n=>{ if(n){ c.v.push([n.gain,n.gain.value]); n.gain.setTargetAtTime(0,t,.02); } }); },
+  end:(G,t,c)=>{ G.lanes.forEach((l,i)=>l.dg.gain.setTargetAtTime(drumsOff||dropped[i]?0:1,t,.006)); c.v.forEach(([p,v])=>p.setTargetAtTime(v,t,.02)); }, keep:()=>{ setDrumsOff(true); S.fx.padOn=false; S.fx.leadOn=false; S.fx.cdOn=false; syncGraph(AG); cdSync(AG); }},
+ {id:'silence',name:'Silence',info:'one bar of nothing, then the drop',len:[1,1],w:.7,ok:()=>true,
+  start:(G,t)=>{ G.dareG.gain.setTargetAtTime(0,t,.008); }, end:(G,t)=>{ G.dareG.gain.setTargetAtTime(1,t,.003); }},
+ {id:'half',name:'Half-time',info:'the drums play at half speed',len:[2,4],w:1,ok:()=>true, start:(G,t,c,g)=>{ DARE.half=g; }, end:()=>{ DARE.half=null; }},
+ {id:'fifth',name:'Up a fifth',info:'everything moves up a fifth',len:[2,2],w:.8,ok:()=>true,
+  start:(G,t,c)=>{ c.prev=S.key; S.key=(S.key+7)%12; UPD.forEach(f=>f()); }, end:(G,t,c)=>{ S.key=c.prev; UPD.forEach(f=>f()); }, keep:()=>{}},
+ {id:'tape',name:'Half speed',info:'the tape loop slows to half speed',len:[2,4],w:1.1,ok:()=>!!S.fx.tlOn&&!!(AG&&AG.tl),
+  start:(G,t,c)=>{ c.d=G.tl.d.delayTime.value; G.tl.d.delayTime.setTargetAtTime(Math.min(59,c.d*2),t,.5); }, end:(G,t,c)=>{ G.tl.d.delayTime.setTargetAtTime(c.d,t,.5); }},
+ {id:'swap',name:'Other grains',info:'',len:[2,4],w:1,ok:()=>!!S.fx.cdOn&&cdSrc()!=='synth'&&FLD_SRC.some(x=>x[0]!==cdFid()&&FLD.buf[x[0]]),
+  start:(G,t,c)=>{ c.prev=S.fx.cdRec; if(c.to==null){ const L=FLD_SRC.filter(x=>x[0]!==cdFid()&&FLD.buf[x[0]]); c.to=L[Math.floor(c.r*L.length)%L.length][0]; } S.fx.cdRec=c.to; c.info='candy takes grains from '+fldInfo(c.to)[1]; CD_PAL.clear(); }, end:(G,t,c)=>{ S.fx.cdRec=c.prev; CD_PAL.clear(); }, keep:()=>{}},
+ {id:'phase',name:'Phase jump',info:'a second lead voice drifts away',len:[4,4],w:.9,ok:()=>!!S.fx.leadOn,
+  start:(G,t,c)=>{ c.prev=S.fx.leadPh; if(c.to==null){ const L=[2,4,8].filter(x=>x!==(c.prev|0)); c.to=L[Math.floor(c.r*L.length)%L.length]; } S.fx.leadPh=c.to; }, end:(G,t,c)=>{ S.fx.leadPh=c.prev; }, keep:()=>{}},
+ {id:'throw',name:'Echo throw',info:'the lead goes into the filter delay',len:[1,2],w:1,ok:()=>!!S.fx.leadOn,
+  start:(G,t,c)=>{ c.prev=S.fx.leadFd; S.fx.leadFd=1; leadSync(G); }, end:(G,t,c)=>{ S.fx.leadFd=c.prev; leadSync(G); }, keep:()=>{}},
+ {id:'oct',name:'Octave',info:'the lead jumps an octave',len:[2,4],w:.7,ok:()=>!!S.fx.leadOn,
+  start:(G,t,c)=>{ c.prev=S.fx.leadTr; S.fx.leadTr=(S.fx.leadTr|0)===12?-12:12; }, end:(G,t,c)=>{ S.fx.leadTr=c.prev; }, keep:()=>{}}];
+function dareGap(bar){ const r=rnd((S.fx.dareSeed??11)>>>0,bar,0xDA2E), rate=S.fx.dareRate??.4; return Math.max(4,Math.round((40-32*rate)*(.6+.8*r))); }
+function dareStart(G,g,t,bar,K,c){ c=c||{r:rnd((S.fx.dareSeed??11)>>>0,bar,0xDA31)}; const L=K.len, n=L[0]+Math.floor(rnd((S.fx.dareSeed??11)>>>0,bar,0xDA33)*(L[1]-L[0]+1));
+  c.k=K; c.bars=n; c.end=bar+n; c.kept=false; c.info=null; DARE.cur=c; DARE.last={k:K,c:Object.assign({},c)}; try{ K.start(G,t,c,g); }catch(e){} dareUI(); }
+function dareEnd(G,t,c){ c=c||DARE.cur; if(!c) return; if(!c.kept||!c.k.keep) try{ c.k.end(G,t,c); }catch(e){} else if(c.k.id==='silence'||c.k.id==='half'||c.k.id==='tape') try{ c.k.end(G,t,c); }catch(e){}
+  DARE.cur=null; dareUI(); }
+function dareStep(ctx,G,g,t){ if(ctx!==actx||G!==AG) return; const BL=4*S.res; if(g%BL) return; const bar=Math.floor(g/BL); DARE.bar=bar;
+  if(!S.fx.dareOn){ if(DARE.cur) dareEnd(G,t); return; }
+  if(DARE.cur&&bar>=DARE.cur.end){ dareEnd(G,t); DARE.next=bar+dareGap(bar); }
+  if(DARE.next<0) DARE.next=bar+Math.min(8,dareGap(bar));
+  if(DARE.cur){ dareUI(); return; }
+  if(DARE.again&&DARE.last){ DARE.again=false; const L=DARE.last; if(L.k.ok()){ const c=Object.assign({},L.c); delete c.info; dareStart(G,g,t,bar,L.k,c); return; } }
+  if(DARE.now||bar>=DARE.next){ DARE.now=false; const sd=(S.fx.dareSeed??11)>>>0, ok=DARE_K.filter(k=>k.ok()&&!(DARE.last&&DARE.last.k===k));
+    let tot=ok.reduce((a,k)=>a+k.w,0), u=rnd(sd,bar,0xDA35)*tot, K=ok[0]; for(const k of ok){ u-=k.w; if(u<=0){ K=k; break; } } if(K){ dareStart(G,g,t,bar,K); return; } }
+  dareUI(); }
+function dareStop(){ if(DARE.cur&&AG) dareEnd(AG,actx.currentTime); DARE.next=-1; DARE.half=null; dareUI(); }
+function dareUI(){ const n=$('dareName'), i=$('dareInfo'); if(!n) return; const c=DARE.cur, L=DARE.last;
+  const a=c?c.k.name:!S.fx.dareOn?'Off':L?L.k.name:'Waiting', b=c?(c.info||c.k.info)+(c.kept?' · kept':' · '+Math.max(1,c.end-Math.max(0,DARE.bar))+(c.end-DARE.bar===1?' bar':' bars')):!S.fx.dareOn?'the machine keeps to your plan':!playing?'starts when Ngoma plays':DARE.next>0?'next in '+Math.max(1,DARE.next-DARE.bar)+' bars':'listening';
+  if(n.textContent!==a) lcdSet('dareName',a); if(i.textContent!==b) i.textContent=b; const kb=$('dareKeep'); if(kb) kb.disabled=!(c&&c.k.keep&&!c.kept); const ab=$('dareAgain'); if(ab) ab.disabled=!L||!S.fx.dareOn; const nb=$('dareNow'); if(nb) nb.disabled=!S.fx.dareOn; }
 function fltQ(v){ return {lq:v<-.005?.7+4.2*Math.pow(-v,1.4):.5, hq:v>.005?.8+3.4*Math.pow(v,1.4):.6}; }   /* v142: the layer filter resonates more the further you turn it (Jesse: it sounded dry) */
 function buildLead(ctx,master,rvIn){ const bus=ctx.createGain(), cut=bq(ctx,'lowpass',20000,.5), hpf=bq(ctx,'highpass',10,.6), out=ctx.createGain(), send=ctx.createGain(); out.gain.value=0; send.gain.value=0; const pk=ctx.createDynamicsCompressor(); pk.threshold.value=-14; pk.knee.value=6; pk.ratio.value=4; pk.attack.value=.003; pk.release.value=.12; const lc=bq(ctx,'highpass',170,.7), pres=bq(ctx,'peaking',2800,.9); pres.gain.value=2.5; bus.connect(cut).connect(hpf).connect(lc).connect(pres).connect(out).connect(pk).connect(master); out.connect(send).connect(rvIn);
   /* v165 (Jesse: the lead should cut through the mix better; is it wide enough?): the low end out below 170 Hz, +2.5 dB presence at 2.8 kHz, and two short
@@ -4367,7 +4415,7 @@ function buildGraph(ctx,opts={}){
   const master=ctx.createGain(); master.gain.value=.9;
   const eqL=bq(ctx,'lowshelf',150), eqM=bq(ctx,'peaking',1200,.8), eqH=bq(ctx,'highshelf',4000), eqC=bq(ctx,'lowpass',20000,.6);
   const fin=ctx.createGain(), fout=ctx.createGain(); fin.connect(fout);
-  const sub=bq(ctx,'highpass',24,.707); master.connect(sub).connect(eqL).connect(eqM).connect(eqH).connect(eqC).connect(fin); const lim=ctx.createDynamicsCompressor(); lim.threshold.value=-1.5; lim.knee.value=0; lim.ratio.value=20; lim.attack.value=.001; lim.release.value=.08;   /* safety: only catches peaks, e.g. kick plus drums */
+  const sub=bq(ctx,'highpass',24,.707), dareG=ctx.createGain(); master.connect(dareG).connect(sub).connect(eqL).connect(eqM).connect(eqH).connect(eqC).connect(fin); const lim=ctx.createDynamicsCompressor(); lim.threshold.value=-1.5; lim.knee.value=0; lim.ratio.value=20; lim.attack.value=.001; lim.release.value=.08;   /* safety: only catches peaks, e.g. kick plus drums */
   const vol=ctx.createGain(); vol.gain.value=opts.export?1:mvolGain();   /* master volume: live listening only, exports stay at -16 LUFS */
   const vet=buildVet(ctx); fout.connect(vet.in); vet.out.connect(comp).connect(lim); const clip=ctx.createWaveShaper(); clip.curve=clipCurve(); clip.oversample='4x'; const ceil=ctx.createWaveShaper(); ceil.curve=clipCurve(); lim.connect(clip).connect(ceil).connect(vol).connect(ctx.destination);   /* v142: a second pass without oversampling catches the few peaks the 4x filter lets ring over 0 dBFS */   /* v139: the limiter overshot by up to 1 dB on hard hits; a soft clip after it holds the peaks under 0 dBFS */   /* v139: Vet master chain before the glue and the limiter */
   let scopeTap=null; if(!opts.export && !(ctx instanceof OfflineAudioContext)){ const sp=ctx.createChannelSplitter(2), aL=ctx.createAnalyser(), aR=ctx.createAnalyser(); aL.fftSize=aR.fftSize=2048; ceil.connect(sp); sp.connect(aL,0); sp.connect(aR,1); scopeTap={aL,aR}; }
@@ -4386,7 +4434,7 @@ function buildGraph(ctx,opts={}){
   if(tl) [lead,pad,cd].forEach(u=>{ u.tl=ctx.createGain(); u.tl.gain.value=0; u.out.connect(u.tl).connect(tl.inp); });
   lead.fd=ctx.createGain(); lead.fd.gain.value=0; lead.out.connect(lead.fd).connect(fdl.inp); cd.fd=ctx.createGain(); cd.fd.gain.value=0; cd.out.connect(cd.fd).connect(fdl.inp);
   let worpTap=null; if(scopeTap){ worpTap={}; [['pad',pad],['lead',lead]].forEach(([k,u])=>{ if(!u||!u.out) return; const a=ctx.createAnalyser(); a.fftSize=2048; u.out.connect(a); worpTap[k]=a; }); }   /* v139: Worp's ring reads these */
-  const G={ctx,master,vol,scopeTap,worpTap,capNode:ceil,dlAll,lanes,fat:-1,rv,dl,dry:!!opts.dry,mg,pad,lead,fld,cd,fdl,tl,bs,vet,room,eq:{eqL,eqM,eqH,eqC,fin,fout,wk:null},scBus}; syncGraph(G); attachFilter(G); return G;
+  const G={ctx,master,vol,scopeTap,worpTap,capNode:ceil,dlAll,lanes,fat:-1,rv,dl,dry:!!opts.dry,mg,pad,lead,fld,cd,fdl,tl,bs,dareG,vet,room,eq:{eqL,eqM,eqH,eqC,fin,fout,wk:null},scBus}; syncGraph(G); attachFilter(G); return G;
 }
 /* v148 Room (Jesse: softly on by default): early reflections of a small wooden room, 5 to 29 ms, the left and right taps
    different and fed partly from the other side, so every drum stands in a space instead of as a dry point in the middle. Low end
@@ -4502,10 +4550,11 @@ function flamGuard(evs,go){ const live=evs.filter(e=>!e.silent); if(live.length<
 const mgQ=(g,i,k)=>{ const LL=S.bars*4*S.res; return rnd(S.seed+k+Math.floor(g/LL)*31,((g%LL)+LL)%LL,i); };   // seeded per loop cycle
 function scheduleStep(ctx,G,g,t,vis){
   if(ctx===actx&&MORPH.on) morphStep(g);   // v104: morph between scenes, live only
+  dareStep(ctx,G,g,t);
   padBar(ctx,G,g,t); leadBar(ctx,G,g,t); bloomStep(G,g,t); fldStep(ctx,G,g,t); cdStep(ctx,G,g,t); bsStep(ctx,G,g,t);
   if(G.mg && g%(S.bars*4*S.res)===0) magicSync(G);
   const cosEr=G.mg?cosmosErase(G,g,t):false; if(G.mg){ combStep(G,g,t,G.ctx instanceof OfflineAudioContext); formantStep(G,g,t); resStep(G,g,t,G.ctx instanceof OfflineAudioContext); }
-  const sd=stepDur(S), go=grooveOff(g,S,sd); const evs=eventsAt(g,S);
+  const sd=stepDur(S), go=grooveOff(g,S,sd); const evs=DARE.half!=null&&ctx===actx?((g-DARE.half)%2?[]:eventsAt(DARE.half+(g-DARE.half)/2,S)):eventsAt(g,S);
   flamGuard(evs,go);
   const X=mgP(), P=X?X.P:{}, a=X?X.a:0, anch=ANCHORS[S.trad]||[], now=ctx.currentTime||0;
   if(g%(S.bars*4*S.res)===0){ G.hc=0; if(G.mg&&G.mg.gl&&g===0) G.mg.gl.until=0; }   /* v143: the hit count starts again with the loop, so every cycle and the export send the same hits */
@@ -4550,7 +4599,7 @@ function tick(){ const sd=stepDur(S); if(nextT<actx.currentTime-.05){ const k=Ma
     scheduleStep(actx,AG,gStep,nextT,true); nextT+=stepDur(S); gStep++; } if(NREC.st) nrecTick(); }
 function start(){ ensureCtx(); clearTimeout(suspT); if(AG.pad){ const g=AG.pad.gate.gain; g.cancelScheduledValues(actx.currentTime); g.setValueAtTime(1,actx.currentTime); } animLive(); gStep=0; nextT=actx.currentTime+.08; if(M4L.on&&M4L.pos) m4lAlign(M4L.pos.b,S.bpm); AG.t0=nextT-gStep*stepDur(S); capStart(nextT); syncFx(AG); vq.length=0; playing=true; timer=setInterval(tick,25); tick(); worpPost(); requestAnimationFrame(draw); setPlayUI(); }
 let suspT=0;
-function stop(){ playing=false; if(NREC.st) nrecStop(false); if(AG&&AG.fld){ fldStopLoop(AG,.6); const fg=AG.fld.gate.gain, n0=actx.currentTime; fg.cancelScheduledValues(n0); fg.setTargetAtTime(0,n0,.25); } if(MORPH.on) morphEnd(false); setTimeout(worpPost,0); if(QB.list.length) qRun(); CAP.stopT=actx?actx.currentTime:0; clearInterval(timer); clearInterval(animTimer); vq.length=0; clearNow(); setPlayUI();
+function stop(){ playing=false; dareStop(); if(NREC.st) nrecStop(false); if(AG&&AG.fld){ fldStopLoop(AG,.6); const fg=AG.fld.gate.gain, n0=actx.currentTime; fg.cancelScheduledValues(n0); fg.setTargetAtTime(0,n0,.25); } if(MORPH.on) morphEnd(false); setTimeout(worpPost,0); if(QB.list.length) qRun(); CAP.stopT=actx?actx.currentTime:0; clearInterval(timer); clearInterval(animTimer); vq.length=0; clearNow(); setPlayUI();
   if(AG&&AG.pad){ const g=AG.pad.gate.gain, n=actx.currentTime; g.cancelScheduledValues(n); g.setTargetAtTime(0,n,.12); }                  // the pad fades out instead of ringing on
   if(AG&&AG.worp) AG.worp.stop(actx.currentTime+.4);
   clearTimeout(suspT); suspT=setTimeout(()=>{ if(!playing && actx && actx.state==='running') actx.suspend(); },6000); }                // rest the audio engine once the tails are gone
@@ -5089,6 +5138,16 @@ function initControls(){
     document.querySelectorAll('#bsSty button').forEach(b=>b.onclick=()=>{ hRecord(()=>{ S.fx.bsSty=b.dataset.s; S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('Bass: '+b.textContent+'.'); });
     $('bsNew').onclick=()=>{ hRecord(()=>{ S.fx.bsSeed=worpSeed(); S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('New bass figure, same sound.'); };
     $('bsSnd').onclick=()=>{ const sd=worpSeed(), r=x=>rnd(sd,x,0xB0DE); hRecord(()=>{ Object.assign(S.fx,{bsSnd:sd,bsOn:true,bsBody:+(.04+.56*r(1)).toFixed(2),bsFlt:+(.15+.6*Math.pow(r(2),1.3)).toFixed(2),bsDec:+(.2+.65*r(3)).toFixed(2)}); S.fx.bsNm={body:S.fx.bsBody,flt:S.fx.bsFlt,dec:S.fx.bsDec}; }); updHist(); save(); u(); bsSync(AG); status('New bass sound: '+bsNm()+'. The figure stays.'); };   /* the name keeps the character it was thrown with, so turning a knob does not rename it */
+  }
+  { const cb=$('dareOn'), U=$('dareU');   /* v204 Dare */
+    const kr=makeKnob({label:'Often',min:0,max:100,step:1,get:()=>Math.round((S.fx.dareRate??.4)*100),set:v=>{ S.fx.dareRate=v/100; save(); },fmt:v=>{ const r=v/100, b=Math.round(40-32*r); return 'every ~'+b+' bars'; },def:40});
+    kr.title='How often the machine steps in: left rarely (every 40 bars or so), right often (every 8 or so); the exact moment is seeded · drag, double-click resets';
+    kr.classList.add('big','mgk'); const wr=document.createElement('div'); wr.className='mgw'; wr.append(kr); $('dareSlot').replaceWith(wr);
+    const u=()=>{ cb.checked=!!S.fx.dareOn; U.classList.toggle('off',!S.fx.dareOn); kr.upd(); dareUI(); }; u(); UPD.push(u);
+    cb.onchange=()=>{ S.fx.dareOn=cb.checked; if(!cb.checked&&DARE.cur&&AG) dareEnd(AG,actx.currentTime); DARE.next=-1; if(cb.checked&&S.fx.dareSeed==null) S.fx.dareSeed=worpSeed(); u(); save(); status(cb.checked?'Dare: the machine will step in now and then. Keep what you like.':'Dare off.'); };
+    $('dareKeep').onclick=()=>{ const c=DARE.cur; if(!c||!c.k.keep) return; hRecord(()=>{ c.k.keep(c); }); c.kept=true; updHist(); save(); UPD.forEach(f=>f()); dareUI(); status('Kept: '+c.k.name+'. Undo takes it back.'); };
+    $('dareAgain').onclick=()=>{ DARE.again=true; status('Again: '+(DARE.last?DARE.last.k.name:'')+' from the next bar.'); };
+    $('dareNow').onclick=()=>{ DARE.now=true; if(DARE.cur&&AG){ dareEnd(AG,actx.currentTime); } status('A dare from the next bar.'); };
   }
   { const cb=$('tlOn'), U=$('tlU');   /* v197 Tape loop */
     const mk=(label,key,def,tt)=>{ const k=makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; tlSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)}); k.title=tt+' · drag, double-click resets'; return k; };
