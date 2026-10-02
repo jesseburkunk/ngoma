@@ -1,0 +1,18 @@
+/* button variants on top of A+B */
+.worn{opacity:.75}
+/* bare: just the jewel and its rims, nothing around */
+body[data-worn=bare] .worn{display:none}
+/* well: the jewel sunk into a copper-lined hole in the board */
+body[data-worn=well] #roll{box-shadow:0 0 0 2px #0d0b09,0 0 0 3.5px var(--gold-d),0 0 0 22px #0a0807,0 0 0 23px var(--gold-d),0 0 0 24px #000,
+  inset 0 -12px 28px rgba(0,0,0,.4),inset 0 6px 14px rgba(255,255,255,.22),0 0 30px 22px rgba(0,0,0,.5)}
+/* bezel: a knurled copper ring round the jewel, like a big panel knob */
+body[data-worn=bezel] .worn{display:none}
+body[data-worn=bezel] #roll{box-shadow:0 0 0 2px #0d0b09,inset 0 -12px 28px rgba(0,0,0,.4),inset 0 6px 14px rgba(255,255,255,.22),0 0 34px 2px color-mix(in srgb,var(--accent) 16%,transparent)}
+body[data-worn=bezel] .ringwrap::after{content:"";position:absolute;left:50%;top:50%;width:61%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;z-index:-1;
+  background:radial-gradient(circle closest-side,transparent 83.5%,rgba(0,0,0,.6) 84.5%,transparent 86%),
+    repeating-conic-gradient(#9a6440 0 2deg,#5e3a24 2deg 4deg),#7a4e31;
+  -webkit-mask:radial-gradient(circle closest-side,transparent 84%,#000 84.5%);mask:radial-gradient(circle closest-side,transparent 84%,#000 84.5%);
+  box-shadow:0 6px 16px rgba(0,0,0,.6)}
+body[data-worn=bezel] .ringwrap::before{content:"";position:absolute;left:50%;top:50%;width:61%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;z-index:-1;
+  background:radial-gradient(circle at 50% 20%,rgba(255,220,180,.35),transparent 55%);-webkit-mask:radial-gradient(circle closest-side,transparent 84%,#000 84.5%);mask:radial-gradient(circle closest-side,transparent 84%,#000 84.5%)}
+#ring{opacity:.6}

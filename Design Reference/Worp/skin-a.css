@@ -1,0 +1,107 @@
+/* ===== Worp skin A "Ets" (after Folktek Alter / Matter): a black lacquered board with gold etched lines, light only where a window glows.
+   Gold is the hardware (lines, labels, rims); the light is the state: milky lichen for pads, lamp amber for leads. Warm black, like Ngoma D. ===== */
+:root{
+  --ground:#0e0d0a; --panel:#15130f; --panel-2:#1c1914; --line:#2f2a21; --ink:#ede4d0; --dim:#a09682; --faint:#6b6253;
+  --gold:#c9a45e; --gold-d:#7d6740; --etch:#5a4a2e;
+  --pad:#d3e08e; --lead:#ffc978; --accent:var(--pad);
+  --display:"Federo","Bricolage Grotesque",serif;
+}
+html,body{background:var(--ground)}
+body{background:radial-gradient(1200px 700px at 22% 18%,#17150f 0%,var(--ground) 60%) fixed,var(--ground)}
+::selection{background:var(--gold);color:#120f0a}
+
+/* brand: Federo, gold, no glow tube */
+.brand b{font-family:"Federo",serif;font-size:30px;letter-spacing:.2em;color:var(--gold);text-shadow:0 0 18px rgba(201,164,94,.22)}
+.brand span{color:var(--dim);font-style:italic}
+.pill{border-color:var(--line);color:var(--dim)}
+
+/* the stage: the etched rosette, the button a milky jewel in a gold rim */
+.ringwrap{isolation:isolate}
+.worn{position:absolute;inset:0;width:100%;height:100%;color:var(--gold);opacity:.62;z-index:-1;overflow:visible}
+.worn .ros{transform-origin:200px 200px}
+body:has(#play[aria-pressed="true"]) .worn .ros,.worn.live .ros{animation:wturn 90s linear infinite}
+@keyframes wturn{to{transform:rotate(360deg)}}
+#roll{border:0;color:#1d1b12;font-family:"Federo",serif;font-weight:400;font-size:22px;letter-spacing:.14em;
+  background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--accent) 62%,#fff) 0%,color-mix(in srgb,var(--accent) 78%,#6d6a4c) 38%,color-mix(in srgb,var(--accent) 38%,#1a1710) 82%,#15130e 100%);
+  box-shadow:0 0 0 3px #0e0d0a,0 0 0 4.5px var(--gold),0 0 0 9px #0e0d0a,0 0 0 9.8px var(--gold-d),
+    0 0 34px 2px color-mix(in srgb,var(--accent) 18%,transparent),inset 0 -12px 28px rgba(0,0,0,.4),inset 0 6px 14px rgba(255,255,255,.22);
+  text-shadow:0 1px 0 rgba(255,255,255,.3)}
+body:has(#play[aria-pressed="true"]) #roll{animation:wbreath 4.8s ease-in-out infinite}
+@keyframes wbreath{50%{filter:brightness(1.12);box-shadow:0 0 0 3px #0e0d0a,0 0 0 4.5px var(--gold),0 0 0 9px #0e0d0a,0 0 0 9.8px var(--gold-d),0 0 60px 10px color-mix(in srgb,var(--accent) 30%,transparent),inset 0 -12px 28px rgba(0,0,0,.4),inset 0 6px 14px rgba(255,255,255,.22)}}
+#roll small{color:color-mix(in srgb,#1b1a10 70%,var(--accent));letter-spacing:.2em}
+#roll:hover{border:0;filter:brightness(1.06)}
+#roll:focus-visible{outline:1px solid var(--gold);outline-offset:14px}
+.name{font-family:"Federo",serif;font-weight:400;letter-spacing:.02em;color:var(--ink)}
+.meta b{color:var(--accent)}
+.notes span{border-color:var(--etch);color:var(--ink);background:#13110d}
+.notes span.moved{border-color:var(--accent);color:var(--accent);box-shadow:0 0 10px -2px color-mix(in srgb,var(--accent) 50%,transparent)}
+.steps i{border-color:var(--etch)}
+
+/* labels like silkscreen: gold, small caps */
+.h,label.f,.lrl{color:var(--gold);letter-spacing:.16em}
+.h{display:flex;align-items:center;gap:10px}
+.h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--etch),transparent)}
+details.more>summary.h::after{display:none}
+.pinfo{color:var(--faint);letter-spacing:.02em;text-transform:none}
+.fk{color:var(--dim)}
+.fk span,.mix .mv{color:var(--ink)}
+
+/* buttons: black lacquer with an etched gold rim; pressed lights up like a window */
+.btn,.seg button,.envr{background:linear-gradient(180deg,#1f1c16,#151310);border:1px solid var(--etch);color:var(--ink);
+  box-shadow:0 2px 0 #050504,inset 0 1px 0 rgba(255,230,180,.06)}
+.btn:hover,.seg button:hover{border-color:var(--gold-d);color:var(--ink)}
+.btn:active,.seg button:active{transform:translateY(1px);box-shadow:0 1px 0 #050504}
+.seg{border:0;gap:4px;overflow:visible;border-radius:0}
+.seg button{border-radius:7px;color:var(--dim)}
+.seg button[aria-pressed="true"],.btn[aria-pressed="true"]{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,var(--etch));
+  background:radial-gradient(120% 150% at 50% 0%,color-mix(in srgb,var(--accent) 24%,#15130f),#15130f 75%);
+  box-shadow:0 2px 0 #050504,inset 0 0 12px -3px color-mix(in srgb,var(--accent) 60%,transparent),0 0 14px -6px var(--accent);text-shadow:0 0 8px color-mix(in srgb,var(--accent) 60%,transparent)}
+.btn .dot{box-shadow:0 0 6px currentColor}
+#roll,.btn,.seg button{transition:filter .15s,box-shadow .2s,background .2s,transform .08s}
+select,input[type=number]{background:#0b0a08;border:1px solid var(--line);color:var(--ink);box-shadow:inset 0 1px 3px rgba(0,0,0,.7)}
+.linerow{border:1px solid var(--etch);background:#12100c}
+
+/* sliders: an engraved groove, the lit part glows, a black knob with a brass rim */
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;height:18px;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 80%,#000) 0,var(--accent) var(--v,50%),#070605 var(--v,50%));
+  box-shadow:inset 0 1px 1px rgba(0,0,0,.8),0 1px 0 rgba(255,230,180,.05)}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:#070605}
+input[type=range]::-moz-range-progress{height:4px;border-radius:2px;background:var(--accent)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;margin-top:-5px;border-radius:50%;
+  background:radial-gradient(circle at 50% 35%,#3c3830,#0d0c0a 70%);box-shadow:0 0 0 1.5px var(--gold-d),0 2px 4px rgba(0,0,0,.7)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:radial-gradient(circle at 50% 35%,#3c3830,#0d0c0a 70%);box-shadow:0 0 0 1.5px var(--gold-d)}
+
+/* layer and effect cards: etched frames with a leaf in the corner */
+.layer,.fx{background:#12100c;border:1px solid var(--etch);border-radius:12px;position:relative;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%237d6740' stroke-width='.9'%3E%3Cpath d='M2 6 H26 L34 14 V38'/%3E%3Cpath d='M2 10 H24 L30 16 V38' opacity='.55'/%3E%3C/g%3E%3Ccircle cx='2' cy='6' r='1.8' fill='%237d6740'/%3E%3Ccircle cx='34' cy='38' r='0' /%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:top 0 right 0;background-size:34px}
+.layer .eng,.fx b{font-family:"Federo",serif;font-weight:400;letter-spacing:.04em}
+.layer .eng{color:var(--ink)}
+.layer .top,.fx .top{padding-right:26px}
+.layer .tag{color:var(--gold)}
+.fx b{color:var(--accent)}
+.layer.thin{border-style:dashed;border-color:var(--line);background-image:none}
+.mute{border-color:var(--etch);background:#0b0a08;color:var(--dim)}
+.mute[aria-pressed="true"]{background:var(--accent);color:#1b1a10;box-shadow:0 0 10px -2px var(--accent)}
+.chip{border-color:var(--etch);color:var(--dim)}
+.chip.cur{border-color:var(--accent);color:var(--ink)}
+.chip i{background:var(--pad);box-shadow:0 0 6px var(--pad)}.chip.lead i{background:var(--lead);box-shadow:0 0 6px var(--lead)}
+details.more{border-top-color:var(--line)}
+.src .m{background:var(--line)}
+.cab b,.src b{color:var(--gold)}
+
+/* the keyboard: bone keys, black sharps, the pressed key lights */
+.kb .w{background:linear-gradient(180deg,#e6dcc6,#d6caaf);border-color:#2a251c}
+.kb .b{background:linear-gradient(180deg,#1d1a15,#0b0a08);border-color:#000}
+.kb .w.down,.kb .b.down{background:var(--accent);box-shadow:0 0 14px var(--accent)}
+.hint kbd{border-color:var(--etch)}
+.toast{border-color:var(--gold-d);background:#16130e}
+.tip{background:#ede4d0;color:#15120d}
+
+/* the app switch: Worp's half in gold on black instead of mint */
+.apps2{border-color:#2f2a21}
+.apps2 .wp{font:400 12px "Federo",serif;letter-spacing:.2em;color:#d9b56c;text-shadow:0 0 8px rgba(201,164,94,.45);
+  background-image:radial-gradient(120% 160% at 25% 15%,rgba(201,164,94,.26),rgba(201,164,94,0) 60%),radial-gradient(90% 120% at 90% 100%,rgba(211,224,142,.12),rgba(211,224,142,0) 60%);background-color:#0e0d0a}
+.apps2 .ng+.wp{border-left-color:#2f2a21}
+@media (prefers-reduced-motion:reduce){.worn .ros{animation:none!important}}

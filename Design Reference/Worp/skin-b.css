@@ -1,0 +1,12 @@
+/* B "Lijst": the board sits in a walnut frame (Folktek Matter, Terra); copper instead of gold, the light a warm cream */
+:root{--gold:#cf8f5e;--gold-d:#8a5a38;--etch:#5c3d28;--pad:#f0e1b4;--lead:#ffb36b;--ground:#0d0b09;--line:#2e2620}
+body{background:#0b0908}
+.app{position:relative;padding:26px 30px 30px;border-radius:18px;background:#0f0d0b;
+  box-shadow:0 0 0 14px #3b2416,0 0 0 15px #1e120b,0 30px 60px -20px rgba(0,0,0,.9),inset 0 0 0 1px #2a1d14;
+  border:14px solid transparent;
+  background-image:linear-gradient(#0f0d0b,#0f0d0b),repeating-linear-gradient(91deg,#4f2f1d 0 5px,#4a2b1a 5px 8px,#563321 8px 13px,#472918 13px 21px,#52301e 21px 24px);
+  background-origin:border-box;background-clip:padding-box,border-box;margin-top:10px}
+.app::before{content:"";position:absolute;inset:-14px;border-radius:18px;pointer-events:none;box-shadow:inset 0 2px 0 rgba(255,210,170,.18),inset 0 -2px 0 rgba(0,0,0,.5)}
+.brand b{color:var(--gold)}
+#roll{color:#2a2116}
+.apps2 .wp{color:#e0a072;text-shadow:0 0 8px rgba(207,143,94,.45);background-image:radial-gradient(120% 160% at 25% 15%,rgba(207,143,94,.28),rgba(207,143,94,0) 60%)}
