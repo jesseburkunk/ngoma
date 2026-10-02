@@ -1380,6 +1380,41 @@ function genName(seed,salt){
   if(x<.95)return r.pick(NOUN)+' '+r.int(2,99);
   return 'The '+r.pick(ADJ)+' '+r.pick(NOUN);
 }
+/* v1.32 sound names (Jesse: make all names fit; a big library of two-word names that suit the kind of sound). Two words, an adjective
+   and a noun, from word lists per kind of sound: pads by mood (dark, bright, pulsing), leads per Plaits model, candy by its sounds, bass by
+   its character. Seeded, so a sound keeps its name. soundName(kind, seed, hint). */
+const SNM={
+ padDark:[['Amber','Velvet','Ember','Umber','Honey','Smoked','Dusk','Molten','Sable','Ochre','Tawny','Hushed','Sunken','Mossy','Copper','Cinder','Hearth','Woollen','Peat','Walnut','Tobacco','Rust','Cocoa','Midnight','Low'],
+   ['Haze','Bloom','Drift','Tide','Veil','Hearth','Lagoon','Mantle','Fog','Dunes','Harbour','Cathedral','Valley','Cloud','Embers','Shore','Canopy','Lull','Swell','Delta','Moor','Cellar','Hollow','Grove','Slumber']],
+ padBright:[['Halo','Pearl','Opal','Dawn','Gilded','Linen','Lantern','Solar','Pale','Silver','Hazy','Morning','Saffron','Glass','Ivory','Golden','Mellow','Sunlit','Feather','Cotton','Honeyed','Glowing','Lucid','Rose','Warm'],
+   ['Glow','Meadow','Horizon','Choir','Sky','Bloom','Shimmer','Cloud','Haze','Light','Field','Lagoon','Morning','Veil','Prairie','Mirage','Chorus','Breeze','Sunrise','Aura','Canopy','Orchard','Atrium','Haven','Daydream']],
+ padPulse:[['Pulsing','Gated','Ticking','Strobing','Rolling','Stuttered','Throbbing','Breathing','Flickering','Rippling','Beating','Pumping','Wavering','Trembling','Rotating'],
+   ['Pulse','Engine','Shutter','Tremor','Flicker','Turbine','Breath','Heartbeat','Wheel','Signal','Lighthouse','Carousel','Ripple','Metronome','Windmill']],
+ lead8:[['Copper','Hot','Brass','Burnt','Ruby','Raw','Tube','Wired','Neon','Molten','Analog','Warm','Scarlet','Sawtooth','Electric'],['Wire','Lance','Voltage','Signal','Hornet','Arc','Spark','Comet','Ray','Line','Filament','Circuit','Torch','Beam','Rocket']],
+ lead1:[['Nasal','Bent','Phased','Pinched','Folded','Reedy','Twangy','Sharp','Crooked','Squeezed','Buzzing','Honking'],['Reed','Kazoo','Whistle','Bugle','Shawm','Duck','Oboe','Musette','Harmonica','Siren','Bagpipe','Horn']],
+ lead9:[['Hollow','Glass','Liquid','Mirror','Bottled','Smooth','Watery','Glazed','Polished','Rounded','Clear','Blown'],['Flute','Bottle','Ocarina','Bubble','Lens','Pipe','Droplet','Marble','Vessel','Whistle','Pebble','Shell']],
+ lead10:[['Steel','Chrome','Frost','Crystal','Tin','Silver','Icy','Bright','Platinum','Starlit','Polar','Metal'],['Bell','Gong','Tine','Chime','Rhodes','Sparkle','Glockenspiel','Spire','Icicle','Star','Carillon','Anvil']],
+ lead12:[['Pure','Organ','Choral','Pipe','Clear','Sacred','Gentle','Clean','Simple','Plain','Stately','Calm'],['Drawbar','Register','Psalm','Flute','Stop','Hymn','Chapel','Manual','Pipe','Bellows','Cantor','Nave']],
+ lead13:[['Prism','Digital','Pixel','Shimmer','Morphing','Shifting','Glitter','Laser','Vapor','Quartz','Fractal','Spectral'],['Scan','Grid','Shard','Mosaic','Circuit','Lattice','Matrix','Wave','Pixel','Beacon','Spectrum','Kaleidoscope']],
+ lead19:[['Silk','Plucked','Nylon','Harp','Koto','Gut','Picked','Twanging','Sitar','Golden','Strummed','Bright'],['Pluck','String','Lyre','Thread','Kalimba','Zither','Harp','Lute','Banjo','Cittern','Fiddle','Strand']],
+ lead20:[['Bronze','Wooden','Struck','Temple','Bamboo','Hammered','Ringing','Tuned','Rosewood','Brass','Sunken','Iron'],['Chime','Bar','Bowl','Mallet','Gamelan','Plate','Marimba','Bell','Gong','Balafon','Anklung','Key']],
+ lead5:[['Contour','Ridged','Orbiting','Winding','Curved','Roaming','Tilted','Coiled','Rolling','Rough'],['Path','Map','Canyon','Loop','Terrain','Trail','Orbit','Ridge','Spiral','Valley']],
+ lead11:[['Vowel','Choral','Whispered','Throaty','Sung','Breathy','Hummed','Chanted','Murmured','Nasal'],['Voice','Mouth','Chant','Vox','Aria','Throat','Choir','Lips','Hum','Psalm']],
+ lead16:[['Swarming','Buzzing','Teeming','Hive','Restless','Humming','Seething','Crowded','Fizzing','Droning'],['Bees','Hornets','Flock','Cloud','Cicadas','Swarm','Murmuration','Locusts','Gnats','Colony']],
+ cdDust:[['Dusty','Crisp','Static','Brittle','Sandy','Grainy','Popping','Tiny','Dry','Fizzy','Crackling','Scratchy'],['Crumbs','Dust','Sparks','Seeds','Gravel','Ticks','Pebbles','Static','Sand','Fleas','Embers','Splinters']],
+ cdBlip:[['Glassy','Bubbly','Chirping','Pixel','Toy','Candy','Neon','Glossy','Bouncy','Twinkling','Sugary','Shiny'],['Bubbles','Drops','Beads','Marbles','Pings','Chirps','Pearls','Dew','Sprinkles','Fireflies','Confetti','Gumdrops']],
+ cdSquelch:[['Squelchy','Acid','Rubber','Wobbly','Gummy','Slick','Gooey','Springy','Wet','Jelly'],['Squelch','Gloop','Jelly','Slime','Frogs','Gum','Tadpoles','Puddles','Springs','Blobs']],
+ cdGrain:[['Shattered','Scattered','Torn','Granular','Spliced','Cut','Broken','Sliced','Frayed','Chopped'],['Shards','Grains','Fragments','Splinters','Flakes','Tatters','Snippets','Crumbs','Clippings','Confetti']],
+ bsSub:[['Deep','Sunken','Abyssal','Under','Low','Dark','Hidden','Heavy','Silent','Submerged','Black','Ocean'],['Tide','Floor','Rumble','Current','Pressure','Undertow','Trench','Depth','Swell','Bedrock','Keel','Ground']],
+ bsRound:[['Round','Warm','Woolly','Velvet','Fat','Plump','Soft','Mellow','Padded','Cushioned','Heavy','Dub'],['Thump','Belly','Heartbeat','Drum','Bloom','Pillow','Boom','Barrel','Bumper','Weight','Pulse']],
+ bsSing:[['Singing','Rubber','Elastic','Talking','Hungry','Bouncing','Stretchy','Grinning','Wailing','Purring'],['Rubber','Throat','Growl','Purr','Moan','Bounce','Elastic','Grin','Yawn','Spring']],
+ bsShort:[['Plucked','Dry','Tight','Clipped','Short','Punchy','Muted','Knocking','Stepping','Snappy'],['Thud','Knock','Pluck','Step','Stomp','Tap','Bump','Kick','Footstep','Thump']]};
+function soundName(kind,seed,h){h=h||{};let k;
+  if(kind==='pad')k=h.gate?'padPulse':(h.bright||0)>.45?'padBright':'padDark';
+  else if(kind==='lead'){const e=h.e|0;k=SNM['lead'+e]?'lead'+e:e===0?'lead8':'lead8'}
+  else if(kind==='candy'){const c=h.kinds||{},n=x=>c[x]||0,v=[['cdDust',n('tick')+n('click')+n('crackle')],['cdBlip',n('blip')+n('ping')],['cdSquelch',n('squelch')*1.2],['cdGrain',n('grain')]];v.sort((a,b)=>b[1]-a[1]);k=v[0][0]}
+  else if(kind==='bass')k=(h.dec??.5)<.32?'bsShort':(h.flt??.4)>=.58?'bsSing':(h.body??.25)>=.3?'bsRound':'bsSub';
+  const L=SNM[k]||SNM.padDark,r=rng(((seed>>>0)^0x2C1B3C6D)+k.length*131),a=r.pick(L[0]);let b=r.pick(L[1]),g=0;while(b===a&&g++<8)b=r.pick(L[1]);return a+' '+b}
 function uniqueName(P){return;const taken=new Set(state.hist.filter(h=>h.seed!==P.seed).map(h=>h.name.split(' ').pop()));let k=1;while(taken.has(P.name.split(' ').pop())&&k<12)P.name=genName(P.seed,k++)}
 function genPatch(seed,kind){
   const r=rng(seed),pad=kind==='pad';
@@ -1500,6 +1535,7 @@ function genPatch(seed,kind){
     P.fxs.chain=P.fxs.chain.filter(f=>f.type!=='bitplane'&&!(f.type==='shifter'&&f.hz>2));P.fxs.chain.forEach(f=>{if(f.type==='sonar'&&(f.chroma==='crush'||f.chroma==='fold'))f.chroma='lowpass';if(f.type==='rotor')f.q=Math.min(f.q,60)})}
   genMods(r,P);
   if(pad&&P.xmod){P.xmod.kind='am';P.xmod.depth=Math.min(P.xmod.depth,.45)}
+  if(pad)P.name=soundName('pad',seed,{gate:!!P.gate,bright:(P.filter.cut-2000)/4000});   /* v1.32: a name that fits the pad */
   P.mix=[1,1,1,1];P.mute=[false,false,false,false];
   return P;
 }
@@ -2224,7 +2260,7 @@ function releaseAll(t){for(const v of poly.values())v.release(t);poly.clear();[l
 }
 function lineAt(P,i,h){const o=PH_HOST;PH_HOST=h;try{return phraseOut(P,i)}finally{PH_HOST=o}}   /* v173: the line as the host would hear it, for tests and for picking candidates */
 function setHostScale(iv){SCALES.__host=iv.slice()}   /* v175: the scale lineAt reads for '__host', when Ngoma plays the line itself (Plaits lead) */
-window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt,LV_FORMS,lineAt,setHostScale};
+window.WorpEngine={create,genPatch,genName,soundName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt,LV_FORMS,lineAt,setHostScale};
 })();
 </script>
 <script>
@@ -4016,6 +4052,10 @@ function plBar(ctx,G,g,gm,t){ const Q=plEngine(ctx,G); if(!Q) return; const W=le
   const LK=W.lock, ps=(LK?LK.seed:(W.ps!=null?W.ps:W.seed))>>>0, P=plPhrase(ps), dg=trDeg(unitTr(S.fx,'lead')), cd=chordAt(g)|0, H={res:S.res,cx:S.fx.leadCx??.3,anchor:leadAnchorFn(),cdv:cd,deg:dg,lv:leadLv(),drum:i=>leadDrum(i)};
   for(const e of WorpEngine.lineAt(P,gm,H)){ const vel=e.vel!=null?e.vel:(e.acc?1:.62); plNote(G,e.v?2:(Q.lv++%2),t0+(e.off||0)*sd,S.key+48+plSemi(e.deg+dg+cd),vel); }
   if(PHN>0&&sh) for(const e of WorpEngine.lineAt(P,gm+sh,H)){ if(e.v) continue; const vel=(e.vel!=null?e.vel:(e.acc?1:.62))*.7; plNote(G,pvf(),t0+(e.off||0)*sd,S.key+48+plSemi(e.deg+dg+cd),vel); } }
+/* v202 (Jesse: names that fit the sound): the lead is named after its Plaits model, the candy after its sounds, the bass after its character */
+function leadNm(W){ return WorpEngine.soundName('lead',W.seed>>>0,{e:plPatch(W.seed).e}); }
+function cdNm(){ const k={}; cdPalette(0).forEach(x=>k[x.kind]=(k[x.kind]||0)+1); return WorpEngine.soundName('candy',cdSeed(),{kinds:k}); }
+function bsNm(){ const h=S.fx.bsNm||{body:S.fx.bsBody??.25,flt:S.fx.bsFlt??.4,dec:S.fx.bsDec??.5}; return WorpEngine.soundName('bass',(S.fx.bsSnd??3)>>>0,h); }
 function leadGain(){ const W=S.fx.wlead; return W?plPatch(W.seed).g*PL_TRIM:1; }   /* v175: each Plaits preset has a measured gain */
 /* v142: Dub echo per layer (Jesse: Echo more extreme). Echo up to 50% works as before (the patch's own echo); above that a
    tempo-synced ping-pong echo joins in: dotted eighth left, quarter right, feedback climbing towards self-oscillation, the
@@ -4095,7 +4135,7 @@ function bsStep(ctx,G,g,t){ const B=G.bs; if(!B||!bsLive()) return; const F=S.fx
   const t0=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)), dec=F.bsDec??.5, len=Math.min(gap-.012,Math.max(.06,Math.round(x[1]/q)*sd*(.4+1.2*dec))), pk=x[2];
   B.o1.frequency.setTargetAtTime(f,t0,.004); B.o2.frequency.setTargetAtTime(2*f,t0,.004);
   B.env.gain.setTargetAtTime(pk,t0,.0035); B.env.gain.setTargetAtTime(pk*(.55+.4*dec),t0+.04,.08+.3*dec); B.env.gain.setTargetAtTime(0,t0+len,.025+.05*dec); }
-function bsUI(){ const n=$('bsName'), i=$('bsInfo'); if(!n||!window.WorpEngine) return; const nm=WorpEngine.genName((S.fx.bsSnd??3)>>>0,0), st={drop:'one drop',step:'steppers',off:'offbeat',half:'half-time'}[bsSty()], P=bsBar(0).concat(bsBar(1));
+function bsUI(){ const n=$('bsName'), i=$('bsInfo'); if(!n||!window.WorpEngine) return; const nm=bsNm(), st={drop:'one drop',step:'steppers',off:'offbeat',half:'half-time'}[bsSty()], P=bsBar(0).concat(bsBar(1));
   const k=st+' · #'+bsSeed().toString(36).toUpperCase().slice(0,5)+' · '+P.length+' notes';   /* v201 (Jesse: a name but no way to pick another patch): the name is the sound, the code the figure */ if(n.textContent!==nm) n.textContent=nm; if(i.textContent!==k) i.textContent=k;
   document.querySelectorAll('#bsSty button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.s===bsSty()))); }
 function fltQ(v){ return {lq:v<-.005?.7+4.2*Math.pow(-v,1.4):.5, hq:v>.005?.8+3.4*Math.pow(v,1.4):.6}; }   /* v142: the layer filter resonates more the further you turn it (Jesse: it sounded dry) */
@@ -4211,7 +4251,7 @@ function cdStep(ctx,G,g,t){ if(!G.cd||!cdLive()) return; const F=S.fx, BL=4*S.re
   const x=P[Math.floor(rnd(sd,motif*977+ph*64+s,0xC3)*6)%6], sdur=stepDur(S), t0=t+grooveOff(g,S,sdur)+(rnd(sd,g,0xC4)-.5)*.12*sdur, v=.55+.45*rnd(sd,g,0xC6);
   const now=ctx.currentTime||0; cdHit(ctx,G,Math.max(now,t0),x,v,size);
   if(rnd(sd,g,0xC8)<.12*amt) cdHit(ctx,G,Math.max(now,t0+sdur*.5),x,v*.7,size); }   /* now and then a 32nd repeat, skippy */
-function cdUI(){ const n=$('cdName'), i=$('cdInfo'); if(!n||!window.WorpEngine) return; const P=cdPalette(0), nm=WorpEngine.genName(cdSeed(),0); if(n.textContent!==nm) n.textContent=nm; const k=[...new Set(P.map(x=>x.kind))].join(' · '); if(i.textContent!==k) i.textContent=k;
+function cdUI(){ const n=$('cdName'), i=$('cdInfo'); if(!n||!window.WorpEngine) return; const P=cdPalette(0), nm=cdNm(); if(n.textContent!==nm) n.textContent=nm; const k=[...new Set(P.map(x=>x.kind))].join(' · '); if(i.textContent!==k) i.textContent=k;
   document.querySelectorAll('#cdSrc button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.s===cdSrc()))); }
 function leadLive(){ const F=S.fx; return !!F.leadOn && (S.renderOnly==null||S.renderOnly===-2) && (F.leadLvl??.5)>.005; }   // -2: the lead stem
 function leadSpec(){ const F=S.fx; if(!F.wlead||!F.wlead.seed) F.wlead={seed:worpSeed(),mix:[1,1,1,1],mute:[false,false,false,false]}; return F.wlead; }
@@ -4222,7 +4262,7 @@ function leadBar(ctx,G,g,t){ if(!window.WorpEngine||!G.lead||!leadLive()) return
 let leadShown='';
 function lcdSet(id,t){ const e=$(id); if(!e||e.textContent===t) return; const had=!!e.textContent; e.textContent=t; const w=e.parentNode; if(had&&w&&w.classList){ w.classList.remove('blink'); void w.offsetWidth; w.classList.add('blink'); } }   /* v139: a new name blinks twice, like a patch change on an LCD */
 function leadUI(){ const el=$('leadStrip'); if(!el||!window.WorpEngine) return; const W=leadSpec(), key='pl|'+JSON.stringify(W.pl||0)+'|'+W.seed+'|'+(W.rec?W.rec.notes.length+(W.rec.off?'o':''):'')+'|'+(W.lock?W.lock.seed:'')+'|'+(W.ps||'')+'|'+(W.pn||'')+'|'+(S.fx.leadForm||'qa')+'|'+(W.name||'')+'|'+W.mute.join()+'|'+W.mix.join()+'|'+JSON.stringify(W.flt||0)+JSON.stringify(W.env||0); if(key===leadShown) return; leadShown=key;
-  const P0=WorpEngine.genPatch(W.seed>>>0,'lead'), PS=W.lock?W.lock.seed:W.ps, P=PS!=null&&(PS>>>0)!==(W.seed>>>0)?{...P0,phrase:WorpEngine.genPatch(PS>>>0,'lead').phrase}:P0; lcdSet('leadName',W.name||P.name); $('leadLock').setAttribute('aria-pressed',W.lock?'true':'false'); $('leadCode').textContent='#'+worpCode(W)+' · '+(recOn()?'your line':(WorpEngine.PH_STYLES[P.phrase.style]||'Loop')+(leadLv()&&WorpEngine.LV_FORMS?' · '+(WorpEngine.LV_FORMS[S.fx.leadForm||'qa']||'free'):'')+(leadLen()?' · '+(S.fx.leadLen==='b3'?'3 bars':S.fx.leadLen==='b5'?'5 bars':leadLen()+'/16'):'')+((S.fx.leadPh|0)?' · phase':''))+' · '+plPatch(W.seed).nm; $('leadCode').title=WorpEngine.phraseDesc(P);
+  const P0=WorpEngine.genPatch(W.seed>>>0,'lead'), PS=W.lock?W.lock.seed:W.ps, P=PS!=null&&(PS>>>0)!==(W.seed>>>0)?{...P0,phrase:WorpEngine.genPatch(PS>>>0,'lead').phrase}:P0; lcdSet('leadName',W.name||leadNm(W)); $('leadLock').setAttribute('aria-pressed',W.lock?'true':'false'); $('leadCode').textContent='#'+worpCode(W)+' · '+(recOn()?'your line':(WorpEngine.PH_STYLES[P.phrase.style]||'Loop')+(leadLv()&&WorpEngine.LV_FORMS?' · '+(WorpEngine.LV_FORMS[S.fx.leadForm||'qa']||'free'):'')+(leadLen()?' · '+(S.fx.leadLen==='b3'?'3 bars':S.fx.leadLen==='b5'?'5 bars':leadLen()+'/16'):'')+((S.fx.leadPh|0)?' · phase':''))+' · '+plPatch(W.seed).nm; $('leadCode').title=WorpEngine.phraseDesc(P);
   const lb=$('leadLine'); if(lb){ const mine=!!recOn(); lb.querySelectorAll('button').forEach(b=>{ const m=b.dataset.l==='mine'; b.setAttribute('aria-pressed',String(m===mine)); if(m){ b.disabled=!W.rec; b.title=W.rec?'Your line plays ('+W.rec.notes.length+' notes)':'Record a line of your own first: Rec 2 bars'; } }); }
   if(window._plUpd) window._plUpd(); }
 function worpBar(ctx,G,g,t){ if(!window.WorpEngine) return; const P=G.pad, W=wTry(G)||worpSpec(), BL=4*S.res, now=Math.max(ctx.currentTime||0,t), off=ctx instanceof OfflineAudioContext;
@@ -5033,7 +5073,7 @@ function initControls(){
     const u=()=>{ cb.checked=!!S.fx.cdOn; U.classList.toggle('off',!S.fx.cdOn); [kl,ka,kz,kat,kg,ks,kfd].forEach(k=>k.upd()); cdUI(); }; u(); UPD.push(u);
     cb.onchange=()=>{ S.fx.cdOn=cb.checked; u(); cdSync(AG); save(); };
     document.querySelectorAll('#cdSrc button').forEach(b=>b.onclick=()=>{ S.fx.cdSrc=b.dataset.s; cdSync(AG); save(); cdUI(); status(b.dataset.s==='synth'?'Candy: synthesized sounds only.':b.dataset.s==='field'?'Candy: grains of the field recording.':'Candy: synthesized sounds and grains.'); });
-    $('cdNew').onclick=()=>{ hRecord(()=>{ S.fx.cdSeed=worpSeed(); S.fx.cdOn=true; }); updHist(); save(); u(); cdSync(AG); status('New candy: '+WorpEngine.genName(cdSeed(),0)+'.'); };
+    $('cdNew').onclick=()=>{ hRecord(()=>{ S.fx.cdSeed=worpSeed(); S.fx.cdOn=true; }); updHist(); save(); u(); cdSync(AG); status('New candy: '+cdNm()+'.'); };
   }
   { const cb=$('bsOn'), U=$('bsU');   /* v200 Bass */
     const mk=(label,key,def,tt,fm)=>{ const k=makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; bsSync(AG); save(); },fmt:fm||(v=>v+'%'),def:Math.round(def*100)}); k.title=tt+' · drag, double-click resets'; return k; };
@@ -5046,7 +5086,7 @@ function initControls(){
     cb.onchange=()=>{ S.fx.bsOn=cb.checked; u(); bsSync(AG); save(); };
     document.querySelectorAll('#bsSty button').forEach(b=>b.onclick=()=>{ hRecord(()=>{ S.fx.bsSty=b.dataset.s; S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('Bass: '+b.textContent+'.'); });
     $('bsNew').onclick=()=>{ hRecord(()=>{ S.fx.bsSeed=worpSeed(); S.fx.bsOn=true; }); updHist(); save(); u(); bsSync(AG); status('New bass figure, same sound.'); };
-    $('bsSnd').onclick=()=>{ const sd=worpSeed(), r=x=>rnd(sd,x,0xB0DE); hRecord(()=>{ Object.assign(S.fx,{bsSnd:sd,bsOn:true,bsBody:+(.04+.56*r(1)).toFixed(2),bsFlt:+(.15+.6*Math.pow(r(2),1.3)).toFixed(2),bsDec:+(.2+.65*r(3)).toFixed(2)}); }); updHist(); save(); u(); bsSync(AG); status('New bass sound: '+WorpEngine.genName(sd,0)+'. The figure stays.'); };
+    $('bsSnd').onclick=()=>{ const sd=worpSeed(), r=x=>rnd(sd,x,0xB0DE); hRecord(()=>{ Object.assign(S.fx,{bsSnd:sd,bsOn:true,bsBody:+(.04+.56*r(1)).toFixed(2),bsFlt:+(.15+.6*Math.pow(r(2),1.3)).toFixed(2),bsDec:+(.2+.65*r(3)).toFixed(2)}); S.fx.bsNm={body:S.fx.bsBody,flt:S.fx.bsFlt,dec:S.fx.bsDec}; }); updHist(); save(); u(); bsSync(AG); status('New bass sound: '+bsNm()+'. The figure stays.'); };   /* the name keeps the character it was thrown with, so turning a knob does not rename it */
   }
   { const cb=$('tlOn'), U=$('tlU');   /* v197 Tape loop */
     const mk=(label,key,def,tt)=>{ const k=makeKnob({label,min:0,max:100,step:1,get:()=>Math.round((S.fx[key]??def)*100),set:v=>{ S.fx[key]=v/100; tlSync(AG); save(); },fmt:v=>v+'%',def:Math.round(def*100)}); k.title=tt+' · drag, double-click resets'; return k; };
@@ -5143,7 +5183,7 @@ function initControls(){
         for(let i=0;i<N;i++) for(const e of (WorpEngine.lineAt?WorpEngine.lineAt(P,i,h):WorpEngine.phraseAt(P,i))) if(!e.v) d.push(e.deg); if(d.length<4) return -9; const dens=d.length/N, span=Math.max(...d)-Math.min(...d), u=new Set(d).size; let lp=0; for(let k=1;k<d.length;k++) if(Math.abs(d[k]-d[k-1])>=4) lp++;
         return -Math.abs(dens-.3)*4-Math.max(0,span-10)*.25-lp/(d.length-1)*3-(u<3?1.5:0)-Math.max(0,u-9)*.2; }catch(e){ return 0; } };
     const best=(n,f)=>{ let b=null, bs=-1e9; for(let k=0;k<n;k++){ const s=worpSeed(), v=f(s)+Math.random()*.3; if(v>bs){ bs=v; b=s; } } return b; };
-    $('leadNew').onclick=()=>{ const W0=leadSpec(), lk=W0.lock, rc=W0.rec, ps=(W0.ps!=null?W0.ps:W0.seed)>>>0; const ns=worpSeed(); hRecord(()=>{ S.fx.wlead={seed:ns,mix:[1,1,1,1],mute:[false,false,false,false],ps}; if(W0.pn!=null) S.fx.wlead.pn=W0.pn; if(lk) S.fx.wlead.lock=lk; if(rc) S.fx.wlead.rec=rc; }); updHist(); save(); leadUI(); status('New sound, same melody.'); };
+    $('leadNew').onclick=()=>{ const W0=leadSpec(), lk=W0.lock, rc=W0.rec, ps=(W0.ps!=null?W0.ps:W0.seed)>>>0; const ns=worpSeed(); hRecord(()=>{ S.fx.wlead={seed:ns,mix:[1,1,1,1],mute:[false,false,false,false],ps}; if(W0.pn!=null) S.fx.wlead.pn=W0.pn; if(lk) S.fx.wlead.lock=lk; if(rc) S.fx.wlead.rec=rc; }); updHist(); save(); leadUI(); status('New sound: '+leadNm(S.fx.wlead)+', same melody.'); };
     $('leadPat').onclick=()=>{ const W0=leadSpec(), np=best(8,s=>leadLine(W0.seed,s)); hRecord(()=>{ const W=leadSpec(); W.ps=np; delete W.pn; delete W.lock; }); updHist(); save(); leadShown=''; leadUI(); status(recOn()?'New Worp melody on the same sound. You hear it when you switch to Worp; Mine plays your own line.':'New melody, same sound.'); };
     $('midibtn').onclick=()=>midiConnect(false);
     document.querySelectorAll('#midiseg button').forEach(b=>b.onclick=()=>{ S.midiTo=b.dataset.to; midiUI(); save(); status('Your MIDI keys play '+(midiDest()==='pad'?'the Worp pad':midiDest()==='lead'?'the Lead':'nothing yet: switch on the Lead or a Worp pad')+'.'); });

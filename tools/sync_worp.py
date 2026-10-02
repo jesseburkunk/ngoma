@@ -97,7 +97,7 @@ function create(ctx,OUT,host){
 }
 function lineAt(P,i,h){const o=PH_HOST;PH_HOST=h;try{return phraseOut(P,i)}finally{PH_HOST=o}}   /* v173: the line as the host would hear it, for tests and for picking candidates */
 function setHostScale(iv){SCALES.__host=iv.slice()}   /* v175: the scale lineAt reads for '__host', when Ngoma plays the line itself (Plaits lead) */
-window.WorpEngine={create,genPatch,genName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt,LV_FORMS,lineAt,setHostScale};
+window.WorpEngine={create,genPatch,genName,soundName,ENG,FX_NAME,PH_STYLES,phraseDesc,anchorFrom,phraseAt,LV_FORMS,lineAt,setHostScale};
 })();
 """
 ng=os.path.join(HERE,'..','public','index.html')

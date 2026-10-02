@@ -500,6 +500,41 @@ function genName(seed,salt){
   if(x<.95)return r.pick(NOUN)+' '+r.int(2,99);
   return 'The '+r.pick(ADJ)+' '+r.pick(NOUN);
 }
+/* v1.32 sound names (Jesse: make all names fit; a big library of two-word names that suit the kind of sound). Two words, an adjective
+   and a noun, from word lists per kind of sound: pads by mood (dark, bright, pulsing), leads per Plaits model, candy by its sounds, bass by
+   its character. Seeded, so a sound keeps its name. soundName(kind, seed, hint). */
+const SNM={
+ padDark:[['Amber','Velvet','Ember','Umber','Honey','Smoked','Dusk','Molten','Sable','Ochre','Tawny','Hushed','Sunken','Mossy','Copper','Cinder','Hearth','Woollen','Peat','Walnut','Tobacco','Rust','Cocoa','Midnight','Low'],
+   ['Haze','Bloom','Drift','Tide','Veil','Hearth','Lagoon','Mantle','Fog','Dunes','Harbour','Cathedral','Valley','Cloud','Embers','Shore','Canopy','Lull','Swell','Delta','Moor','Cellar','Hollow','Grove','Slumber']],
+ padBright:[['Halo','Pearl','Opal','Dawn','Gilded','Linen','Lantern','Solar','Pale','Silver','Hazy','Morning','Saffron','Glass','Ivory','Golden','Mellow','Sunlit','Feather','Cotton','Honeyed','Glowing','Lucid','Rose','Warm'],
+   ['Glow','Meadow','Horizon','Choir','Sky','Bloom','Shimmer','Cloud','Haze','Light','Field','Lagoon','Morning','Veil','Prairie','Mirage','Chorus','Breeze','Sunrise','Aura','Canopy','Orchard','Atrium','Haven','Daydream']],
+ padPulse:[['Pulsing','Gated','Ticking','Strobing','Rolling','Stuttered','Throbbing','Breathing','Flickering','Rippling','Beating','Pumping','Wavering','Trembling','Rotating'],
+   ['Pulse','Engine','Shutter','Tremor','Flicker','Turbine','Breath','Heartbeat','Wheel','Signal','Lighthouse','Carousel','Ripple','Metronome','Windmill']],
+ lead8:[['Copper','Hot','Brass','Burnt','Ruby','Raw','Tube','Wired','Neon','Molten','Analog','Warm','Scarlet','Sawtooth','Electric'],['Wire','Lance','Voltage','Signal','Hornet','Arc','Spark','Comet','Ray','Line','Filament','Circuit','Torch','Beam','Rocket']],
+ lead1:[['Nasal','Bent','Phased','Pinched','Folded','Reedy','Twangy','Sharp','Crooked','Squeezed','Buzzing','Honking'],['Reed','Kazoo','Whistle','Bugle','Shawm','Duck','Oboe','Musette','Harmonica','Siren','Bagpipe','Horn']],
+ lead9:[['Hollow','Glass','Liquid','Mirror','Bottled','Smooth','Watery','Glazed','Polished','Rounded','Clear','Blown'],['Flute','Bottle','Ocarina','Bubble','Lens','Pipe','Droplet','Marble','Vessel','Whistle','Pebble','Shell']],
+ lead10:[['Steel','Chrome','Frost','Crystal','Tin','Silver','Icy','Bright','Platinum','Starlit','Polar','Metal'],['Bell','Gong','Tine','Chime','Rhodes','Sparkle','Glockenspiel','Spire','Icicle','Star','Carillon','Anvil']],
+ lead12:[['Pure','Organ','Choral','Pipe','Clear','Sacred','Gentle','Clean','Simple','Plain','Stately','Calm'],['Drawbar','Register','Psalm','Flute','Stop','Hymn','Chapel','Manual','Pipe','Bellows','Cantor','Nave']],
+ lead13:[['Prism','Digital','Pixel','Shimmer','Morphing','Shifting','Glitter','Laser','Vapor','Quartz','Fractal','Spectral'],['Scan','Grid','Shard','Mosaic','Circuit','Lattice','Matrix','Wave','Pixel','Beacon','Spectrum','Kaleidoscope']],
+ lead19:[['Silk','Plucked','Nylon','Harp','Koto','Gut','Picked','Twanging','Sitar','Golden','Strummed','Bright'],['Pluck','String','Lyre','Thread','Kalimba','Zither','Harp','Lute','Banjo','Cittern','Fiddle','Strand']],
+ lead20:[['Bronze','Wooden','Struck','Temple','Bamboo','Hammered','Ringing','Tuned','Rosewood','Brass','Sunken','Iron'],['Chime','Bar','Bowl','Mallet','Gamelan','Plate','Marimba','Bell','Gong','Balafon','Anklung','Key']],
+ lead5:[['Contour','Ridged','Orbiting','Winding','Curved','Roaming','Tilted','Coiled','Rolling','Rough'],['Path','Map','Canyon','Loop','Terrain','Trail','Orbit','Ridge','Spiral','Valley']],
+ lead11:[['Vowel','Choral','Whispered','Throaty','Sung','Breathy','Hummed','Chanted','Murmured','Nasal'],['Voice','Mouth','Chant','Vox','Aria','Throat','Choir','Lips','Hum','Psalm']],
+ lead16:[['Swarming','Buzzing','Teeming','Hive','Restless','Humming','Seething','Crowded','Fizzing','Droning'],['Bees','Hornets','Flock','Cloud','Cicadas','Swarm','Murmuration','Locusts','Gnats','Colony']],
+ cdDust:[['Dusty','Crisp','Static','Brittle','Sandy','Grainy','Popping','Tiny','Dry','Fizzy','Crackling','Scratchy'],['Crumbs','Dust','Sparks','Seeds','Gravel','Ticks','Pebbles','Static','Sand','Fleas','Embers','Splinters']],
+ cdBlip:[['Glassy','Bubbly','Chirping','Pixel','Toy','Candy','Neon','Glossy','Bouncy','Twinkling','Sugary','Shiny'],['Bubbles','Drops','Beads','Marbles','Pings','Chirps','Pearls','Dew','Sprinkles','Fireflies','Confetti','Gumdrops']],
+ cdSquelch:[['Squelchy','Acid','Rubber','Wobbly','Gummy','Slick','Gooey','Springy','Wet','Jelly'],['Squelch','Gloop','Jelly','Slime','Frogs','Gum','Tadpoles','Puddles','Springs','Blobs']],
+ cdGrain:[['Shattered','Scattered','Torn','Granular','Spliced','Cut','Broken','Sliced','Frayed','Chopped'],['Shards','Grains','Fragments','Splinters','Flakes','Tatters','Snippets','Crumbs','Clippings','Confetti']],
+ bsSub:[['Deep','Sunken','Abyssal','Under','Low','Dark','Hidden','Heavy','Silent','Submerged','Black','Ocean'],['Tide','Floor','Rumble','Current','Pressure','Undertow','Trench','Depth','Swell','Bedrock','Keel','Ground']],
+ bsRound:[['Round','Warm','Woolly','Velvet','Fat','Plump','Soft','Mellow','Padded','Cushioned','Heavy','Dub'],['Thump','Belly','Heartbeat','Drum','Bloom','Pillow','Boom','Barrel','Bumper','Weight','Pulse']],
+ bsSing:[['Singing','Rubber','Elastic','Talking','Hungry','Bouncing','Stretchy','Grinning','Wailing','Purring'],['Rubber','Throat','Growl','Purr','Moan','Bounce','Elastic','Grin','Yawn','Spring']],
+ bsShort:[['Plucked','Dry','Tight','Clipped','Short','Punchy','Muted','Knocking','Stepping','Snappy'],['Thud','Knock','Pluck','Step','Stomp','Tap','Bump','Kick','Footstep','Thump']]};
+function soundName(kind,seed,h){h=h||{};let k;
+  if(kind==='pad')k=h.gate?'padPulse':(h.bright||0)>.45?'padBright':'padDark';
+  else if(kind==='lead'){const e=h.e|0;k=SNM['lead'+e]?'lead'+e:e===0?'lead8':'lead8'}
+  else if(kind==='candy'){const c=h.kinds||{},n=x=>c[x]||0,v=[['cdDust',n('tick')+n('click')+n('crackle')],['cdBlip',n('blip')+n('ping')],['cdSquelch',n('squelch')*1.2],['cdGrain',n('grain')]];v.sort((a,b)=>b[1]-a[1]);k=v[0][0]}
+  else if(kind==='bass')k=(h.dec??.5)<.32?'bsShort':(h.flt??.4)>=.58?'bsSing':(h.body??.25)>=.3?'bsRound':'bsSub';
+  const L=SNM[k]||SNM.padDark,r=rng(((seed>>>0)^0x2C1B3C6D)+k.length*131),a=r.pick(L[0]);let b=r.pick(L[1]),g=0;while(b===a&&g++<8)b=r.pick(L[1]);return a+' '+b}
 function uniqueName(P){if(typeof state==='undefined')return;const taken=new Set(state.hist.filter(h=>h.seed!==P.seed).map(h=>h.name.split(' ').pop()));let k=1;while(taken.has(P.name.split(' ').pop())&&k<12)P.name=genName(P.seed,k++)}
 function genPatch(seed,kind){
   const r=rng(seed),pad=kind==='pad';
@@ -620,6 +655,7 @@ function genPatch(seed,kind){
     P.fxs.chain=P.fxs.chain.filter(f=>f.type!=='bitplane'&&!(f.type==='shifter'&&f.hz>2));P.fxs.chain.forEach(f=>{if(f.type==='sonar'&&(f.chroma==='crush'||f.chroma==='fold'))f.chroma='lowpass';if(f.type==='rotor')f.q=Math.min(f.q,60)})}
   genMods(r,P);
   if(pad&&P.xmod){P.xmod.kind='am';P.xmod.depth=Math.min(P.xmod.depth,.45)}
+  if(pad)P.name=soundName('pad',seed,{gate:!!P.gate,bright:(P.filter.cut-2000)/4000});   /* v1.32: a name that fits the pad */
   P.mix=[1,1,1,1];P.mute=[false,false,false,false];
   return P;
 }
