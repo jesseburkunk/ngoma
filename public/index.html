@@ -914,7 +914,7 @@ input,select{accent-color:var(--accent)}
         <span class="seg" id="editmode" role="group" aria-label="Step edit mode"><button data-m="hits">Hits</button><button data-m="prob">Chance</button><button data-m="cond">Condition</button><button data-m="roll">Flam/roll</button><button data-m="pitch">Pitch</button><button data-m="decay">Decay</button></span></div>
       <div class="grp"><button class="tg" id="fillbtn" aria-pressed="false" title="Steps with the fill condition play while this is on">Fill</button>
         <select id="autofill" aria-label="Auto fill"><option value="0">Auto fill off</option><option value="4">Fill every 4 bars</option><option value="8">Fill every 8 bars</option><option value="16">Fill every 16 bars</option></select>
-        <button class="tg" id="compact">All tracks</button><button class="tg" id="knobsall" aria-pressed="false" title="Open or close the controls of every track">Track controls</button><button class="tg" id="audbtn" aria-pressed="false" title="Audition: hear a drum when you turn one of its knobs, roll its dice or click a step while Ngoma is stopped. Off by default; clicking a track name always plays it">Audition</button></div>
+        <button class="tg" id="compact">All tracks</button><button class="tg" id="knobsall" aria-pressed="false" title="Open or close the controls of every track">Track controls</button><button class="tg" id="clearall" type="button" title="Clear all: every note of every drum off, so you can build a jam from nothing (the sounds stay). ← brings them all back">Clear all</button><button class="tg" id="audbtn" aria-pressed="false" title="Audition: hear a drum when you turn one of its knobs, roll its dice or click a step while Ngoma is stopped. Off by default; clicking a track name always plays it">Audition</button></div>
     </div>
     <div class="rack-scroll"><div class="lanes" id="lanes"></div></div>
     <div class="legend">
@@ -4242,7 +4242,8 @@ const DARE_K=[
   start:(G,t,c)=>{ c.prev=S.fx.leadFd; S.fx.leadFd=1; leadSync(G); }, end:(G,t,c)=>{ S.fx.leadFd=c.prev; leadSync(G); }, keep:()=>{}},
  {id:'oct',name:'Octave',info:'the lead jumps an octave',len:[2,4],w:.7,ok:()=>!!S.fx.leadOn,
   start:(G,t,c)=>{ c.prev=S.fx.leadTr; S.fx.leadTr=(S.fx.leadTr|0)===12?-12:12; }, end:(G,t,c)=>{ S.fx.leadTr=c.prev; }, keep:()=>{}}];
-function dareGap(bar){ const r=rnd((S.fx.dareSeed??11)>>>0,bar,0xDA2E), rate=S.fx.dareRate??.4; return Math.max(4,Math.round((40-32*rate)*(.6+.8*r))); }
+function dareGap(bar){ const r=rnd((S.fx.dareSeed??11)>>>0,bar,0xDA2E), rate=S.fx.dareRate??.4; if(rate<=.005) return Infinity;   /* v216 (Jesse): all the way left is never; Now and Again still work */
+  return Math.max(4,Math.round((40-32*rate)*(.6+.8*r))); }
 function dareStart(G,g,t,bar,K,c){ c=c||{r:rnd((S.fx.dareSeed??11)>>>0,bar,0xDA31)}; const L=K.len, n=L[0]+Math.floor(rnd((S.fx.dareSeed??11)>>>0,bar,0xDA33)*(L[1]-L[0]+1));
   c.k=K; c.bars=n; c.end=bar+n; c.kept=false; c.info=null; DARE.cur=c; DARE.last={k:K,c:Object.assign({},c)}; try{ K.start(G,t,c,g); }catch(e){} dareUI(); }
 function dareEnd(G,t,c){ c=c||DARE.cur; if(!c) return; if(!c.kept||!c.k.keep) try{ c.k.end(G,t,c); }catch(e){} else if(c.k.id==='silence'||c.k.id==='half'||c.k.id==='tape') try{ c.k.end(G,t,c); }catch(e){}
@@ -4250,7 +4251,7 @@ function dareEnd(G,t,c){ c=c||DARE.cur; if(!c) return; if(!c.kept||!c.k.keep) tr
 function dareStep(ctx,G,g,t){ if(ctx!==actx||G!==AG) return; const BL=4*S.res; if(g%BL) return; const bar=Math.floor(g/BL); DARE.bar=bar;
   if(!S.fx.dareOn){ if(DARE.cur) dareEnd(G,t); return; }
   if(DARE.cur&&bar>=DARE.cur.end){ dareEnd(G,t); DARE.next=bar+dareGap(bar); }
-  if(DARE.next<0) DARE.next=bar+Math.min(8,dareGap(bar));
+  if(DARE.next<0){ const gp=dareGap(bar); DARE.next=isFinite(gp)?bar+Math.min(8,gp):Infinity; }
   if(DARE.cur){ dareUI(); return; }
   if(DARE.again&&DARE.last){ DARE.again=false; const L=DARE.last; if(L.k.ok()){ const c=Object.assign({},L.c); delete c.info; dareStart(G,g,t,bar,L.k,c); return; } }
   if(DARE.now||bar>=DARE.next){ DARE.now=false; const sd=(S.fx.dareSeed??11)>>>0, ok=DARE_K.filter(k=>k.ok()&&!(DARE.last&&DARE.last.k===k));
@@ -4258,7 +4259,7 @@ function dareStep(ctx,G,g,t){ if(ctx!==actx||G!==AG) return; const BL=4*S.res; i
   dareUI(); }
 function dareStop(){ if(DARE.cur&&AG) dareEnd(AG,actx.currentTime); DARE.next=-1; DARE.half=null; dareUI(); }
 function dareUI(){ const n=$('dareName'), i=$('dareInfo'); if(!n) return; const c=DARE.cur, L=DARE.last;
-  const a=c?c.k.name:!S.fx.dareOn?'Off':L?L.k.name:'Waiting', b=c?(c.info||c.k.info)+(c.kept?' · kept':' · '+Math.max(1,c.end-Math.max(0,DARE.bar))+(c.end-DARE.bar===1?' bar':' bars')):!S.fx.dareOn?'the machine keeps to your plan':!playing?'starts when Ngoma plays':DARE.next>0?'next in '+Math.max(1,DARE.next-DARE.bar)+' bars':'listening';
+  const a=c?c.k.name:!S.fx.dareOn?'Off':L?L.k.name:'Waiting', b=c?(c.info||c.k.info)+(c.kept?' · kept':' · '+Math.max(1,c.end-Math.max(0,DARE.bar))+(c.end-DARE.bar===1?' bar':' bars')):!S.fx.dareOn?'the machine keeps to your plan':!playing?'starts when Ngoma plays':!isFinite(DARE.next)?'only when you press Now':DARE.next>0?'next in '+Math.max(1,DARE.next-DARE.bar)+' bars':'listening';
   if(n.textContent!==a) lcdSet('dareName',a); if(i.textContent!==b) i.textContent=b; const kb=$('dareKeep'); if(kb) kb.disabled=!(c&&c.k.keep&&!c.kept); const ab=$('dareAgain'); if(ab) ab.disabled=!L||!S.fx.dareOn; const nb=$('dareNow'); if(nb) nb.disabled=!S.fx.dareOn; }
 /* v209 (Jesse: when you switch an instrument on while jamming, it should not come in at full volume): a layer switched on fades in from
    silence over two bars; switched off, its notes stop and what still rings fades out over a bar. Only while Ngoma plays; a scene, a preset
@@ -5050,7 +5051,9 @@ function euRow(i){
   r.append(lk,ln,lr,sel,go,hint); return r;
 }
 let rsT=0; function renderSoon(){ if(rsT) return; rsT=requestAnimationFrame(()=>{ rsT=0; renderLanes(); }); }   // one redraw per frame while dragging
-var CLEARED=new Set();   /* v140: a track you just cleared stays in view in 'Only playing' until the next rhythm */
+var CLEARED=new Set();
+/* v217 (Jesse: clear every drum note at once, to build a jam up): one undo step; the tracks stay in view so you can click notes back in */
+function clearAll(){ if(!S.lanes.some(L=>hasHits(L)||L.pend)) return; hRecord(()=>{ S.lanes.forEach((L,i)=>{ if(!hasHits(L)&&!L.pend) return; L.btpl='.'.repeat(L.blen); L.xs={}; L.eu=null; delete L.pend; regen(i); CLEARED.add(i); }); invalidate(); }); renderLanes(); updHist(); mstatus('Every drum cleared: start clicking notes, or roll the ⚄ on a track. ← brings them all back.'); }   /* v140: a track you just cleared stays in view in 'Only playing' until the next rhythm */
 function renderLanes(){
   const box=$('lanes'); box.textContent=''; cellEls=[]; nowIdx=[]; ledEls=[]; driftEls=[];
   let hidden=0, lastReg='';
@@ -5197,6 +5200,7 @@ function initControls(){
   const gd=$('guide'); let gPrev=null;
   const gOpen=()=>{ gPrev=document.activeElement; gd.hidden=false; $('gclose').focus(); };
   const gShut=()=>{ gd.hidden=true; gPrev&&gPrev.focus&&gPrev.focus(); };
+  { const ca=$('clearall'); if(ca) ca.onclick=clearAll; }
   { const b=$('knobsall'); const u=()=>{ b.setAttribute('aria-pressed',!!S.knobsOpen); }; u(); UPD.push(u);
     b.onclick=()=>{ S.knobsOpen=!S.knobsOpen; S.lanes.forEach(L=>delete L.kopen); u(); renderLanes(); kfoldSeen(); save(); }; }
   $('guidebtn').onclick=gOpen; $('gclose').onclick=gShut;
@@ -5290,8 +5294,8 @@ function initControls(){
   }
   pbInit();
   { const cb=$('dareOn'), U=$('dareU');   /* v204 Dare */
-    const kr=makeKnob({label:'Often',min:0,max:100,step:1,get:()=>Math.round((S.fx.dareRate??.4)*100),set:v=>{ S.fx.dareRate=v/100; save(); },fmt:v=>{ const r=v/100, b=Math.round(40-32*r); return 'every ~'+b+' bars'; },def:40});
-    kr.title='How often the machine steps in: left rarely (every 40 bars or so), right often (every 8 or so); the exact moment is seeded · drag, double-click resets';
+    const kr=makeKnob({label:'Often',min:0,max:100,step:1,get:()=>Math.round((S.fx.dareRate??.4)*100),set:v=>{ S.fx.dareRate=v/100; DARE.next=-1; save(); },fmt:v=>{ if(v<=0) return 'never'; const r=v/100, b=Math.round(40-32*r); return 'every ~'+b+' bars'; },def:40});
+    kr.title='How often the machine steps in: all the way left never (Now still works), then rarely (every 40 bars or so), right often (every 8 or so); the exact moment is seeded · drag, double-click resets';
     kr.classList.add('big','mgk'); const wr=document.createElement('div'); wr.className='mgw'; wr.append(kr); $('dareSlot').replaceWith(wr);
     const u=()=>{ cb.checked=!!S.fx.dareOn; U.classList.toggle('off',!S.fx.dareOn); kr.upd(); dareUI(); }; u(); UPD.push(u);
     cb.onchange=()=>{ S.fx.dareOn=cb.checked; if(!cb.checked&&DARE.cur&&AG) dareEnd(AG,actx.currentTime); DARE.next=-1; if(cb.checked&&S.fx.dareSeed==null) S.fx.dareSeed=worpSeed(); u(); save(); status(cb.checked?'Dare: the machine will step in now and then. Keep what you like.':'Dare off.'); };

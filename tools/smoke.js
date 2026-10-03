@@ -137,6 +137,8 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
 
   await check('Keyboard shortcuts do not throw', async () => { for (const k of ['t', 'm', 'm', 'ArrowLeft', 'ArrowRight']) { await p.keyboard.press(k); await p.waitForTimeout(80); } await p.keyboard.down('d'); await p.waitForTimeout(150); await p.keyboard.up('d'); });
 
+  await check('Clear all empties every drum, undo brings them back', async () => { const r = await p.evaluate(() => { const b = S.lanes.filter(hasHits).length; document.getElementById('clearall').click(); const a = S.lanes.filter(hasHits).length; hStep(-1); return [b, a, S.lanes.filter(hasHits).length]; });
+    assert(r[0] > 0 && r[1] === 0 && r[2] === r[0], JSON.stringify(r)); });
   await check('Undo and redo', async () => { const r = await p.evaluate(() => { const L = S.lanes[0], before = L.level; hRecord(() => { L.level = before * .5; }); updHist(); const mid = S.lanes[0].level; hStep(-1); const back = S.lanes[0].level; hStep(1); return [before, mid, back, S.lanes[0].level]; });
     assert(r[1] === r[0] * .5 && r[2] === r[0] && r[3] === r[0] * .5, 'level ' + r.join(' ')); await p.evaluate(() => hStep(-1)); });
 
