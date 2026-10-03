@@ -639,10 +639,10 @@ input,select{accent-color:var(--accent)}
 .play:hover{background:#ff7a40;box-shadow:0 2px 0 #a63d10,0 6px 12px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.25)}
 /* v215 patch bay */
 #wiSel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.pbay{flex:1 1 560px;min-width:320px;max-width:800px;height:300px;position:relative;touch-action:none;user-select:none}
+.pbay{flex:1 1 600px;min-width:340px;max-width:860px;height:470px;position:relative;touch-action:none;user-select:none}
 .pbay svg{width:100%;height:100%;overflow:visible;display:block}
 .pbay .jk{cursor:grab}.pbay .jk.dim{opacity:.35}.pbay .jk.ok .ring{stroke:#ece6da;stroke-width:2.2}
-.pbay .lbl2{font:600 10px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;fill:#a59f92}.pbay .sub2{font:500 9.5px/1 ui-monospace,monospace;fill:#7f7a70;cursor:pointer}
+.pbay .pbio{font:800 7.5px/1 system-ui,sans-serif;letter-spacing:.12em;fill:#141515}.pbay .pbk{cursor:ns-resize}.pbay .pbt{font:700 12px/1 system-ui,sans-serif;letter-spacing:.32em;fill:#e9e3d6}.pbay .pbs{font:500 9px/1 system-ui,sans-serif;letter-spacing:.12em;fill:#8d887e;text-transform:uppercase}.pbay .pbg{font:700 8.5px/1 system-ui,sans-serif;letter-spacing:.24em;fill:#a8c9cd}.pbay .pbl{stroke:#5fb7c4;stroke-opacity:.35;stroke-width:1}.pbay .pbj{font:600 9px/1 system-ui,sans-serif;letter-spacing:.14em;fill:#d8d2c4}.pbay .pbd{font:600 8px/1 ui-monospace,monospace;letter-spacing:.08em;fill:#9a96f2}.pbay .pblcd{font:600 8.5px/1 ui-monospace,monospace;letter-spacing:.08em;fill:#e6c46a}.pbay .lbl2{font:600 10px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;fill:#a59f92}.pbay .sub2{font:500 9.5px/1 ui-monospace,monospace;fill:#7f7a70;cursor:pointer}
 .pbay .cab{cursor:pointer}.pbay .cab path{fill:none;stroke-linecap:round}
 #hinttx .btn{padding:2px 9px;margin-left:6px;font-size:12px}
 .lyr-invite{animation:lyrinv 2.4s ease-in-out infinite}@keyframes lyrinv{0%,100%{outline:2px solid color-mix(in srgb,var(--ua,#ff6a2b) 0%,transparent);outline-offset:2px}50%{outline:2px solid color-mix(in srgb,var(--ua,#ff6a2b) 75%,transparent);outline-offset:4px}}
@@ -1260,7 +1260,7 @@ THE SOFTWARE.</pre></details>
     <dt>Texture</dt><dd>A field recording far under the drums, as a background texture: a place rather than an instrument, in the spirit of Chris Watson and Jake Muir. Off by default.<details class="g-more"><summary>More</summary><p>Seven recordings by Félix Blume, all CC0 (public domain): a castle moat through hydrophones, a forest at night in Mexico, wind in a wire fence, dawn in the Amazon, ice on an alpine lake, a night in Port-au-Prince with the city far away, and a contact microphone on a bat nest. <b>Voices</b> is radio from NASA's Artemis II mission (public domain): mission control and the crew in short phrases, with pauses; Candy takes syllables from it. <i>Your file…</i> plays your own recording; it stays in this browser.</p><p><b>Filter</b> darkens it (left) or thins it out of the way of the drums (right). <b>Distance</b> pushes the place away: darker, quieter, more reverb. <b>Drift</b> lets the recording come apart into slow, overlapping grains at lower speeds, so it floats instead of running. <b>Tune</b> sends it through narrow filters on the tones of the current chord, so wind, water or insects start to sing the harmony. The low drums duck it a little. Everything is seeded, so the export sounds as you hear it, and loops without a seam.</p></details></dd>
     <dt>Tape loop</dt><dd>A long tape loop after Frippertronics: what you send in comes back on every pass, a little darker, so layers pile up and drift against the bar. Live and in Rec only.<details class="g-more"><summary>More</summary><p>The loop is 2.5, 3.5, 5.5 or 7.5 bars, never a whole number, so every pass lands somewhere else. Changing it while it plays bends the tape like a slowing machine. <i>Level</i> is what comes back, <i>Lead</i>, <i>Pad</i> and <i>Candy</i> how much of each goes in, <i>Hold</i> how many passes a layer lives, <i>Tone</i> how much darker each pass gets. <i>Clear</i> erases the tape. A loop export leaves it out: a minute of build-up does not fit in a few bars.</p></details></dd>
     <dt>Dare</dt><dd>Now and then, on a bar line, the machine steps in for a few bars with one move you would not have made. <i>Keep</i> makes it stay (← takes it back), <i>Again</i> plays the last one once more, <i>Now</i> asks for one. Live only.<details class="g-more"><summary>More</summary><p>The moves: <i>Breakdown</i> (the drums step out), <i>Strip</i> (only bass and texture remain), <i>Silence</i> (one bar of nothing, then the drop), <i>Half-time</i>, <i>Up a fifth</i>, <i>Half speed</i> (the tape loop), <i>Other grains</i> (Candy takes another recording), <i>Phase jump</i>, <i>Echo throw</i> and <i>Octave</i> on the lead. Only moves that fit the layers you have on. <i>Often</i> sets how often, from about every 40 bars to about every 8; the moment itself is seeded.</p></details></dd>
-    <dt>Wires</dt><dd>The layers listen to each other, with real patch cables: drag from an output on the left to an input on the right, pull a plug out (or click a cable) to unpatch. A cable lights up when a signal runs through it. Every output fits every input, and several cables can share a jack. Outputs that fire: <i>Low drums</i>, <i>Drum</i> (one track you pick, such as tamburello or palmas; click its jack for the next), <i>Lead</i> and <i>Bass</i> (their notes). Outputs that set a level: <i>Gate</i> (a 16-step pattern, open or closed, the trance gate; click for the next pattern), <i>LFO</i> (a slow wave over 1, 2 or 4 bars) and <i>Random</i> (a random level per step that loops; click for a new loop). Inputs: <i>Bass filter</i>, <i>Pad</i> (dips, or with Gate: chopped), <i>Lead tone</i> (darker and back), <i>Echo</i> (throws the drums into the filter delay), <i>Tape loop</i> (bends it, live only), <i>Candy</i> (sets off a sound) and <i>Texture</i>. Try Gate → Pad for a trance gate, Low drums → Echo for dub throws, LFO → Bass filter for a slow wobble. <i>Amount</i> sets how hard they pull. Everything but the tape is in the export too.</dd>
+    <dt>Wires</dt><dd>The layers listen to each other, with real patch cables: drag from an output on the left to an input on the right, pull a plug out (or click a cable) to unpatch. A cable lights up when a signal runs through it. Every output fits every input, and several cables can share a jack. Outputs that fire: <i>Low drums</i>, <i>Drum</i> (one track you pick, such as tamburello or palmas; click its jack for the next), <i>Lead</i> and <i>Bass</i> (their notes). Outputs that set a level: <i>Gate</i> (a 16-step pattern, open or closed, the trance gate; click for the next pattern), <i>LFO</i> (a slow wave over 1, 2 or 4 bars) and <i>Random</i> (a random level per step that loops; click for a new loop). Inputs: <i>Bass filter</i>, <i>Pad</i> (dips, or with Gate: chopped), <i>Lead tone</i> (darker and back), <i>Echo</i> (throws the drums into the filter delay), <i>Tape loop</i> (bends it, live only), <i>Candy</i> (sets off a sound) and <i>Texture</i>. Each output has a small amount knob (drag up or down, double-click for full); <i>Depth</i> scales them all. Try Gate → Pad for a trance gate, Low drums → Echo for dub throws, LFO → Bass filter for a slow wobble. <i>Amount</i> sets how hard they pull. Everything but the tape is in the export too.</dd>
     <dt>Magic</dt><dd>Seven characters that work on the sound, not the rhythm. <i>Amount</i> says how far; everything stays in tune and in the export.<details class="g-more"><summary>More</summary><p><b>Breath</b>: gentle life in timing and dynamics. <b>Resonate</b>: sympathetic strings on your key that ring with every stroke; <i>Chord</i> picks their notes (and with Chords on they follow the scheme). <b>Comb</b>: a tuned comb that moves to another note every two bars. <b>Air</b>: harmonics and sheen on top. <b>Formant</b>: two vowel filters, as if the kit speaks. <b>Cosmos</b>: a drifting echo after the SOMA Cosmos, two echo lines that drift apart and meet again. <b>Ghosts</b>: a tiny grain of a hit comes back a few steps later, quiet and far left or right.</p><p><b>Decay</b> sets how long Resonate rings and Comb and Cosmos repeat. <b>Every</b> sends only every 2nd to 8th hit into Magic; the rest stays dry. <b>Echo</b> gives Magic its own dub echo. With Ghosts, <b>Chance</b> sets how often and <b>Hard</b> how present.</p></details></dd>
   </dl>
 </section>
@@ -4096,7 +4096,7 @@ function plSync(G,t){ const Q=G.plaits; if(!Q) return; const P=plPatch(leadSpec(
   [['eng',P.e],['harm',plHarm(P.e,P.h)],['timb',P.t],['morph',P.m],['dec',P.d],['col',P.c],['tmod',P.tm]].forEach(([n,v])=>{ const a=pr.get(n); if(live) a.setValueAtTime(v,Math.max(t||0,G.ctx.currentTime)); else a.value=v; }); }
 function plNote(G,v,t,midi,vel){ const Q=G.plaits; if(!Q||!isFinite(midi)) return; const pr=Q.node.parameters, c=++Q.cnt[v]; t=Math.max(t,G.ctx.currentTime||0);
   pr.get('n'+v).setValueAtTime(midi,t); pr.get('v'+v).setValueAtTime(Math.max(.05,Math.min(1,vel)),t); pr.get('c'+v).setValueAtTime(c,t);
-  if(S.fx.wiOn) wiFire('lead',G.ctx,G,t,vel,null); }   /* v217 Wires: the lead as a source */
+  if(S.fx.wiOn){ if(G.ctx===actx) pbAct('lead',t-G.ctx.currentTime,Math.max(.4,vel)); wiFire('lead',G.ctx,G,t,vel,null); } }   /* v217 Wires: the lead as a source */
 function plKeys(G){ return {noteOn:(m,v,t)=>{ const Q=plEngine(G.ctx,G); if(!Q){ loadFilter(G.ctx).then(()=>{ const Q2=plEngine(G.ctx,G); if(!Q2) return; plSync(G,0); plNote(G,3+(Q2.kv++%3),G.ctx.currentTime,m,v); }); return; }   /* v178: the first key, before the worklet has loaded, waits for it instead of being lost */
   plSync(G,t); plNote(G,3+(Q.kv++%3),t,m,v); }, noteOff:()=>{}}; }   /* the low-pass gate decays by itself: a key needs no note-off */
 const PL_PH=new Map();
@@ -4210,7 +4210,7 @@ function bsStep(ctx,G,g,t){ const B=G.bs; if(!B) return; const live=bsLive(); if
   const t0=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)), dec=F.bsDec??.5, len=Math.min(gap-.012,Math.max(.06,Math.round(x[1]/q)*sd*(.4+1.2*dec))), pk=x[2];
   if(live){ B.o1.frequency.setTargetAtTime(f,t0,.004); B.o2.frequency.setTargetAtTime(2*f,t0,.004);
   B.env.gain.setTargetAtTime(pk,t0,.0035); B.env.gain.setTargetAtTime(pk*(.55+.4*dec),t0+.04,.08+.3*dec); B.env.gain.setTargetAtTime(0,t0+len,.025+.05*dec); }
-  wiFire('bass',ctx,G,t0,x[2],g); }
+  if(S.fx.wiOn&&ctx===actx&&live) pbAct('bass',t0-ctx.currentTime,x[2]); wiFire('bass',ctx,G,t0,x[2],g); }
 function bsUI(){ const n=$('bsName'), i=$('bsInfo'); if(!n||!window.WorpEngine) return; const nm=bsNm(), st={drop:'one drop',step:'steppers',off:'offbeat',half:'half-time'}[bsSty()], P=bsBar(0).concat(bsBar(1));
   const k=st+' · #'+bsSeed().toString(36).toUpperCase().slice(0,5)+' · '+P.length+' notes';   /* v201 (Jesse: a name but no way to pick another patch): the name is the sound, the code the figure */ if(n.textContent!==nm) n.textContent=nm; if(i.textContent!==k) i.textContent=k;
   document.querySelectorAll('#bsSty button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.s===bsSty()))); }
@@ -4273,7 +4273,8 @@ const WI_OLD={lb:'low>bf',lp:'low>pad',lt:'lead>tape',bc:'bass>cd'};
 function wiCables(){ const F=S.fx; if(Array.isArray(F.wc)) return F.wc; const W=F.wi||{lb:1,lp:1}; return Object.entries(WI_OLD).filter(([k])=>W[k]).map(([,v])=>v); }
 function wiFrom(src){ return S.fx.wiOn?wiCables().filter(k=>k.startsWith(src+'>')).map(k=>k.split('>')[1]):[]; }
 function wiOn(k){ const c=WI_OLD[k]; return !!(S.fx.wiOn&&c&&wiCables().includes(c)); }
-function wiFire(src,ctx,G,t,v,seed){ const D=wiFrom(src); if(!D.length) return; const a=wiAmt(), live=ctx===actx, te=Math.max(ctx.currentTime||0,t), vv=Math.min(1,.4+.6*(v??.8));
+function wiOutAmt(src){ const A=S.fx.wAmt; return A&&isFinite(A[src])?A[src]:1; }   /* v219: one attenuator per output, times Depth */
+function wiFire(src,ctx,G,t,v,seed){ const D=wiFrom(src); if(!D.length) return; const a=wiAmt()*wiOutAmt(src), live=ctx===actx, te=Math.max(ctx.currentTime||0,t), vv=Math.min(1,.4+.6*(v??.8));
   if(live&&PB.svg) pbPulse(src,te-ctx.currentTime);
   D.forEach(d=>{ try{
     if(d==='bf'&&G.bs){ const hz0=45*Math.pow(2,(S.fx.bsFlt??.4)*7.4), up=Math.min(9000,hz0*(1+5*a*vv)), f=G.bs.lp1.frequency; f.setTargetAtTime(up,te,.004); f.setTargetAtTime(hz0,te+.02,.09+.1*a); }
@@ -4298,7 +4299,7 @@ function wiLfoBars(){ return WI_LFO[(S.fx.wLfo??1)%WI_LFO.length]; }
 function wiDrumLanes(){ return S.lanes.map((L,i)=>i).filter(i=>hasHits(S.lanes[i])&&INSTR[i].reg!=='low'); }
 function wiDrumLane(){ const L=wiDrumLanes(); if(!L.length) return -1; const w=S.fx.wDrum; if(typeof w==='string'){ const i=S.lanes.findIndex((_,k)=>INSTR[k].id===w); if(L.includes(i)) return i; }
   const pref=['tamburello','palmas','shaker','tambourine','ganza','caxixi']; for(const id of pref){ const i=L.find(k=>INSTR[k].id===id); if(i!=null) return i; } return L.sort((a,b)=>S.lanes[b].steps.filter(Boolean).length-S.lanes[a].steps.filter(Boolean).length)[0]; }
-function wiLevel(src,ctx,G,t,lv,soft){ const D=wiFrom(src); if(!D.length) return; const a=wiAmt(), live=ctx===actx, te=Math.max(ctx.currentTime||0,t), tc=soft?stepDur(S)*.6:.004, prev=(G._wl||(G._wl={}))[src]??0; G._wl[src]=lv;
+function wiLevel(src,ctx,G,t,lv,soft){ const D=wiFrom(src); if(!D.length) return; const a=wiAmt()*wiOutAmt(src), live=ctx===actx, te=Math.max(ctx.currentTime||0,t), tc=soft?stepDur(S)*.6:.004, prev=(G._wl||(G._wl={}))[src]??0; G._wl[src]=lv;
   if(live&&PB.svg&&lv>.5&&(prev<=.5||soft)) pbPulse(src,te-ctx.currentTime,soft?lv*.6:1);
   D.forEach(d=>{ try{
     if(d==='pad'&&G.pad&&G.pad.pump&&padLive(G)) G.pad.pump.gain.setTargetAtTime(1-(.2+.75*a)*(1-lv),te,tc);
@@ -4310,6 +4311,11 @@ function wiLevel(src,ctx,G,t,lv,soft){ const D=wiFrom(src); if(!D.length) return
     else if(d==='cd'&&G.cd&&cdLive()&&lv>.5&&prev<=.5){ const bar=Math.floor(Math.max(0,G._wg||0)/(4*S.res)), PP=cdPalette(Math.floor(bar/8)), cx=PP[Math.floor(rnd(cdSeed(),(G._wg|0)+src.length*7,0xB2C)*6)%6]; cdHit(ctx,G,te+.004,cx,.45+.4*a,S.fx.cdSize??.35); }
   }catch(err){} }); }
 function wiStep(ctx,G,g,t){ if(!S.fx.wiOn) return; G._wg=g; const sd=stepDur(S), BL=4*S.res, s=((g%BL)+BL)%BL, go=grooveOff(g,S,sd);
+  if(ctx===actx&&PB.svg&&PB.vis!==false){ const dl=t+go-ctx.currentTime, i16b=Math.floor(s*16/BL); setTimeout(()=>{ PB.st16=i16b; },Math.max(0,dl*1000));   /* v219: the LEDs and step displays, also with nothing patched */
+    const e=wiLow(g); if(e) pbAct('low',dl,Math.min(1,.4+.6*(e.v??.8)));
+    const ln=wiDrumLane(); if(ln>=0){ const S2=S.renderOnly==null?S:Object.assign({},S,{renderOnly:null}); for(const e2 of eventsAt(g,S2)) if(e2.lane===ln&&!e2.silent){ pbAct('drum',dl,Math.min(1,.4+.6*(e2.v??.8))); break; } }
+    if(wiGatePat()[i16b]==='1') pbAct('gate',dl,1); const per=wiLfoBars()*BL; pbAct('lfo',dl,.5-.5*Math.cos(2*Math.PI*(((g%per)+per)%per)/per),true);
+    const n=16*Math.max(1,Math.round(BL/16)), k=((g%n)+n)%n, sr=(S.fx.wRnd??5)>>>0; if(rnd(sr,k,0xD1CE)>=.5) pbAct('rnd',dl,.4+.6*rnd(sr,k,0xD1CF)); }
   if(wiFrom('low').length){ const e=wiLow(g); if(e) wiFire('low',ctx,G,t+go+(e.dt||0),e.v??.8,g); }
   if(wiFrom('drum').length){ const ln=wiDrumLane(); if(ln>=0){ const S2=S.renderOnly==null?S:Object.assign({},S,{renderOnly:null}); for(const e of eventsAt(g,S2)) if(e.lane===ln&&!e.silent){ wiFire('drum',ctx,G,t+go+(e.dt||0),e.v??.8,g); break; } } }
   const i16=Math.floor(s*16/BL), on16=Math.floor((s+1)*16/BL)!==i16||BL===16;
@@ -4324,38 +4330,82 @@ const PB_OUT=[['low','Low drums','#47a37c'],['drum','Drum','#d9c86a'],['lead','L
 function pbSub(id){ if(id==='drum'){ const i=wiDrumLane(); return i>=0?INSTR[i].name:'no track'; } if(id==='gate') return WI_GATES[(S.fx.wGate|0)%WI_GATES.length][0]; if(id==='lfo'){ const b=wiLfoBars(); return b+(b>1?' bars':' bar'); } if(id==='rnd') return '#'+((S.fx.wRnd??5)>>>0).toString(36).toUpperCase().slice(0,4); return ''; }
 function pbCycle(id){ if(id==='drum'){ const L=wiDrumLanes(); if(!L.length) return; const c=L.indexOf(wiDrumLane()); S.fx.wDrum=INSTR[L[(c+1)%L.length]].id; } else if(id==='gate') S.fx.wGate=((S.fx.wGate|0)+1)%WI_GATES.length; else if(id==='lfo') S.fx.wLfo=((S.fx.wLfo??1)+1)%WI_LFO.length; else if(id==='rnd') S.fx.wRnd=worpSeed(); else return false; save(); pbKick(); status(PB_OUT.find(x=>x[0]===id)[1]+': '+pbSub(id)+'.'); return true; }
 const PB={svg:null,w:0,h:0,cab:{},drag:null,raf:0,pulse:{}};
-function pbJack(side,id){ const L=side==='o'?PB_OUT:PB_IN, i=L.findIndex(x=>x[0]===id), n=L.length, x=side==='o'?118:PB.w-104, y=22+(PB.h-60)*(n>1?i/(n-1):.5); return {x,y}; }   // labels sit outside the jacks, cables run between them
+/* v219 (Jesse: make Wires a beautiful module): a Eurorack-style panel drawn in SVG. Brushed dark aluminium with a hint of teal, rails and
+   screws, engraved labels above the jacks, outputs in dark inverted boxes, real jacks (hex nut, chrome ring), an LED by every output that
+   shows its signal even unpatched, small displays for Gate (16 steps), Random (16 bars), LFO (a wave) and Drum (the track), plugs with
+   coloured boots, and the cable under the pointer comes forward. */
+const PBL={top:58,rowO:0,rowI:0};
+function pbJack(side,id){ const L=side==='o'?PB_OUT:PB_IN, i=L.findIndex(x=>x[0]===id), n=L.length, top=PBL.top+18, bot=PB.h-30, gap=side==='o'?14:0, span=bot-top-gap, y=top+(n>1?span*i/(n-1):span/2)+(side==='o'&&i>=4?gap:0), x=side==='o'?Math.min(260,PB.w*.3):PB.w-70; return {x,y}; }
 function pbKeys(){ return S.fx.wiOn?wiCables().slice():[]; }
 function pbSync(){ if(!PB.svg) return; const keep=new Set(pbKeys()); for(const k of Object.keys(PB.cab)) if(!keep.has(k)&&!(PB.drag&&PB.drag.k===k)) delete PB.cab[k];
   keep.forEach(k=>{ if(!PB.cab[k]){ const [o,i]=k.split('>'); PB.cab[k]={o,i,s:0,v:-6,lx:0,glow:0}; } }); pbKick(); }
 function pbKick(){ if(!PB.raf) PB.raf=requestAnimationFrame(pbFrame); }
 function pbPath(a,b,sag){ const mx=(a.x+b.x)/2, my=(a.y+b.y)/2+sag; return 'M'+a.x+' '+a.y+' Q'+mx+' '+(my+sag*.9)+' '+b.x+' '+b.y; }
-function pbFrame(){ PB.raf=0; const svg=PB.svg; if(!svg) return; let busy=false; const now=performance.now();
-  const parts=[]; const plug=(p,c)=>'<g transform="translate('+p.x+','+p.y+')"><circle r="7.5" fill="#1a1917"/><circle r="5.5" fill="'+c+'"/><circle r="2" fill="#0d0d0c"/></g>';
-  const cable=(key,a,b,col,C)=>{ const d=Math.hypot(b.x-a.x,b.y-a.y), tgt=14+d*.16; C.v+=(tgt-C.s)*.09; C.v*=.86; C.s+=C.v; if(Math.abs(C.v)>.02||Math.abs(tgt-C.s)>.2) busy=true;
-    const gl=Math.max(0,C.glow-(now-(C.gt||0))/260); if(gl>0) busy=true; const pth=pbPath(a,b,C.s);
-    parts.push('<g class="cab" data-k="'+key+'"><path d="'+pth+'" stroke="#000" stroke-opacity=".45" stroke-width="9" transform="translate(0,3)"/><path d="'+pth+'" stroke="#141312" stroke-width="8"/><path d="'+pth+'" stroke="'+col+'" stroke-width="5.5" style="filter:brightness('+(1+gl*.9)+')'+(gl>0?';drop-shadow(0 0 '+(6*gl).toFixed(1)+'px '+col+')':'')+'"/><path d="'+pth+'" stroke="#fff" stroke-opacity="'+(.18+gl*.35)+'" stroke-width="1.4" transform="translate(-.6,-1.6)"/><path d="'+pth+'" stroke="transparent" stroke-width="18"/></g>'); };
-  const D=PB.drag, ok=D?PB_IN.map(x=>x[0]):[];
-  // jacks
-  const jack=(side,[id,lab,col])=>{ const p=pbJack(side,id), cls='jk'+(D&&side==='i'?(ok.includes(id)?' ok':' dim'):''); return '<g class="'+cls+'" data-s="'+side+'" data-j="'+id+'" transform="translate('+p.x+','+p.y+')"><circle r="15" fill="transparent"/><circle class="ring" r="11" fill="#242321" stroke="'+col+'" stroke-width="1.6"/><circle r="7" fill="#0b0b0a" stroke="#4a4842" stroke-width="1"/><circle r="3" fill="#000"/></g><text class="lbl2" x="'+(side==='o'?p.x-20:p.x+20)+'" y="'+(p.y+(side==='o'&&pbSub(id)?-1:3.5))+'" text-anchor="'+(side==='o'?'end':'start')+'">'+lab+'</text>'+(side==='o'&&pbSub(id)?'<text class="sub2" x="'+(p.x-20)+'" y="'+(p.y+10)+'" text-anchor="end">'+pbSub(id)+' ⟳</text>':''); };
-  PB_OUT.forEach(j=>parts.push(jack('o',j))); PB_IN.forEach(j=>parts.push(jack('i',j)));
-  for(const [k,C] of Object.entries(PB.cab)){ if(D&&D.k===k) continue; const a=pbJack('o',C.o), b=pbJack('i',C.i), col=PB_OUT.find(x=>x[0]===C.o)[2]; cable(k,a,b,col,C); parts.push(plug(a,col)); parts.push(plug(b,col)); }
-  if(D){ const a=pbJack('o',D.o), col=PB_OUT.find(x=>x[0]===D.o)[2]; D.lx+=(D.x-D.lx)*.35; D.ly+=(D.y-D.ly)*.35; const b={x:D.lx,y:D.ly}; cable('drag',a,b,col,D.C); parts.push(plug(a,col)); parts.push(plug(b,col)); busy=true;
+function pbFrame(){ PB.raf=0; const svg=PB.svg; if(!svg) return; let busy=false; const now=performance.now(), W=PB.w, H=PB.h, parts=[];
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  // panel
+  parts.push('<defs><linearGradient id="pbPan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d2f2f"/><stop offset=".5" stop-color="#262828"/><stop offset="1" stop-color="#202222"/></linearGradient>'+
+    '<pattern id="pbBr" width="6" height="3" patternUnits="userSpaceOnUse"><rect width="6" height="1" fill="#fff" opacity=".018"/></pattern>'+
+    '<radialGradient id="pbNut" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d9d6cf"/><stop offset=".45" stop-color="#8d8a84"/><stop offset="1" stop-color="#3b3a37"/></radialGradient>'+
+    '<radialGradient id="pbScr" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#bdb9b1"/><stop offset="1" stop-color="#4a4844"/></radialGradient></defs>');
+  parts.push('<rect x="1" y="1" width="'+(W-2)+'" height="'+(H-2)+'" rx="6" fill="url(#pbPan)" stroke="#3a3c3c"/><rect x="1" y="1" width="'+(W-2)+'" height="'+(H-2)+'" rx="6" fill="url(#pbBr)"/><rect x="1" y="1" width="'+(W-2)+'" height="'+(H-2)+'" rx="6" fill="#5fb7c4" opacity=".035"/>');
+  [[10,10],[W-10,10],[10,H-10],[W-10,H-10]].forEach(([x,y])=>parts.push('<g transform="translate('+x+','+y+')"><circle r="4.2" fill="url(#pbScr)" stroke="#1b1b1a" stroke-width=".8"/><path d="M-2.4 -.9 L2.4 .9" stroke="#2a2927" stroke-width="1.1"/></g>'));
+  parts.push('<text class="pbt" x="'+(W/2)+'" y="27" text-anchor="middle">WIRES</text><text class="pbs" x="'+(W/2)+'" y="39" text-anchor="middle">patch the layers into each other</text>');
+  const ox=pbJack('o','low').x, ix=pbJack('i','bf').x, yT=pbJack('o','low').y, yC=pbJack('o','gate').y;
+  parts.push('<text class="pbg" x="26" y="'+(yT-31)+'">TRIGGERS</text><line x1="26" y1="'+(yT-26)+'" x2="'+(ox+22)+'" y2="'+(yT-26)+'" class="pbl"/>');
+  parts.push('<text class="pbg" x="26" y="'+(yC-31)+'">CV</text><line x1="26" y1="'+(yC-26)+'" x2="'+(ox+22)+'" y2="'+(yC-26)+'" class="pbl"/>');
+  const pill=(x,t)=>'<rect x="'+(x-13)+'" y="'+(yT-38)+'" width="26" height="12" rx="6" fill="#d8d2c4"/><text class="pbio" x="'+x+'" y="'+(yT-29.2)+'" text-anchor="middle">'+t+'</text>'; parts.push(pill(ox,'OUT')+pill(ix,'IN')+'<text class="pbg" x="'+(ix-24)+'" y="'+(yT-31)+'" text-anchor="end">DESTINATIONS</text><line x1="'+(ix-110)+'" y1="'+(yT-26)+'" x2="'+(ix-14)+'" y2="'+(yT-26)+'" class="pbl"/>');
+  const D=PB.drag, A=PB.act||(PB.act={}), inl=[];
+  const actLv=src=>{ const a=A[src]; if(!a) return 0; const t=(now-a.t)/1000; if(t<0) return 0; return a.lv*Math.exp(-t/(a.hold?99:.12)); };
+  const jack=(p,col,dim,ok)=>'<g transform="translate('+p.x+','+p.y+')"'+(dim?' opacity=".35"':'')+'><polygon points="'+[0,1,2,3,4,5].map(k=>{ const an=Math.PI/3*k+Math.PI/6; return (10.5*Math.cos(an)).toFixed(1)+','+(10.5*Math.sin(an)).toFixed(1); }).join(' ')+'" fill="url(#pbNut)" stroke="#1d1d1c" stroke-width=".8"/><circle r="7.4" fill="#151514" stroke="'+(ok?'#ece6da':col)+'" stroke-width="'+(ok?1.8:1.1)+'"/><circle r="4.6" fill="#040404"/><circle r="4.6" fill="none" stroke="#000" stroke-opacity=".6" stroke-width="1.5"/></g>';
+  // outputs
+  PB_OUT.forEach(([id,lab,col])=>{ const p=pbJack('o',id), x0=26, w=p.x-x0-64, lv=actLv(id); if(lv>.01) busy=true;
+    parts.push('<rect x="'+(x0-6)+'" y="'+(p.y-22)+'" width="'+(p.x-x0+24)+'" height="38" rx="4" fill="#121313" opacity=".72"/>');
+    parts.push('<text class="pbj" x="'+x0+'" y="'+(p.y-9)+'">'+esc(lab.toUpperCase())+'</text>');
+    { const kv=wiOutAmt(id), kx=p.x-46, an=(-135+270*kv)*Math.PI/180; parts.push('<g class="pbk" data-k="'+id+'"><circle cx="'+kx+'" cy="'+p.y+'" r="8" fill="#1a1b1b" stroke="#4b4d4d"/><circle cx="'+kx+'" cy="'+p.y+'" r="6" fill="#2c2e2e"/><line x1="'+kx+'" y1="'+p.y+'" x2="'+(kx+6*Math.sin(an)).toFixed(1)+'" y2="'+(p.y-6*Math.cos(an)).toFixed(1)+'" stroke="#ece6da" stroke-width="1.6" stroke-linecap="round"/><title>'+esc(lab)+' amount '+Math.round(kv*100)+'%</title></g>'); }
+    parts.push('<circle cx="'+(p.x-22)+'" cy="'+p.y+'" r="3.2" fill="'+col+'" opacity="'+(.18+.82*lv).toFixed(2)+'"'+(lv>.15?' style="filter:drop-shadow(0 0 '+(4*lv).toFixed(1)+'px '+col+')"':'')+'/>');
+    // small displays
+    if(id==='gate'||id==='rnd'){ const pat=id==='gate'?wiGatePat():null, sd2=(S.fx.wRnd??5)>>>0, cw=Math.min(6.5,(w-4)/16), cur=PB.st16??-1;
+      for(let k=0;k<16;k++){ const v=id==='gate'?(pat[k]==='1'?1:0):(rnd(sd2,k,0xD1CE)<.5?0:.4+.6*rnd(sd2,k,0xD1CF)), x=x0+k*cw, hot=k===cur&&playing;
+        parts.push(id==='gate'?'<rect x="'+x.toFixed(1)+'" y="'+(p.y-1)+'" width="'+(cw-1.6).toFixed(1)+'" height="6" rx="1" fill="'+(v?col:'#3a3b3b')+'" opacity="'+(v?(hot?1:.55):(hot?.9:.6))+'"/>':'<rect x="'+x.toFixed(1)+'" y="'+(p.y+5-9*v).toFixed(1)+'" width="'+(cw-1.6).toFixed(1)+'" height="'+(1+9*v).toFixed(1)+'" fill="'+col+'" opacity="'+(hot?1:.5)+'"/>'); }
+      if(playing) busy=true; }
+    else if(id==='lfo'){ const b=wiLfoBars(), pts=[]; for(let k=0;k<=24;k++){ const ph=k/24; pts.push((x0+ph*Math.min(w,104)).toFixed(1)+','+(p.y+2-4.5*Math.sin(2*Math.PI*ph*Math.min(b,2)/ (b>2?2:1))).toFixed(1)); } parts.push('<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="1.3" opacity=".75"/><text class="pbd" x="'+(x0+Math.min(w,104)+6)+'" y="'+(p.y+5)+'">'+b+(b>1?' BARS':' BAR')+'</text>'); }
+    else if(id==='drum'){ const nm=pbSub('drum'); parts.push('<rect x="'+x0+'" y="'+(p.y-4)+'" width="'+Math.min(w,104)+'" height="13" rx="2" fill="#1d1a12" stroke="#3a3426"/><text class="pblcd" x="'+(x0+5)+'" y="'+(p.y+6)+'">'+esc(nm.toUpperCase())+'</text>'); }
+    parts.push('<g class="jk" data-s="o" data-j="'+id+'">'+jack(p,col,false,false)+'<circle cx="'+p.x+'" cy="'+p.y+'" r="16" fill="transparent"/></g>'); });
+  // inputs
+  const ok=D?PB_IN.map(x=>x[0]):[];
+  PB_IN.forEach(([id,lab,col])=>{ const p=pbJack('i',id), tw=lab.length*6.4+10; inl.push('<rect x="'+(p.x-18-tw)+'" y="'+(p.y-7)+'" width="'+tw+'" height="14" rx="3" fill="#1b1c1c" opacity=".86"/><text class="pbj" x="'+(p.x-23)+'" y="'+(p.y+3.5)+'" text-anchor="end">'+esc(lab.toUpperCase())+'</text>'); parts.push('<g class="jk" data-s="i" data-j="'+id+'">'+jack(p,col,false,!!D&&ok.includes(id))+'<circle cx="'+p.x+'" cy="'+p.y+'" r="16" fill="transparent"/></g>'); });
+  // cables
+  const plug=(p,q,col)=>{ const an=Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI; return '<g transform="translate('+p.x+','+p.y+') rotate('+an.toFixed(1)+')"><rect x="-3" y="-3.2" width="9" height="6.4" rx="1.5" fill="#b9b5ad"/><rect x="5" y="-5.2" width="17" height="10.4" rx="3.5" fill="'+col+'"/><rect x="5" y="-5.2" width="17" height="3.2" rx="2" fill="#fff" opacity=".22"/><rect x="20" y="-3.4" width="6" height="6.8" rx="2.5" fill="#151514"/></g>'; };
+  const ctrl=(a,b,sag)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2+sag*1.9});
+  const cable=(key,a,b,col,C,hov)=>{ const d=Math.hypot(b.x-a.x,b.y-a.y), tgt=Math.min(16+d*.17,Math.max(4,(H-18-(a.y+b.y)/2)/1.9));   /* the cable stays on the panel */ C.v+=(tgt-C.s)*.09; C.v*=.86; C.s+=C.v; if(Math.abs(C.v)>.02||Math.abs(tgt-C.s)>.2) busy=true;
+    const gl=Math.max(0,(C.glow||0)-(now-(C.gt||0))/260); if(gl>0) busy=true; const pth=pbPath(a,b,C.s), op=hov?1:.93, br=1+gl*.9+(hov?.25:0), c=ctrl(a,b,C.s);
+    parts.push('<g class="cab" data-k="'+key+'" opacity="'+op+'"><path d="'+pth+'" stroke="#000" stroke-opacity=".38" stroke-width="'+(hov?11:9)+'" transform="translate(0,4)"/><path d="'+pth+'" stroke="#121211" stroke-width="'+(hov?9:8)+'"/><path d="'+pth+'" stroke="'+col+'" stroke-width="'+(hov?6.5:5.5)+'" style="filter:brightness('+br.toFixed(2)+')'+(gl>0?';drop-shadow(0 0 '+(6*gl).toFixed(1)+'px '+col+')':'')+'"/><path d="'+pth+'" stroke="#fff" stroke-opacity="'+(.16+gl*.35)+'" stroke-width="1.3" transform="translate(-.6,-1.6)"/><path d="'+pth+'" stroke="transparent" stroke-width="18"/>'+plug(a,c,col)+plug(b,c,col)+'</g>'); };
+  const keys=Object.keys(PB.cab).filter(k=>!(D&&D.k===k)); keys.sort((x,y)=>(x===PB.hov)-(y===PB.hov));
+  for(const k of keys){ const C=PB.cab[k], a=pbJack('o',C.o), b=pbJack('i',C.i), col=PB_OUT.find(x=>x[0]===C.o)[2]; cable(k,a,b,col,C,k===PB.hov); }
+  if(D){ const a=pbJack('o',D.o), col=PB_OUT.find(x=>x[0]===D.o)[2]; D.lx+=(D.x-D.lx)*.35; D.ly+=(D.y-D.ly)*.35; const b={x:D.lx,y:D.ly}; cable('drag',a,b,col,D.C,true); busy=true;
     if(D.back){ D.x+=(a.x-D.x)*.25; D.y+=(a.y-D.y)*.25; if(Math.hypot(D.x-a.x,D.y-a.y)<3){ PB.drag=null; } } }
-  svg.innerHTML=parts.join(''); if(busy||PB.drag) pbKick(); }
+  parts.push(...inl); svg.innerHTML=parts.join(''); if((busy||PB.drag)&&PB.vis!==false) pbKick(); }
 function pbPt(e){ const r=PB.svg.getBoundingClientRect(); return {x:(e.clientX-r.left)*(PB.w/r.width),y:(e.clientY-r.top)*(PB.h/r.height)}; }
 function pbHit(p,side){ const L=side==='o'?PB_OUT:PB_IN; for(const [id] of L){ const j=pbJack(side,id); if(Math.hypot(j.x-p.x,j.y-p.y)<20) return id; } return null; }
 function pbSet(k,on){ const L=wiCables().filter(x=>x!==k); if(on) L.push(k); S.fx.wc=L; if(on) S.fx.wiOn=true; save(); UPD.forEach(f=>f()); }
+function pbAct(o,delay,lv,hold){ if(!PB.svg) return; const go=()=>{ (PB.act||(PB.act={}))[o]={t:performance.now(),lv:lv??1,hold:!!hold}; pbKick(); }; if(delay>0) setTimeout(go,delay*1000); else go(); }
 function pbPulse(o,delay,lv){ if(!PB.svg) return; for(const [k,C] of Object.entries(PB.cab)) if(C.o===o){ const go=()=>{ C.glow=lv??1; C.gt=performance.now(); pbKick(); }; if(delay>0) setTimeout(go,delay*1000); else go(); } }
 function pbInit(){ const host=$('pbay'), svg=$('pbsvg'); if(!host||!svg) return; PB.svg=svg;
   const size=()=>{ const r=host.getBoundingClientRect(); PB.w=Math.max(300,Math.round(r.width)); PB.h=Math.max(150,Math.round(r.height)); svg.setAttribute('viewBox','0 0 '+PB.w+' '+PB.h); pbKick(); };
   size(); try{ new ResizeObserver(size).observe(host); }catch(e){ window.addEventListener('resize',size); }
-  svg.addEventListener('pointerdown',e=>{ const p=pbPt(e); let o=pbHit(p,'o'), from=null;
+  svg.addEventListener('pointerdown',e=>{ const p=pbPt(e); const kn=e.target.closest&&e.target.closest('.pbk');
+    if(kn){ const id=kn.dataset.k, y0=e.clientY, v0=wiOutAmt(id); svg.setPointerCapture(e.pointerId); const mv=ev=>{ const A=Object.assign({},S.fx.wAmt||{}); A[id]=Math.max(0,Math.min(1,v0+(y0-ev.clientY)/(ev.shiftKey?600:150))); S.fx.wAmt=A; pbKick(); status(PB_OUT.find(x=>x[0]===id)[1]+' amount '+Math.round(A[id]*100)+'%.'); };
+      const end=()=>{ svg.removeEventListener('pointermove',mv); svg.removeEventListener('pointerup',end); save(); }; svg.addEventListener('pointermove',mv); svg.addEventListener('pointerup',end); e.preventDefault(); e.stopPropagation(); return; }
+    let o=pbHit(p,'o'), from=null;
     if(!o){ const i=pbHit(p,'i'); if(i){ const k=Object.keys(PB.cab).find(k=>PB.cab[k].i===i); if(k){ o=PB.cab[k].o; from=k; } } }
     if(!o){ const c=e.target.closest('.cab'); if(c&&PB.cab[c.dataset.k]){ const k=c.dataset.k, C=PB.cab[k]; pbSet(k,false); const b=pbJack('i',C.i); PB.drag={o:C.o,x:b.x,y:b.y,lx:b.x,ly:b.y+10,C:{s:C.s,v:6},back:true}; delete PB.cab[k]; pbKick(); status('Unpatched.'); } return; }
     if(from){ pbSet(from,false); delete PB.cab[from]; }
     svg.setPointerCapture(e.pointerId); PB.drag={o,x:p.x,y:p.y,lx:p.x,ly:p.y,C:{s:0,v:0},x0:p.x,y0:p.y,fromJack:!from}; pbKick(); e.preventDefault(); });
-  svg.addEventListener('pointermove',e=>{ if(!PB.drag||PB.drag.back) return; const p=pbPt(e); PB.drag.x=p.x; PB.drag.y=p.y; pbKick(); });
+  svg.addEventListener('pointermove',e=>{ if(!PB.drag||PB.drag.back){ const c=e.target.closest&&e.target.closest('.cab'), h=c?c.dataset.k:null; if(h!==PB.hov){ PB.hov=h; pbKick(); } return; } const p=pbPt(e); PB.drag.x=p.x; PB.drag.y=p.y; pbKick(); });
+  svg.addEventListener('pointerleave',()=>{ if(PB.hov){ PB.hov=null; pbKick(); } });
+  svg.addEventListener('dblclick',e=>{ const kn=e.target.closest&&e.target.closest('.pbk'); if(!kn) return; const A=Object.assign({},S.fx.wAmt||{}); A[kn.dataset.k]=1; S.fx.wAmt=A; save(); pbKick(); });
+  try{ new IntersectionObserver(es=>{ PB.vis=es[0].isIntersecting; if(PB.vis) pbKick(); }).observe(host); }catch(e){}
   const up=e=>{ const D=PB.drag; if(!D||D.back) return; const p=pbPt(e), i=pbHit(p,'i'), k=D.o+'>'+i;
     if(D.fromJack&&Math.hypot(p.x-D.x0,p.y-D.y0)<5){ PB.drag=null; pbCycle(D.o); pbKick(); return; }   // a click on an output: its next pattern, track or rate
     if(i){ PB.cab[k]={o:D.o,i,s:D.C.s,v:D.C.v-9,glow:.8,gt:performance.now()}; PB.drag=null; pbSet(k,true); status('Patched: '+PB_OUT.find(x=>x[0]===D.o)[1]+' → '+PB_IN.find(x=>x[0]===i)[1]+'.'); }
@@ -5330,7 +5380,7 @@ function initControls(){
     $('bsSnd').onclick=()=>{ const sd=worpSeed(), r=x=>rnd(sd,x,0xB0DE); hRecord(()=>{ Object.assign(S.fx,{bsSnd:sd,bsOn:true,bsBody:+(.04+.56*r(1)).toFixed(2),bsFlt:+(.15+.6*Math.pow(r(2),1.3)).toFixed(2),bsDec:+(.2+.65*r(3)).toFixed(2),bsSat:BS_SAT[Math.floor(r(4)*3)%3],bsDrv:r(5)<.45?0:+(.1+.5*r(6)).toFixed(2)}); S.fx.bsNm={body:S.fx.bsBody,flt:S.fx.bsFlt,dec:S.fx.bsDec}; }); updHist(); save(); u(); bsSync(AG); status('New bass sound: '+bsNm()+'. The figure stays.'); };   /* the name keeps the character it was thrown with, so turning a knob does not rename it */
   }
   { const cb=$('wiOn'), U=$('wiU');   /* v213 Wires */
-    const ka=makeKnob({label:'Amount',min:0,max:100,step:1,get:()=>Math.round(wiAmt()*100),set:v=>{ S.fx.wiAmt=v/100; save(); },fmt:v=>v+'%',def:50}); ka.title='How strongly every cable pulls · drag, double-click resets'; ka.classList.add('big','mgk');
+    const ka=makeKnob({label:'Depth',min:0,max:100,step:1,get:()=>Math.round(wiAmt()*100),set:v=>{ S.fx.wiAmt=v/100; save(); },fmt:v=>v+'%',def:50}); ka.title='Depth: how strongly every cable pulls; each output also has its own small amount knob on the panel · drag, double-click resets'; ka.classList.add('big','mgk');
     const wr=document.createElement('div'); wr.className='mgw'; wr.append(ka); $('wiSlot').replaceWith(wr);
     const u=()=>{ cb.checked=!!S.fx.wiOn; U.classList.toggle('off',!S.fx.wiOn); ka.upd(); if(PB.svg) pbSync(); const W={}; Object.entries(WI_OLD).forEach(([k,v])=>W[k]=wiCables().includes(v)?1:0); document.querySelectorAll('#wiSel button').forEach(b=>b.setAttribute('aria-pressed',String(!!W[b.dataset.w]))); }; u(); UPD.push(u);
     cb.onchange=()=>{ S.fx.wiOn=cb.checked; u(); save(); status(cb.checked?'Wires: the layers listen to each other.':'Wires off.'); };
