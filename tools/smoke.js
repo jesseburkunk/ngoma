@@ -47,7 +47,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       const p95 = a => { const w = 1102, v = []; for (let i = 0; i + w <= a.length; i += w) { let e = 0; for (let j = i; j < i + w; j++) e += a[j] * a[j]; v.push(Math.sqrt(e / w)); } v.sort((x, y) => x - y); return v[Math.floor(v.length * .95)] || 0; };
       for (const sd of [4242, 12163, 20084]) { S.fx.wlead = { seed: sd, mix: [1, 1, 1, 1], mute: [false, false, false, false] };
         const m = await renderLoop(false, 22050); S.renderOnly = -2; const l = await renderLoop(false, 22050); S.renderOnly = null; out.push(+(db(p95(l[0])) - db(p95(m[0]))).toFixed(1)); }
-      return out; }, rmsJS); assert(r.every(x => x > -16 && x < -3), 'lead vs mix dB ' + r.join(' ')); return 'lead ' + r.join(' / ') + ' dB under mix'; });
+      return out; }, rmsJS); assert(r.every(x => x > -18 && x < -3), 'lead vs mix dB ' + r.join(' '));   /* v214: new sounds start with a short decay (Jesse), a sparse short line sits a little lower */ return 'lead ' + r.join(' / ') + ' dB under mix'; });
 
   await check('Pad sits in the mix, every Worp sound alike', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), db = v => 20 * Math.log10(v + 1e-9), out = [];
       S.bars = 2; S.fx.leadOn = false; S.fx.padType = 7; S.fx.padLvl = .35;   /* v192: per-patch trim, about 16 dB under the drums at the default Level */

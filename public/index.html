@@ -4060,9 +4060,9 @@ const PL_TRIM=1;
 /* v176: every Plaits model the Lead can use, with its measured gain (same RMS as the lab presets); the eight lab ones first */
 const PL_ENG=[[8,'Analog',.55],[1,'Phase distortion',.39],[9,'Waveshaper',.58],[10,'FM',.41],[12,'Additive',.66],[13,'Wavetable',.9],[19,'String',.74],[20,'Modal',.45],[0,'Analog + filter',.43],[5,'Wave terrain',.43],[11,'Formant',.52],[16,'Swarm',.65]];
 function plPatch(seed){ const s=seed>>>0, q=k=>rnd(s,k,0x91A1), P0=PL_PRE[Math.floor(q(1)*PL_PRE.length)%PL_PRE.length], j=(v,k,w)=>Math.max(.03,Math.min(.97,v+(q(k)-.5)*2*w));
-  const P={nm:P0.nm,e:P0.e,h:j(P0.h,2,.12),t:j(P0.t,3,.1),m:j(P0.m,4,.15),d:j(P0.d,5,.08),c:j(P0.c,6,.1),tm:P0.tm,g:P0.g};
+  const P={nm:P0.nm,e:P0.e,h:j(P0.h,2,.12),t:j(P0.t,3,.1),m:j(P0.m,4,.15),d:+(.30+(q(5)-.5)*.08).toFixed(3),c:j(P0.c,6,.1),tm:P0.tm,g:P0.g};
   const W=S.fx.wlead, O=W&&(W.seed>>>0)===s&&W.pl; if(O){ ['h','t','m','d','c'].forEach(k=>{ if(isFinite(O[k])) P[k]=O[k]; }); if(isFinite(O.e)){ const E=PL_ENG.find(x=>x[0]===O.e); if(E){ P.e=E[0]; P.nm=E[1]; P.g=E[2]; } } }   /* v176: your knob settings (W.pl) over the seed's */
-  return P; }
+  return P; }   /* v214 (Jesse: a new lead sound always starts with a short decay, not closed but short): Decay starts at 26 to 34%; your knob still wins */
 /* v176 Move: two slow LFOs per seed (periods in bars, so they drift against each other) move Timbre, Morph and a little of Harmonics,
    computed per step from the step number, so the export moves the same way. Move 0 = still. */
 /* v186 (Jesse: the lead lines no longer sound in tune). Measured with the wasm (pitch of the note against its MIDI pitch): on some models
@@ -4107,7 +4107,7 @@ function plBar(ctx,G,g,gm,t){ const Q=plEngine(ctx,G); if(!Q) return; const W=le
 function leadNm(W){ return WorpEngine.soundName('lead',W.seed>>>0,{e:plPatch(W.seed).e}); }
 function cdNm(){ const k={}; cdPalette(0).forEach(x=>k[x.kind]=(k[x.kind]||0)+1); return WorpEngine.soundName('candy',cdSeed(),{kinds:k}); }
 function bsNm(){ const h=S.fx.bsNm||{body:S.fx.bsBody??.25,flt:S.fx.bsFlt??.4,dec:S.fx.bsDec??.5}; return WorpEngine.soundName('bass',(S.fx.bsSnd??3)>>>0,h); }
-function leadGain(){ const W=S.fx.wlead; return W?plPatch(W.seed).g*PL_TRIM:1; }   /* v175: each Plaits preset has a measured gain */
+function leadGain(){ const W=S.fx.wlead; if(!W) return 1; const P=plPatch(W.seed); return P.g*PL_TRIM*Math.pow(10,(.5-P.d)*20/20); }   /* v214: a shorter decay rings less, so it gets a little more level (about +4 dB at the new default) */   /* v175: each Plaits preset has a measured gain */
 /* v142: Dub echo per layer (Jesse: Echo more extreme). Echo up to 50% works as before (the patch's own echo); above that a
    tempo-synced ping-pong echo joins in: dotted eighth left, quarter right, feedback climbing towards self-oscillation, the
    repeats getting darker and thinner through a band-pass in the loop, with a slow tape wobble on the time. */
