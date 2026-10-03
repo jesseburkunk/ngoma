@@ -90,6 +90,11 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       Object.assign(S.fx, { wiOn: true, wc: ['low>bf', 'low>pad', 'bass>cd', 'low>cd'], wiAmt: .8 }); const p1 = await run(-1), c1 = await run(-4); Object.assign(S.fx, JSON.parse(keep)); return { p0, p1, c0, c1 }; }, rmsJS);
     assert(r.p1 < r.p0 * .95 && r.c1 > r.c0 * 1.2, JSON.stringify(r)); return 'pad ' + (20 * Math.log10(r.p1 / r.p0)).toFixed(1) + ' dB, candy ' + (20 * Math.log10(r.c1 / r.c0)).toFixed(1) + ' dB'; });
 
+  await check('Wires levels: Gate chops the pad, Low drums throw into Echo', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
+      Object.assign(S.fx, { padOn: true, padType: 0, wiOn: true, wiAmt: 1, wc: [] }); S.renderOnly = -1; const a = await renderLoop(false, 22050); S.fx.wc = ['gate>pad']; const b = await renderLoop(false, 22050); S.renderOnly = null;
+      S.fx.padOn = false; S.fx.wc = []; const c = await renderLoop(true, 22050); S.fx.wc = ['low>echo']; const d = await renderLoop(true, 22050); const df = rms(c[0].map((x, i) => d[0][i] - x)); Object.assign(S.fx, JSON.parse(keep)); return { pad: rms(b[0]) / rms(a[0]), echo: df }; }, rmsJS);
+    assert(r.pad < .9 && r.echo > .005, JSON.stringify(r)); return 'gate ' + (20 * Math.log10(r.pad)).toFixed(1) + ' dB on the pad, echo diff ' + r.echo.toFixed(3); });
+
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
       for (let i = 0; i < MG_MODES.length; i++) { S.fx.mgMode = i; const w = await renderLoop(false, 22050), v = rms(w[0]); if (!(v > .002)) bad.push(MG_NAMES[i] + ':' + (v < 0 ? 'NaN' : v.toFixed(4))); }
       S.fx.mgOn = false; return { n: MG_MODES.length, bad }; }, rmsJS); assert(!r.bad.length, r.bad.join(', ')); return r.n + ' modes'; });
