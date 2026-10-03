@@ -4085,7 +4085,7 @@ function midiQT(now){ if(!S.midiQ||!playing||!actx) return now; const sd=stepDur
 const MHELD=new Map();
 function midiKey(E,on,m,v){ const now=AG.ctx.currentTime; if(on){ const t=midiQT(now); MHELD.set(m,{E,t}); E.noteOn(m,v,t); }
   else { const h=MHELD.get(m); MHELD.delete(m); const E2=h?h.E:E; if(E2&&E2.noteOff) E2.noteOff(m,Math.max(now,h?h.t+.06:now)); } }
-function ngMidi(e){ if((e.data[0]&0xf0)===0xb0 && mlCC(e.data[0]&15,e.data[1],e.data[2]??0)) return; const P=$('worpPane'); if(P&&!P.hidden){ try{ $('worpFrame').contentWindow.postMessage({t:'midi',data:Array.from(e.data)},'*'); }catch(x){} return; }   /* v174: Worp over Ngoma gets your keys from Ngoma */ const [st,d1,d2=0]=e.data, cmd=st&0xf0, on=cmd===0x90&&d2>0, off=cmd===0x80||(cmd===0x90&&d2===0); if(!on&&!off) return;
+function ngMidi(e){ if(ML.learn) mlHeard(e); if((e.data[0]&0xf0)===0xb0 && mlCC(e.data[0]&15,e.data[1],e.data[2]??0)) return; const P=$('worpPane'); if(P&&!P.hidden){ try{ $('worpFrame').contentWindow.postMessage({t:'midi',data:Array.from(e.data)},'*'); }catch(x){} return; }   /* v174: Worp over Ngoma gets your keys from Ngoma */ const [st,d1,d2=0]=e.data, cmd=st&0xf0, on=cmd===0x90&&d2>0, off=cmd===0x80||(cmd===0x90&&d2===0); if(!on&&!off) return;
   const d=midiDest();
   if(on&&d==='lead'&&window.WorpEngine){ ensureCtx(); if(actx.state!=='running') actx.resume().catch(()=>{}); if(AG&&AG.lead){ plEngine(actx,AG); leadSync(AG); } if(actx.state!=='running'&&!playing) status('Click anywhere in Ngoma once, then your keys sound (the browser wants one click first).'); }   /* v137: keys work before Play and right after coming back from Worp */
   if(NREC.st&&NREC.u===d) nrecNote(on,d1,.35+.65*d2/127);   /* v171 */
@@ -4115,11 +4115,20 @@ function mlCC(ch,cc,v){ const id=(ch+1)+':'+cc;
     status('Learned: CC '+cc+(ch?' (channel '+(ch+1)+')':'')+' turns '+mlName(ML.sel)+'.'); ML.sel.classList.remove('mlsel'); ML.sel=null; mlMark(); mlApply(k,v); return true; }
   const k=ML.map[id]; if(!k) return false; ML.pend.set(k,v);
   if(!ML.raf) ML.raf=requestAnimationFrame(()=>{ ML.raf=0; const P=[...ML.pend]; ML.pend.clear(); P.forEach(([k,v])=>mlApply(k,v)); }); return true; }
+/* v227 (Jesse: Learn did not react; it took my USB sound card while a separate controller is plugged in too): Learn listens to every MIDI
+   input. While Learn is on, Ngoma says which devices it hears and what arrives, so you see at once when a controller sends notes instead
+   of knobs (CC), or does not reach the browser at all. */
+let mlLastHeard=0;
+function mlHeard(e){ const now=performance.now(); if(now-mlLastHeard<400) return; const [st,d1]=e.data, c=st&0xf0, src=(e.target&&e.target.name)||'a device';
+  if(c===0xb0){ if(!ML.sel){ mlLastHeard=now; status('Heard knob CC '+d1+' from '+src+'. Click a control first, then turn it again.'); } return; }
+  if(c===0x90){ mlLastHeard=now; status('Heard a key or pad (note '+d1+') from '+src+'. Learn needs a knob or fader: those send CC.'); }
+  else if(c===0xe0){ mlLastHeard=now; status('Heard the pitch wheel from '+src+'. Learn needs a knob or fader (CC).'); } }
+function mlDevs(){ const n=(MIDIK.names||[]).filter(Boolean); return n.length?'Learn listens to: '+n.join(', ')+'.':'No MIDI device found yet: plug in your controller, Ngoma picks it up by itself.'; }
 function mlMark(){ const rev={}; Object.entries(ML.map).forEach(([id,k])=>{ rev[k]=id; });
   document.querySelectorAll(ML_SEL).forEach(el=>{ const k=mlKey(el), id=k&&rev[k]; if(id){ const [ch,cc]=id.split(':'); el.dataset.cc=(ch!=='1'?ch+'·':'')+cc; } else delete el.dataset.cc; }); }
 function mlSet(on,sel){ ML.learn=on; document.body.classList.toggle('mlearn',on); ['midilearn','mlearn'].forEach(id=>{ const b=$(id); if(b) b.setAttribute('aria-pressed',on); });
   if(ML.sel){ ML.sel.classList.remove('mlsel'); ML.sel=null; }
-  if(on){ if(!MIDIK.on) midiConnect(false); mlMark(); if(sel) mlPick(sel); else status('MIDI learn: click a knob or slider, then turn a knob on your controller. Right-click a learned one to forget it. Esc stops.'); } }
+  if(on){ if(!MIDIK.on) midiConnect(false); mlMark(); if(sel) mlPick(sel); else status('MIDI learn: click a knob or slider, then turn a knob on your controller. '+mlDevs()+' Esc stops.'); } }
 function mlPick(el){ if(ML.sel) ML.sel.classList.remove('mlsel'); ML.sel=el; el.classList.add('mlsel'); status('Turn a knob on your controller for '+mlName(el)+'.'); }
 function mlForget(el){ const k=mlKey(el); let n=0; Object.keys(ML.map).forEach(x=>{ if(ML.map[x]===k){ delete ML.map[x]; n++; } }); mlSave(); mlMark(); status(n?mlName(el)+' is no longer on your controller.':mlName(el)+' was not learned.'); }
 document.addEventListener('pointerdown',e=>{ if(!ML.learn||e.button!==0) return; const el=e.target.closest(ML_SEL); if(!el||!mlKey(el)) return; e.preventDefault(); e.stopPropagation(); mlPick(el); },true);
