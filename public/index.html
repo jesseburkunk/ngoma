@@ -1260,7 +1260,7 @@ THE SOFTWARE.</pre></details>
     <dt>Texture</dt><dd>A field recording far under the drums, as a background texture: a place rather than an instrument, in the spirit of Chris Watson and Jake Muir. Off by default.<details class="g-more"><summary>More</summary><p>Seven recordings by Félix Blume, all CC0 (public domain): a castle moat through hydrophones, a forest at night in Mexico, wind in a wire fence, dawn in the Amazon, ice on an alpine lake, a night in Port-au-Prince with the city far away, and a contact microphone on a bat nest. <b>Voices</b> is radio from NASA's Artemis II mission (public domain): mission control and the crew in short phrases, with pauses; Candy takes syllables from it. <i>Your file…</i> plays your own recording; it stays in this browser.</p><p><b>Filter</b> darkens it (left) or thins it out of the way of the drums (right). <b>Distance</b> pushes the place away: darker, quieter, more reverb. <b>Drift</b> lets the recording come apart into slow, overlapping grains at lower speeds, so it floats instead of running. <b>Tune</b> sends it through narrow filters on the tones of the current chord, so wind, water or insects start to sing the harmony. The low drums duck it a little. Everything is seeded, so the export sounds as you hear it, and loops without a seam.</p></details></dd>
     <dt>Tape loop</dt><dd>A long tape loop after Frippertronics: what you send in comes back on every pass, a little darker, so layers pile up and drift against the bar. Live and in Rec only.<details class="g-more"><summary>More</summary><p>The loop is 2.5, 3.5, 5.5 or 7.5 bars, never a whole number, so every pass lands somewhere else. Changing it while it plays bends the tape like a slowing machine. <i>Level</i> is what comes back, <i>Lead</i>, <i>Pad</i> and <i>Candy</i> how much of each goes in, <i>Hold</i> how many passes a layer lives, <i>Tone</i> how much darker each pass gets. <i>Clear</i> erases the tape. A loop export leaves it out: a minute of build-up does not fit in a few bars.</p></details></dd>
     <dt>Dare</dt><dd>Now and then, on a bar line, the machine steps in for a few bars with one move you would not have made. <i>Keep</i> makes it stay (← takes it back), <i>Again</i> plays the last one once more, <i>Now</i> asks for one. Live only.<details class="g-more"><summary>More</summary><p>The moves: <i>Breakdown</i> (the drums step out), <i>Strip</i> (only bass and texture remain), <i>Silence</i> (one bar of nothing, then the drop), <i>Half-time</i>, <i>Up a fifth</i>, <i>Half speed</i> (the tape loop), <i>Other grains</i> (Candy takes another recording), <i>Phase jump</i>, <i>Echo throw</i> and <i>Octave</i> on the lead. Only moves that fit the layers you have on. <i>Often</i> sets how often, from about every 40 bars to about every 8; the moment itself is seeded.</p></details></dd>
-    <dt>Wires</dt><dd>The layers listen to each other, with real patch cables: drag from an output on the left to an input on the right, pull a plug out (or click a cable) to unpatch. A cable lights up when a signal runs through it. <i>Low → Bass</i>: every low drum opens the bass filter for a moment. <i>Low → Pad</i>: the pad dips on every low drum and swells back. <i>Lead → Tape</i>: lead notes bend the tape loop. <i>Bass → Candy</i>: every bass note sets off a candy sound. <i>Amount</i> sets how hard they pull. Everything but the tape is in the export too.</dd>
+    <dt>Wires</dt><dd>The layers listen to each other, with real patch cables: drag from an output on the left to an input on the right, pull a plug out (or click a cable) to unpatch. A cable lights up when a signal runs through it. Every output fits every input. The outputs: the low drums' hits, the lead's notes, the bass's notes. The inputs: <i>Bass filter</i> (opens for a moment), <i>Pad</i> (dips and swells back, the pump of house), <i>Tape loop</i> (bends the tape, live only) and <i>Candy</i> (sets off one of its sounds). Several cables can share a jack. <i>Amount</i> sets how hard they pull. Everything but the tape is in the export too.</dd>
     <dt>Magic</dt><dd>Seven characters that work on the sound, not the rhythm. <i>Amount</i> says how far; everything stays in tune and in the export.<details class="g-more"><summary>More</summary><p><b>Breath</b>: gentle life in timing and dynamics. <b>Resonate</b>: sympathetic strings on your key that ring with every stroke; <i>Chord</i> picks their notes (and with Chords on they follow the scheme). <b>Comb</b>: a tuned comb that moves to another note every two bars. <b>Air</b>: harmonics and sheen on top. <b>Formant</b>: two vowel filters, as if the kit speaks. <b>Cosmos</b>: a drifting echo after the SOMA Cosmos, two echo lines that drift apart and meet again. <b>Ghosts</b>: a tiny grain of a hit comes back a few steps later, quiet and far left or right.</p><p><b>Decay</b> sets how long Resonate rings and Comb and Cosmos repeat. <b>Every</b> sends only every 2nd to 8th hit into Magic; the rest stays dry. <b>Echo</b> gives Magic its own dub echo. With Ghosts, <b>Chance</b> sets how often and <b>Hard</b> how present.</p></details></dd>
   </dl>
 </section>
@@ -4096,8 +4096,7 @@ function plSync(G,t){ const Q=G.plaits; if(!Q) return; const P=plPatch(leadSpec(
   [['eng',P.e],['harm',plHarm(P.e,P.h)],['timb',P.t],['morph',P.m],['dec',P.d],['col',P.c],['tmod',P.tm]].forEach(([n,v])=>{ const a=pr.get(n); if(live) a.setValueAtTime(v,Math.max(t||0,G.ctx.currentTime)); else a.value=v; }); }
 function plNote(G,v,t,midi,vel){ const Q=G.plaits; if(!Q||!isFinite(midi)) return; const pr=Q.node.parameters, c=++Q.cnt[v]; t=Math.max(t,G.ctx.currentTime||0);
   pr.get('n'+v).setValueAtTime(midi,t); pr.get('v'+v).setValueAtTime(Math.max(.05,Math.min(1,vel)),t); pr.get('c'+v).setValueAtTime(c,t);
-  if(G.ctx===actx&&PB.svg&&wiOn('lt')&&S.fx.tlOn) pbPulse('lead',t-G.ctx.currentTime);
-  if(G.tl&&S.fx.tlOn&&wiOn('lt')){ const d=G.tl.d.delayTime, base=Math.min(59,tlBars()*4*60/S.bpm), b=.004*wiAmt()*(v%2?1:-1)*(.5+vel*.5); d.setTargetAtTime(base+b,t,.03); d.setTargetAtTime(base,t+.12,.25); } }   /* v213 Wires: the lead bends the tape */
+  if(S.fx.wiOn) wiFire('lead',G.ctx,G,t,vel,null); }   /* v217 Wires: the lead as a source */
 function plKeys(G){ return {noteOn:(m,v,t)=>{ const Q=plEngine(G.ctx,G); if(!Q){ loadFilter(G.ctx).then(()=>{ const Q2=plEngine(G.ctx,G); if(!Q2) return; plSync(G,0); plNote(G,3+(Q2.kv++%3),G.ctx.currentTime,m,v); }); return; }   /* v178: the first key, before the worklet has loaded, waits for it instead of being lost */
   plSync(G,t); plNote(G,3+(Q.kv++%3),t,m,v); }, noteOff:()=>{}}; }   /* the low-pass gate decays by itself: a key needs no note-off */
 const PL_PH=new Map();
@@ -4201,19 +4200,17 @@ function bsBar(bar){ const sd=bsSeed(), st=bsSty(), m=Math.floor(bar/2)*0+(bar%2
   P.sort((a,b)=>a[0]-b[0]); const seen=new Set(); P=P.filter(x=>!seen.has(x[0])&&seen.add(x[0]));
   BS_BAR.set(k,P); if(BS_BAR.size>64) BS_BAR.delete(BS_BAR.keys().next().value); return P; }
 function bsSnap(semi){ const iv=(SCALES[S.scale]||SCALES.mpenta).iv; let best=semi, bd=99; for(let o=-2;o<=2;o++) iv.forEach(x=>{ const c=x+12*o; if(Math.abs(c-semi)<bd){ bd=Math.abs(c-semi); best=c; } }); return best; }
-function bsStep(ctx,G,g,t){ const B=G.bs; if(!B) return; const live=bsLive(); if(!live&&!(S.fx.bsOn&&wiOn('bc')&&cdLive())) return;   /* v213: the candy stem still hears the bass notes through Wires */ const F=S.fx, R=S.res, BL=4*R, bar=Math.floor(g/BL), s=g%BL, sd=stepDur(S), q=16/BL;
+function bsStep(ctx,G,g,t){ const B=G.bs; if(!B) return; const live=bsLive(); if(!live&&!(S.fx.bsOn&&wiFrom('bass').length)) return;   /* v213: the candy stem still hears the bass notes through Wires */ const F=S.fx, R=S.res, BL=4*R, bar=Math.floor(g/BL), s=g%BL, sd=stepDur(S), q=16/BL;
   // duck for the surdo: the sub steps aside for its hit
   if(live) try{ const S2=S.renderOnly==null?S:Object.assign({},S,{renderOnly:null}); let best=null; for(const e of eventsAt(g,S2)){ if(e.silent||INSTR[e.lane].reg!=='low') continue; if(!best||(e.v||0)>(best.v||0)) best=e; }   /* v208: every low drum, not only the surdo, and deeper for a harder hit */
-    if(best){ const te=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)+(best.dt||0)), dep=1-.85*Math.min(1,.4+.6*(best.v??.8)); B.dk.gain.setTargetAtTime(dep,te,.003); B.dk.gain.setTargetAtTime(1,te+.04,.08);
-      if(wiOn('lb')){ const hz0=45*Math.pow(2,(S.fx.bsFlt??.4)*7.4), up=Math.min(9000,hz0*(1+5*wiAmt()*Math.min(1,.4+.6*(best.v??.8)))); B.lp1.frequency.setTargetAtTime(up,te,.004); B.lp1.frequency.setTargetAtTime(hz0,te+.02,.09+.1*wiAmt()); } } }catch(err){}
+    if(best){ const te=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)+(best.dt||0)), dep=1-.85*Math.min(1,.4+.6*(best.v??.8)); B.dk.gain.setTargetAtTime(dep,te,.003); B.dk.gain.setTargetAtTime(1,te+.04,.08); } }catch(err){}
   const P=bsBar(bar), x=P.find(n=>Math.round(n[0]/q)===s); if(!x) return;
   const nx=P.find(n=>Math.round(n[0]/q)>s), nxt=nx?Math.round(nx[0]/q):BL+Math.round(bsBar(bar+1)[0][0]/q), gap=(nxt-s)*sd;
   const cd=chordAt(g)|0, root=S.key+24+plSemi(cd)-(plSemi(cd)>=7?12:0), tr=[-12,0,12].includes(F.bsTr|0)?(F.bsTr|0):0, midi=root+(root<33?12:0)+bsSnap(x[3])+tr, f=440*Math.pow(2,(midi-69)/12);
   const t0=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)), dec=F.bsDec??.5, len=Math.min(gap-.012,Math.max(.06,Math.round(x[1]/q)*sd*(.4+1.2*dec))), pk=x[2];
   if(live){ B.o1.frequency.setTargetAtTime(f,t0,.004); B.o2.frequency.setTargetAtTime(2*f,t0,.004);
   B.env.gain.setTargetAtTime(pk,t0,.0035); B.env.gain.setTargetAtTime(pk*(.55+.4*dec),t0+.04,.08+.3*dec); B.env.gain.setTargetAtTime(0,t0+len,.025+.05*dec); }
-  if(ctx===actx&&PB.svg&&wiOn('bc')) pbPulse('bass',t0-ctx.currentTime);
-  if(wiOn('bc')&&G.cd&&cdLive()){ const PP=cdPalette(Math.floor(bar/8)), cx=PP[Math.floor(rnd(cdSeed(),g,0xB1C)*6)%6]; cdHit(ctx,G,t0+.004,cx,(.45+.4*wiAmt())*x[2],S.fx.cdSize??.35); } }
+  wiFire('bass',ctx,G,t0,x[2],g); }
 function bsUI(){ const n=$('bsName'), i=$('bsInfo'); if(!n||!window.WorpEngine) return; const nm=bsNm(), st={drop:'one drop',step:'steppers',off:'offbeat',half:'half-time'}[bsSty()], P=bsBar(0).concat(bsBar(1));
   const k=st+' · #'+bsSeed().toString(36).toUpperCase().slice(0,5)+' · '+P.length+' notes';   /* v201 (Jesse: a name but no way to pick another patch): the name is the sound, the code the figure */ if(n.textContent!==nm) n.textContent=nm; if(i.textContent!==k) i.textContent=k;
   document.querySelectorAll('#bsSty button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.s===bsSty()))); }
@@ -4270,20 +4267,31 @@ function layerFade(u,on,sync){ if(!AG||!u||!u.fade||!playing){ sync(); return; }
 /* v213 Wires (Jesse: let the layers react to each other instead of playing side by side; the unexpected). Four patch cables, each with
    the same Amount: low drums open the bass filter, low drums pump the pad, lead notes bend the tape, bass notes set off candy. All but
    the tape are scheduled with the notes, so the export sounds as live. */
-function wiOn(k){ const F=S.fx; if(!F.wiOn) return false; const W=F.wi||{lb:1,lp:1}; return !!W[k]; }
+/* v217 (Jesse: the cables don't fit everywhere): every output now fits every input. Three sources (low drum hits, lead notes, bass notes),
+   four destinations (open the bass filter, dip the pad, bend the tape, set off a candy sound); S.fx.wc lists the cables as 'src>dst'. */
+const WI_OLD={lb:'low>bf',lp:'low>pad',lt:'lead>tape',bc:'bass>cd'};
+function wiCables(){ const F=S.fx; if(Array.isArray(F.wc)) return F.wc; const W=F.wi||{lb:1,lp:1}; return Object.entries(WI_OLD).filter(([k])=>W[k]).map(([,v])=>v); }
+function wiFrom(src){ return S.fx.wiOn?wiCables().filter(k=>k.startsWith(src+'>')).map(k=>k.split('>')[1]):[]; }
+function wiOn(k){ const c=WI_OLD[k]; return !!(S.fx.wiOn&&c&&wiCables().includes(c)); }
+function wiFire(src,ctx,G,t,v,seed){ const D=wiFrom(src); if(!D.length) return; const a=wiAmt(), live=ctx===actx, te=Math.max(ctx.currentTime||0,t), vv=Math.min(1,.4+.6*(v??.8));
+  if(live&&PB.svg) pbPulse(src,te-ctx.currentTime);
+  D.forEach(d=>{ try{
+    if(d==='bf'&&G.bs){ const hz0=45*Math.pow(2,(S.fx.bsFlt??.4)*7.4), up=Math.min(9000,hz0*(1+5*a*vv)), f=G.bs.lp1.frequency; f.setTargetAtTime(up,te,.004); f.setTargetAtTime(hz0,te+.02,.09+.1*a); }
+    else if(d==='pad'&&G.pad&&G.pad.pump&&padLive(G)){ const pp=G.pad.pump.gain; pp.setTargetAtTime(1-(.25+.6*a)*vv,te,.004); pp.setTargetAtTime(1,te+.03,.06+.12*a); }
+    else if(d==='tape'&&live&&G.tl&&S.fx.tlOn){ const dt=G.tl.d.delayTime, base=Math.min(59,tlBars()*4*60/S.bpm), b=.004*a*((G.tl._wb=(G.tl._wb|0)+1)%2?1:-1)*(.5+vv*.5); dt.setTargetAtTime(base+b,te,.03); dt.setTargetAtTime(base,te+.12,.25); }
+    else if(d==='cd'&&G.cd&&cdLive()){ const sd=seed!=null?seed:Math.round(te*1000), bar=Math.floor(Math.max(0,(seed!=null?seed:0))/(4*S.res)), PP=cdPalette(Math.floor(bar/8)), cx=PP[Math.floor(rnd(cdSeed(),sd,0xB1C+src.length)*6)%6]; cdHit(ctx,G,te+.004,cx,(.45+.4*a)*(v??.8),S.fx.cdSize??.35); }
+  }catch(err){} }); }
 function wiAmt(){ return S.fx.wiAmt??.5; }
 function wiLow(g){ try{ const S2=S.renderOnly==null?S:Object.assign({},S,{renderOnly:null}); let best=null; for(const e of eventsAt(g,S2)){ if(e.silent||INSTR[e.lane].reg!=='low') continue; if(!best||(e.v||0)>(best.v||0)) best=e; } return best; }catch(err){ return null; } }
-function wiStep(ctx,G,g,t){ if(!S.fx.wiOn) return; const live=ctx===actx; if(live&&PB.svg&&(wiOn('lb')||wiOn('lp'))){ const e0=wiLow(g); if(e0) pbPulse('low',t-ctx.currentTime); }
-  if(!wiOn('lp')||!G.pad||!G.pad.pump||!padLive(G)) return; const e=wiLow(g); if(!e) return; const te=Math.max(ctx.currentTime||0,t+grooveOff(g,S,stepDur(S))+(e.dt||0)), a=wiAmt(), dep=1-(.25+.6*a)*Math.min(1,.4+.6*(e.v??.8));
-  const pp=G.pad.pump.gain; pp.setTargetAtTime(dep,te,.004); pp.setTargetAtTime(1,te+.03,.06+.12*a); }
+function wiStep(ctx,G,g,t){ if(!S.fx.wiOn||!wiFrom('low').length) return; const e=wiLow(g); if(!e) return; wiFire('low',ctx,G,t+grooveOff(g,S,stepDur(S))+(e.dt||0),e.v??.8,g); }
 /* v215 Patch bay (Jesse: make Wires cables, and they must feel like cables). Outputs on the left, inputs on the right, each in its layer's
    colour. Drag from an output to an input to patch; drag a plug off its jack (or click the cable) to unpatch. A cable hangs in a sagging
    curve that swings when you move it and settles with a small bounce, and it lights up whenever a signal runs through it. Only the four
    patches Wires knows are allowed; while you drag, those inputs glow and the others dim. */
 const PB_OUT=[['low','Low drums','#47a37c'],['lead','Lead','#76a6d6'],['bass','Bass','#d27a5c']], PB_IN=[['bf','Bass filter','#d27a5c'],['pad','Pad','#e6ae2c'],['tape','Tape loop','#b48ccf'],['cd','Candy','#5fbf8e']];
-const PB_W={'low>bf':'lb','low>pad':'lp','lead>tape':'lt','bass>cd':'bc'}, PB={svg:null,w:0,h:0,cab:{},drag:null,raf:0,pulse:{}};
+const PB={svg:null,w:0,h:0,cab:{},drag:null,raf:0,pulse:{}};
 function pbJack(side,id){ const L=side==='o'?PB_OUT:PB_IN, i=L.findIndex(x=>x[0]===id), n=L.length, x=side==='o'?104:PB.w-104, y=22+(PB.h-60)*(n>1?i/(n-1):.5); return {x,y}; }   // labels sit outside the jacks, cables run between them
-function pbKeys(){ const W=S.fx.wiOn?(S.fx.wi||{lb:1,lp:1}):{}; return Object.entries(PB_W).filter(([k,w])=>W[w]).map(([k])=>k); }
+function pbKeys(){ return S.fx.wiOn?wiCables().slice():[]; }
 function pbSync(){ if(!PB.svg) return; const keep=new Set(pbKeys()); for(const k of Object.keys(PB.cab)) if(!keep.has(k)&&!(PB.drag&&PB.drag.k===k)) delete PB.cab[k];
   keep.forEach(k=>{ if(!PB.cab[k]){ const [o,i]=k.split('>'); PB.cab[k]={o,i,s:0,v:-6,lx:0,glow:0}; } }); pbKick(); }
 function pbKick(){ if(!PB.raf) PB.raf=requestAnimationFrame(pbFrame); }
@@ -4293,7 +4301,7 @@ function pbFrame(){ PB.raf=0; const svg=PB.svg; if(!svg) return; let busy=false;
   const cable=(key,a,b,col,C)=>{ const d=Math.hypot(b.x-a.x,b.y-a.y), tgt=14+d*.16; C.v+=(tgt-C.s)*.09; C.v*=.86; C.s+=C.v; if(Math.abs(C.v)>.02||Math.abs(tgt-C.s)>.2) busy=true;
     const gl=Math.max(0,C.glow-(now-(C.gt||0))/260); if(gl>0) busy=true; const pth=pbPath(a,b,C.s);
     parts.push('<g class="cab" data-k="'+key+'"><path d="'+pth+'" stroke="#000" stroke-opacity=".45" stroke-width="9" transform="translate(0,3)"/><path d="'+pth+'" stroke="#141312" stroke-width="8"/><path d="'+pth+'" stroke="'+col+'" stroke-width="5.5" style="filter:brightness('+(1+gl*.9)+')'+(gl>0?';drop-shadow(0 0 '+(6*gl).toFixed(1)+'px '+col+')':'')+'"/><path d="'+pth+'" stroke="#fff" stroke-opacity="'+(.18+gl*.35)+'" stroke-width="1.4" transform="translate(-.6,-1.6)"/><path d="'+pth+'" stroke="transparent" stroke-width="18"/></g>'); };
-  const D=PB.drag, ok=D?Object.keys(PB_W).filter(k=>k.startsWith(D.o+'>')).map(k=>k.split('>')[1]):[];
+  const D=PB.drag, ok=D?PB_IN.map(x=>x[0]):[];
   // jacks
   const jack=(side,[id,lab,col])=>{ const p=pbJack(side,id), cls='jk'+(D&&side==='i'?(ok.includes(id)?' ok':' dim'):''); return '<g class="'+cls+'" data-s="'+side+'" data-j="'+id+'" transform="translate('+p.x+','+p.y+')"><circle r="15" fill="transparent"/><circle class="ring" r="11" fill="#242321" stroke="'+col+'" stroke-width="1.6"/><circle r="7" fill="#0b0b0a" stroke="#4a4842" stroke-width="1"/><circle r="3" fill="#000"/></g><text class="lbl2" x="'+(side==='o'?p.x-20:p.x+20)+'" y="'+(p.y+3.5)+'" text-anchor="'+(side==='o'?'end':'start')+'">'+lab+'</text>'; };
   PB_OUT.forEach(j=>parts.push(jack('o',j))); PB_IN.forEach(j=>parts.push(jack('i',j)));
@@ -4303,7 +4311,7 @@ function pbFrame(){ PB.raf=0; const svg=PB.svg; if(!svg) return; let busy=false;
   svg.innerHTML=parts.join(''); if(busy||PB.drag) pbKick(); }
 function pbPt(e){ const r=PB.svg.getBoundingClientRect(); return {x:(e.clientX-r.left)*(PB.w/r.width),y:(e.clientY-r.top)*(PB.h/r.height)}; }
 function pbHit(p,side){ const L=side==='o'?PB_OUT:PB_IN; for(const [id] of L){ const j=pbJack(side,id); if(Math.hypot(j.x-p.x,j.y-p.y)<20) return id; } return null; }
-function pbSet(k,on){ const w=PB_W[k]; if(!w) return; const W=Object.assign({lb:1,lp:1},S.fx.wi||{}); W[w]=on?1:0; S.fx.wi=W; if(on) S.fx.wiOn=true; save(); UPD.forEach(f=>f()); }
+function pbSet(k,on){ const L=wiCables().filter(x=>x!==k); if(on) L.push(k); S.fx.wc=L; if(on) S.fx.wiOn=true; save(); UPD.forEach(f=>f()); }
 function pbPulse(o,delay){ if(!PB.svg) return; for(const [k,C] of Object.entries(PB.cab)) if(C.o===o){ const go=()=>{ C.glow=1; C.gt=performance.now(); pbKick(); }; if(delay>0) setTimeout(go,delay*1000); else go(); } }
 function pbInit(){ const host=$('pbay'), svg=$('pbsvg'); if(!host||!svg) return; PB.svg=svg;
   const size=()=>{ const r=host.getBoundingClientRect(); PB.w=Math.max(300,Math.round(r.width)); PB.h=Math.max(150,Math.round(r.height)); svg.setAttribute('viewBox','0 0 '+PB.w+' '+PB.h); pbKick(); };
@@ -4315,8 +4323,8 @@ function pbInit(){ const host=$('pbay'), svg=$('pbsvg'); if(!host||!svg) return;
     svg.setPointerCapture(e.pointerId); PB.drag={o,x:p.x,y:p.y,lx:p.x,ly:p.y,C:{s:0,v:0}}; pbKick(); e.preventDefault(); });
   svg.addEventListener('pointermove',e=>{ if(!PB.drag||PB.drag.back) return; const p=pbPt(e); PB.drag.x=p.x; PB.drag.y=p.y; pbKick(); });
   const up=e=>{ const D=PB.drag; if(!D||D.back) return; const p=pbPt(e), i=pbHit(p,'i'), k=D.o+'>'+i;
-    if(i&&PB_W[k]){ PB.cab[k]={o:D.o,i,s:D.C.s,v:D.C.v-9,glow:.8,gt:performance.now()}; PB.drag=null; pbSet(k,true); status('Patched: '+PB_OUT.find(x=>x[0]===D.o)[1]+' → '+PB_IN.find(x=>x[0]===i)[1]+'.'); }
-    else { D.back=true; if(i) status('That patch does nothing yet: '+PB_OUT.find(x=>x[0]===D.o)[1]+' goes to '+Object.keys(PB_W).filter(x=>x.startsWith(D.o+'>')).map(x=>PB_IN.find(y=>y[0]===x.split('>')[1])[1]).join(' or ')+'.'); }
+    if(i){ PB.cab[k]={o:D.o,i,s:D.C.s,v:D.C.v-9,glow:.8,gt:performance.now()}; PB.drag=null; pbSet(k,true); status('Patched: '+PB_OUT.find(x=>x[0]===D.o)[1]+' → '+PB_IN.find(x=>x[0]===i)[1]+'.'); }
+    else D.back=true;
     pbKick(); };
   svg.addEventListener('pointerup',up); svg.addEventListener('pointercancel',up);
   UPD.push(pbSync); pbSync(); }
@@ -5288,9 +5296,9 @@ function initControls(){
   { const cb=$('wiOn'), U=$('wiU');   /* v213 Wires */
     const ka=makeKnob({label:'Amount',min:0,max:100,step:1,get:()=>Math.round(wiAmt()*100),set:v=>{ S.fx.wiAmt=v/100; save(); },fmt:v=>v+'%',def:50}); ka.title='How strongly every cable pulls · drag, double-click resets'; ka.classList.add('big','mgk');
     const wr=document.createElement('div'); wr.className='mgw'; wr.append(ka); $('wiSlot').replaceWith(wr);
-    const u=()=>{ cb.checked=!!S.fx.wiOn; U.classList.toggle('off',!S.fx.wiOn); ka.upd(); if(PB.svg) pbSync(); const W=S.fx.wi||{lb:1,lp:1}; document.querySelectorAll('#wiSel button').forEach(b=>b.setAttribute('aria-pressed',String(!!W[b.dataset.w]))); }; u(); UPD.push(u);
+    const u=()=>{ cb.checked=!!S.fx.wiOn; U.classList.toggle('off',!S.fx.wiOn); ka.upd(); if(PB.svg) pbSync(); const W={}; Object.entries(WI_OLD).forEach(([k,v])=>W[k]=wiCables().includes(v)?1:0); document.querySelectorAll('#wiSel button').forEach(b=>b.setAttribute('aria-pressed',String(!!W[b.dataset.w]))); }; u(); UPD.push(u);
     cb.onchange=()=>{ S.fx.wiOn=cb.checked; u(); save(); status(cb.checked?'Wires: the layers listen to each other.':'Wires off.'); };
-    document.querySelectorAll('#wiSel button').forEach(b=>b.onclick=()=>{ const W=Object.assign({lb:1,lp:1},S.fx.wi||{}); W[b.dataset.w]=W[b.dataset.w]?0:1; S.fx.wi=W; if(!S.fx.wiOn){ S.fx.wiOn=true; } u(); save(); });
+    document.querySelectorAll('#wiSel button').forEach(b=>b.onclick=()=>{ const k=WI_OLD[b.dataset.w]; pbSet(k,!wiCables().includes(k)); });
   }
   pbInit();
   { const cb=$('dareOn'), U=$('dareU');   /* v204 Dare */

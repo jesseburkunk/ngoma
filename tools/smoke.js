@@ -87,7 +87,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
   await check('Wires: low drums pump the pad, bass notes set off candy (also in the stems)', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx); S.bars = 2;
       const run = async ro => { S.renderOnly = ro; const w = await renderLoop(false, 22050); S.renderOnly = null; return rms(w[0]); };
       Object.assign(S.fx, { padOn: true, padType: 0, bsOn: true, bsSty: 'step', cdOn: true, cdSrc: 'synth', cdAmt: .2, wiOn: false }); const p0 = await run(-1), c0 = await run(-4);
-      Object.assign(S.fx, { wiOn: true, wi: { lb: 1, lp: 1, bc: 1 }, wiAmt: .8 }); const p1 = await run(-1), c1 = await run(-4); Object.assign(S.fx, JSON.parse(keep)); return { p0, p1, c0, c1 }; }, rmsJS);
+      Object.assign(S.fx, { wiOn: true, wc: ['low>bf', 'low>pad', 'bass>cd', 'low>cd'], wiAmt: .8 }); const p1 = await run(-1), c1 = await run(-4); Object.assign(S.fx, JSON.parse(keep)); return { p0, p1, c0, c1 }; }, rmsJS);
     assert(r.p1 < r.p0 * .95 && r.c1 > r.c0 * 1.2, JSON.stringify(r)); return 'pad ' + (20 * Math.log10(r.p1 / r.p0)).toFixed(1) + ' dB, candy ' + (20 * Math.log10(r.c1 / r.c0)).toFixed(1) + ' dB'; });
 
   await check('Every Magic mode renders', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), bad = []; S.bars = 1; S.fx.mgOn = true;
