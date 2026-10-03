@@ -1421,9 +1421,10 @@ const liveLead=mono(),seqLead=mono(),seqLead2=mono();
 // v1.17: your own 2-bar line. R={notes:[{s,d,r,v}]}: start and length in sixteenths, r semitones above the key's root (octave 3), velocity.
 // It loops every 2 bars on the host's grid (sixteenths or triplets), each note its own voice, so chords and overlaps work.
 const RECM=new WeakMap();
-function playRec(R,i,t,spb,res){if(!R||!R.notes||!R.notes.length)return;const r=res||4,len=8*r,pos=((i%len)+len)%len;
+/* v1.33 (Jesse: the recorder ignores the metre, e.g. a tarantella in 12/8): a take may carry its own grid (res: steps per beat) and length (bars); old takes are in sixteenths over two bars */
+function playRec(R,i,t,spb,res){if(!R||!R.notes||!R.notes.length)return;const r=res||4,u=R.res||4,len=(R.bars||2)*4*r,pos=((i%len)+len)%len;
   let M=RECM.get(R);if(!M){M={};RECM.set(R,M)}let map=M[r];
-  if(!map){map=M[r]={};R.notes.forEach((n,k)=>{const p=n.s*r/4,st=Math.floor(p);(map[st]||(map[st]=[])).push({k,off:p-st,d:n.d*r/4,r:n.r,v:n.v})})}
+  if(!map){map=M[r]={};R.notes.forEach((n,k)=>{const p=n.s*r/u,st=Math.floor(p+1e-6);(map[st]||(map[st]=[])).push({k,off:Math.max(0,p-st),d:n.d*r/u,r:n.r,v:n.v})})}
   const ev=map[pos];if(!ev)return;for(const e of ev){const tt=t+e.off*spb,midi=state.key+48+e.r;if(!isFinite(midi))continue;const key='rec'+e.k;polyOn(key,midi,e.v,tt);polyOff(key,tt+Math.max(.06,e.d*spb))}}
 function playPhrase(P,i,t0,spb){for(const e of phraseOut(P,i)){const t=t0+(e.off||0)*spb,c=e.v?seqLead2:seqLead,midi=state.key+48+semis(P.scale,e.deg+(state.deg|0)+(state.cdv|0)),vel=e.vel!=null?e.vel:(e.acc?1:.62);if(!isFinite(midi))continue;   // a guard: a line never takes the voice down
   if(c.tied&&c.voice&&!c.voice.rel)c.voice.setFreq(mtof(midi),t,P.glide||.03);else{if(c.voice)c.voice.release(t);c.voice=new Voice(P,mtof(midi),vel,t)}

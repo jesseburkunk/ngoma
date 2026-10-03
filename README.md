@@ -229,6 +229,7 @@ Open: save/load own patterns, MIDI import, test in real tracks.
 - v197: Tape loop (Frippertronics): nieuwe unit na Texture. Lange lus van 2,5 / 3,5 / 5,5 / 7,5 maten (geen hele maten, dus elke ronde valt anders), sends Lead, Pad, Candy, Hold (hoe lang een laag leeft), Tone (hoeveel donkerder per ronde), Clear. Zachte verzadiging en lichte wow in de lus; lengte wisselen tijdens spelen buigt de band. Alleen live en in Rec, de loop-export laat hem weg. Smoke: 40 checks (Tape loop; Whole cycle nu los van eerdere checks).
 - v198: Candy Attack: links harde transient, naar rechts zwellen de geluidjes aan (tot ~90 ms). Elk geluid heeft een eigen aandeel, dus halverwege tikken sommige nog en zwellen andere. Smoke: check Candy Attack.
 - v199: Texture-opname Voices: radiostemmen uit NASA's Artemis II-missie-audio (publiek domein), 12 zinnen (31 s spraak) met pauzes in een lus van 48 s (tools/make_voices.py uit field_src/voices/). Candy pakt er lettergrepen uit. Credits in footer, help en public/field/CREDITS.txt. Apollo volgt als Jesse bestanden toevoegt.
+- v225 / Worp v1.33: Rec keeps the metre (12/8 triplet grid), takes of 2 or 4 bars; Learn in the sticky bar
 - v224: MIDI learn on every knob and slider; Mix knobs Low/Mid/High for the drum groups
 - v223: Room off by default (its early reflections read as a delay); Punch kept in saves and undo
 - v222: Surdo Punch (kick quality: pitch dive, click, thump, saturation); Space at 0 is fully dry

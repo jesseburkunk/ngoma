@@ -187,6 +187,7 @@ body.mlearn .knob.mlsel,body.mlearn input[type=range].mlsel{outline:2px solid va
 @keyframes mlpulse{50%{outline-color:transparent}}
 body.mlearn .knob[data-cc]{position:relative}body.mlearn .knob[data-cc]::after{content:attr(data-cc);position:absolute;top:-6px;right:-4px;font:600 9px/1 "JetBrains Mono",monospace;background:var(--accent);color:var(--onaccent);padding:2px 3px;border-radius:3px;pointer-events:none}
 body.mlearn input[type=range][data-cc]{outline:2px solid var(--accent)}
+.recbars{display:inline-flex;margin-left:-2px}.recbars button{min-width:24px;padding:0 6px}
 .midilearn[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--onaccent)}
 .knob.punch{margin-left:8px}.knob.punch .kl{color:var(--accent);font-weight:700}
 .kickb{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;margin-left:6px;padding:1px 4px;border-radius:3px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent);vertical-align:2px;font-weight:600}
@@ -861,7 +862,7 @@ input,select{accent-color:var(--accent)}
 <div class="mini" id="mini" aria-label="Transport">
   <button class="btn primary" id="mplay" type="button">▶ Play</button>
   <span class="mname" id="mname"></span><span class="mbpm" id="mbpm"></span>
-  <button class="btn" id="mcap" type="button" title="Capture the last bars (C)">Capture</button>
+  <button class="btn" id="mcap" type="button" title="Capture the last bars (C)">Capture</button><button class="btn midilearn" id="mlearn" type="button" aria-pressed="false" title="MIDI learn: click a knob or slider, turn a knob on your controller. Esc stops">Learn</button>
   <button class="btn drop" id="mdrop" type="button" title="Hold for a breakdown (D)">Drop</button>
   <button class="btn" id="mbb" type="button" title="Write to your Blackbox folder (B)">→ BB</button>
   <div class="mscn" id="mscn"></div>
@@ -940,7 +941,7 @@ input,select{accent-color:var(--accent)}
     <div class="fxg magic padu" id="padU">
       <div class="fxh"><span class="lbl" title="The layer under the drums, in your key and scale">Pad</span><span class="seg padseg" id="padseg" role="group" aria-label="Pad engine"><button data-pm="worp" title="Worp: a new modular patch every throw that keeps re-patching itself. Open it in Worp to see and tweak everything">Worp</button><button data-pm="classic" title="The classic pads: Bed, Seasons, Tides, Echoes, Cloud and Loops">Classic</button></span><label class="chk"><input id="padOn" type="checkbox"> On</label></div>
       <div class="fxc"><div class="knrow"><div id="padSlot"></div></div>
-        <div class="wstrip" id="worpStrip" hidden><button class="btn rec" id="padRec" type="button" aria-pressed="false" title="Record two bars of chords from your MIDI keys, from the next bar line. They loop on this pad as Mine">Rec 2 bars</button><span class="seg lineseg" id="padLine" role="group" aria-label="What the pad plays" title="Mine: the chords you recorded with Rec. Worp: the pad's own chords and movement. Your take stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Worp</button></span><button class="btn" id="worpNew" title="New sound: another Worp pad, with the same chords and movement (the old one stays in undo)">New sound</button><button class="btn" id="worpPat" title="New pattern: other chords, voicing and movement, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="PAD"><b id="worpName"></b><small id="worpCode"></small></span><span class="wms" id="worpMutes" aria-label="Mute Worp layers"></span></div></div>
+        <div class="wstrip" id="worpStrip" hidden><button class="btn rec" id="padRec" type="button" aria-pressed="false" title="Record two or four bars (the switch next to it) of chords from your MIDI keys, from the next bar line. They loop on this pad as Mine">Rec 2 bars</button><span class="seg recbars" role="group" aria-label="Take length"><button type="button" data-b="2" title="Record two bars">2</button><button type="button" data-b="4" title="Record four bars">4</button></span><span class="seg lineseg" id="padLine" role="group" aria-label="What the pad plays" title="Mine: the chords you recorded with Rec. Worp: the pad's own chords and movement. Your take stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Worp</button></span><button class="btn" id="worpNew" title="New sound: another Worp pad, with the same chords and movement (the old one stays in undo)">New sound</button><button class="btn" id="worpPat" title="New pattern: other chords, voicing and movement, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="PAD"><b id="worpName"></b><small id="worpCode"></small></span><span class="wms" id="worpMutes" aria-label="Mute Worp layers"></span></div></div>
     </div>
     <div class="fxg magic bsu" id="bsU">
       <div class="fxh"><span class="lbl" title="Bass: a sub bass under the drums, a sine with a touch of body, playing slow dub figures in your key that follow the chords and step aside when the surdo hits">Bass</span><label class="chk"><input id="bsOn" type="checkbox"> On</label></div>
@@ -950,7 +951,7 @@ input,select{accent-color:var(--accent)}
     <div class="fxg magic leadu" id="leadU">
       <div class="fxh"><span class="lbl" title="A Worp lead: one voice with glide playing a short phrase in your key, in time and with the swing of the drums. Off by default, so it only plays when you want a melody">Lead</span><label class="chk"><input id="leadOn" type="checkbox"> On</label></div>
       <div class="fxc"><div class="knrow"><div id="leadSlot"></div></div><div class="knrow lvrow plrow" id="plRow"><div id="plSlot"></div></div><div class="knrow lvrow" id="lvRow"><div id="lvSlot"></div></div>
-        <div class="wstrip" id="leadStrip"><button class="btn rec" id="leadRec" type="button" aria-pressed="false" title="Record two bars from your MIDI keys, from the next bar line. Your line loops on the lead as Mine">Rec 2 bars</button><button class="btn" id="leadLock" aria-pressed="false" title="Lock the line: the lead keeps playing these bars exactly as they are">Lock</button><span class="seg lineseg" id="leadLine" role="group" aria-label="Which line the lead plays" title="Mine: the line you recorded with Rec 2 bars. Auto: the line the Lead makes itself. Your line stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Auto</button></span><button class="btn" id="leadNew" title="New sound: another Plaits sound, playing the same melody (the old one stays in undo)">New sound</button><button class="btn" id="leadPat" title="New pattern: another melody, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="LEAD"><b id="leadName"></b><small id="leadCode"></small></span></div></div>
+        <div class="wstrip" id="leadStrip"><button class="btn rec" id="leadRec" type="button" aria-pressed="false" title="Record two or four bars (the switch next to it) from your MIDI keys, from the next bar line. Your line loops on the lead as Mine">Rec 2 bars</button><span class="seg recbars" role="group" aria-label="Take length"><button type="button" data-b="2" title="Record two bars">2</button><button type="button" data-b="4" title="Record four bars">4</button></span><button class="btn" id="leadLock" aria-pressed="false" title="Lock the line: the lead keeps playing these bars exactly as they are">Lock</button><span class="seg lineseg" id="leadLine" role="group" aria-label="Which line the lead plays" title="Mine: the line you recorded with Rec 2 bars. Auto: the line the Lead makes itself. Your line stays when you switch"><button data-l="mine">Mine</button><button data-l="worp">Auto</button></span><button class="btn" id="leadNew" title="New sound: another Plaits sound, playing the same melody (the old one stays in undo)">New sound</button><button class="btn" id="leadPat" title="New pattern: another melody, on the same sound (the old one stays in undo)">New pattern</button><span class="wname lcd" data-lcd="LEAD"><b id="leadName"></b><small id="leadCode"></small></span></div></div>
     </div>
     <div class="fxg magic cdu" id="cdU">
       <div class="fxh"><span class="lbl" title="Candy: tiny sounds without a key (clicks, blips, crackle, grains of a recording) in the gaps of the drums, as in microhouse">Candy</span><label class="chk"><input id="cdOn" type="checkbox"> On</label></div>
@@ -2227,9 +2228,10 @@ const liveLead=mono(),seqLead=mono(),seqLead2=mono();
 // v1.17: your own 2-bar line. R={notes:[{s,d,r,v}]}: start and length in sixteenths, r semitones above the key's root (octave 3), velocity.
 // It loops every 2 bars on the host's grid (sixteenths or triplets), each note its own voice, so chords and overlaps work.
 const RECM=new WeakMap();
-function playRec(R,i,t,spb,res){if(!R||!R.notes||!R.notes.length)return;const r=res||4,len=8*r,pos=((i%len)+len)%len;
+/* v1.33 (Jesse: the recorder ignores the metre, e.g. a tarantella in 12/8): a take may carry its own grid (res: steps per beat) and length (bars); old takes are in sixteenths over two bars */
+function playRec(R,i,t,spb,res){if(!R||!R.notes||!R.notes.length)return;const r=res||4,u=R.res||4,len=(R.bars||2)*4*r,pos=((i%len)+len)%len;
   let M=RECM.get(R);if(!M){M={};RECM.set(R,M)}let map=M[r];
-  if(!map){map=M[r]={};R.notes.forEach((n,k)=>{const p=n.s*r/4,st=Math.floor(p);(map[st]||(map[st]=[])).push({k,off:p-st,d:n.d*r/4,r:n.r,v:n.v})})}
+  if(!map){map=M[r]={};R.notes.forEach((n,k)=>{const p=n.s*r/u,st=Math.floor(p+1e-6);(map[st]||(map[st]=[])).push({k,off:Math.max(0,p-st),d:n.d*r/u,r:n.r,v:n.v})})}
   const ev=map[pos];if(!ev)return;for(const e of ev){const tt=t+e.off*spb,midi=state.key+48+e.r;if(!isFinite(midi))continue;const key='rec'+e.k;polyOn(key,midi,e.v,tt);polyOff(key,tt+Math.max(.06,e.d*spb))}}
 function playPhrase(P,i,t0,spb){for(const e of phraseOut(P,i)){const t=t0+(e.off||0)*spb,c=e.v?seqLead2:seqLead,midi=state.key+48+semis(P.scale,e.deg+(state.deg|0)+(state.cdv|0)),vel=e.vel!=null?e.vel:(e.acc?1:.62);if(!isFinite(midi))continue;   // a guard: a line never takes the voice down
   if(c.tied&&c.voice&&!c.voice.rel)c.voice.setFreq(mtof(midi),t,P.glide||.03);else{if(c.voice)c.voice.release(t);c.voice=new Voice(P,mtof(midi),vel,t)}
@@ -3994,6 +3996,8 @@ function worpSeed(){ const u=new Uint32Array(1); crypto.getRandomValues(u); retu
 /* v171 Rec in Ngoma (Jesse: switching between Ngoma and Worp is awkward). Rec 2 bars on the Lead or the Pad records what you play on your
    MIDI keys, from the next bar line, on the grid (sixteenths; Ngoma's swing is added when it plays). While you record only that unit's
    own line rests; the drums go on and your keys sound. The take becomes Mine; Worp switches back to the generated line or chords. */
+function recBars(){ return S.recBars===4?4:2; }   /* v225 (Jesse: a switch for a longer loop): a take of 2 or 4 bars */
+function recBarsUI(){ document.querySelectorAll('.recbars button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.b===recBars()))); nrecUI(); }
 var PREC=false; const NREC={st:'',u:'',l0:0,g0:0,g1:0,notes:[],open:new Map(),clk:[]};
 function padRecOn(){ const R=S.fx.worp&&S.fx.worp.rec; return R&&!R.off?R:null; }
 function stepNow(){ if(!actx||!playing) return null; return gStep-(nextT-actx.currentTime)/stepDur(S); }
@@ -4001,7 +4005,7 @@ function nrecUI(){ ['lead','pad'].forEach(u=>{ const b=$(u==='lead'?'leadRec':'p
   b.classList.toggle('arming',me&&NREC.st==='arm'); b.classList.toggle('recording',me&&NREC.st==='rec'); b.setAttribute('aria-pressed',me?'true':'false');
   /* v172 (Jesse: count with the bar, not a percentage; a lead-in of two bars, clearly): before the count-in 'Rec · wait', then the beats
      that are left (8 down to 1, with a click on every beat), then bar and beat of the take (1·1 to 2·4) */
-  let t='Rec 2 bars'; const p=me?stepNow():null, r=S.res;
+  let t='Rec '+(me&&NREC.bars?NREC.bars:recBars())+' bars'; const p=me?stepNow():null, r=S.res;
   if(me&&p!=null&&NREC.st==='arm') t=p<NREC.l0?'Rec · wait':'In '+Math.max(1,Math.ceil((NREC.g0-p)/r-1e-6));
   if(me&&p!=null&&NREC.st==='rec'){ const k=Math.max(0,Math.floor((p-NREC.g0)/r)); t='● '+(Math.floor(k/4)+1)+'·'+(k%4+1); }
   b.classList.toggle('counting',me&&NREC.st==='arm'&&p!=null&&p>=NREC.l0); if(b.textContent!==t) b.textContent=t; }); }
@@ -4012,18 +4016,19 @@ function nrecToggle(u){ if(NREC.st){ const was=NREC.u; nrecStop(false); if(was==
   if(u==='lead'&&!S.fx.leadOn){ S.fx.leadOn=true; UPD.forEach(f=>f()); if(AG) leadSync(AG); }
   if(u==='pad'&&!midiPadOK()){ S.fx.padOn=true; S.fx.padType=7; UPD.forEach(f=>f()); worpUI(); if(AG) padSync(AG); }
   S.midiTo=u; midiUI(); save(); if(!MIDIK.on) midiConnect(false);
-  if(!playing) start(); const BL=4*S.res; NREC.l0=Math.ceil((stepNow()+1)/BL)*BL; NREC.g0=NREC.l0+2*BL; NREC.g1=NREC.g0+2*BL; NREC.clk=[];   /* v172: two bars of count-in from the next bar line */ NREC.u=u; NREC.st='arm'; NREC.notes=[]; NREC.open.clear();
+  if(!playing) start(); const BL=4*S.res; NREC.l0=Math.ceil((stepNow()+1)/BL)*BL; NREC.bars=recBars(); NREC.res=S.res; NREC.g0=NREC.l0+2*BL; NREC.g1=NREC.g0+NREC.bars*BL; NREC.clk=[];   /* v172: two bars of count-in from the next bar line */ NREC.u=u; NREC.st='arm'; NREC.notes=[]; NREC.open.clear();
   if(u==='lead') LREC=true; else { PREC=true; if(AG&&AG.worp) AG.worp.stop(actx.currentTime); } if(AG) leadSync(AG);
-  nrecClicks(); status('Rec on the '+(u==='lead'?'Lead':'Pad')+': two bars count-in (the clicks), then play two bars on your MIDI keys. Rec again cancels.'); nrecUI(); }
+  nrecClicks(); status('Rec on the '+(u==='lead'?'Lead':'Pad')+': two bars count-in (the clicks), then play '+(NREC.bars===4?'four':'two')+' bars on your MIDI keys. Rec again cancels.'); nrecUI(); }
 function nrecStop(done){ if(actx) NREC.clk.forEach(o=>{ try{ o.stop(actx.currentTime); }catch(e){} }); NREC.clk=[]; NREC.st=''; NREC.u=''; LREC=false; PREC=false; if(AG) leadSync(AG); nrecUI(); if(!done) status('Rec cancelled.'); }
 function nrecNote(on,m,v){ if(!NREC.st) return; const p=stepNow(); if(p==null) return;
   if(on){ if(p<NREC.g1) NREC.open.set(m,{p:Math.max(p,NREC.g0-.6),v}); return; }   /* a note played just before the bar counts as on the one */
   const o=NREC.open.get(m); if(!o) return; NREC.open.delete(m); NREC.notes.push({p0:o.p,p1:Math.min(p,NREC.g1),m,v:o.v}); }
 function nrecTick(){ if(!NREC.st) return; const p=stepNow(); if(p==null){ nrecStop(false); return; } if(NREC.st==='arm'&&p>=NREC.g0) NREC.st='rec'; nrecUI(); if(p<NREC.g1) return;
   NREC.open.forEach((o,m)=>NREC.notes.push({p0:o.p,p1:NREC.g1,m,v:o.v})); NREC.open.clear(); const u=NREC.u, k=4/S.res, root=S.key+48;
-  const notes=NREC.notes.filter(n=>n.p0<NREC.g1-.5).map(n=>{ let s=Math.round((n.p0-NREC.g0)*k); const d=Math.max(1,Math.round((n.p1-n.p0)*k)); if(s<0) s=0; if(s>=32) s-=32; return {s,d,r:n.m-root,v:+Math.max(.2,Math.min(1,n.v)).toFixed(2)}; }).filter(n=>n.s<32).sort((a,b)=>a.s-b.s).slice(0,256);
+  /* v225 (Jesse: the recorder ignores the metre): the take is kept on Ngoma's own grid, in steps (sixteenths, or triplet eighths in 12/8), with its length in bars */
+  const NS=NREC.bars*4*NREC.res, notes=NREC.notes.filter(n=>n.p0<NREC.g1-.5).map(n=>{ let s=Math.round(n.p0-NREC.g0); const d=Math.max(1,Math.round(n.p1-n.p0)); if(s<0) s=0; if(s>=NS) s-=NS; return {s,d,r:n.m-root,v:+Math.max(.2,Math.min(1,n.v)).toFixed(2)}; }).filter(n=>n.s<NS).sort((a,b)=>a.s-b.s).slice(0,256);
   nrecStop(true); if(!notes.length){ status('Nothing recorded: after Rec, play on your MIDI keys from the next bar.'); return; }
-  hRecord(()=>{ const W=u==='lead'?leadSpec():worpSpec(); W.rec={notes,bars:2}; if(u==='lead') S.fx.leadOn=true; }); updHist(); save(); leadShown=''; worpShown=''; leadUI(); worpUI(); if(AG){ leadSync(AG); padSync(AG); } worpPost();
+  hRecord(()=>{ const W=u==='lead'?leadSpec():worpSpec(); W.rec={notes,bars:NREC.bars,res:NREC.res}; if(u==='lead') S.fx.leadOn=true; }); updHist(); save(); leadShown=''; worpShown=''; leadUI(); worpUI(); if(AG){ leadSync(AG); padSync(AG); } worpPost();
   status('Your '+(u==='lead'?'line':'chords')+': '+notes.length+' notes, looping now. Mine | Worp switches between yours and the generated one.'); }
 function padMine(mine){ const R=worpSpec().rec; if(!R||mine===!R.off) return; hRecord(()=>{ if(mine) delete R.off; else R.off=true; }); updHist(); save(); worpShown=''; worpUI(); worpPost(); status(mine?'Your chords play again.':'The pad\'s own chords play. Your take is kept: Mine brings it back.'); }
 function worpSpec(){ const F=S.fx; if(!F.worp||!F.worp.seed) F.worp={seed:worpSeed(),mix:[1,1,1,1],mute:[false,false,false,false]}; return F.worp; }
@@ -4097,7 +4102,7 @@ function mlCC(ch,cc,v){ const id=(ch+1)+':'+cc;
   if(!ML.raf) ML.raf=requestAnimationFrame(()=>{ ML.raf=0; const P=[...ML.pend]; ML.pend.clear(); P.forEach(([k,v])=>mlApply(k,v)); }); return true; }
 function mlMark(){ const rev={}; Object.entries(ML.map).forEach(([id,k])=>{ rev[k]=id; });
   document.querySelectorAll(ML_SEL).forEach(el=>{ const k=mlKey(el), id=k&&rev[k]; if(id){ const [ch,cc]=id.split(':'); el.dataset.cc=(ch!=='1'?ch+'·':'')+cc; } else delete el.dataset.cc; }); }
-function mlSet(on,sel){ ML.learn=on; document.body.classList.toggle('mlearn',on); const b=$('midilearn'); if(b) b.setAttribute('aria-pressed',on);
+function mlSet(on,sel){ ML.learn=on; document.body.classList.toggle('mlearn',on); ['midilearn','mlearn'].forEach(id=>{ const b=$(id); if(b) b.setAttribute('aria-pressed',on); });
   if(ML.sel){ ML.sel.classList.remove('mlsel'); ML.sel=null; }
   if(on){ if(!MIDIK.on) midiConnect(false); mlMark(); if(sel) mlPick(sel); else status('MIDI learn: click a knob or slider, then turn a knob on your controller. Right-click a learned one to forget it. Esc stops.'); } }
 function mlPick(el){ if(ML.sel) ML.sel.classList.remove('mlsel'); ML.sel=el; el.classList.add('mlsel'); status('Turn a knob on your controller for '+mlName(el)+'.'); }
@@ -4161,7 +4166,7 @@ const PL_PH=new Map();
 function plPhrase(ps){ let P=PL_PH.get(ps); if(!P){ P=WorpEngine.genPatch(ps,'lead'); P._ps=ps; P.scale='__host'; PL_PH.set(ps,P); if(PL_PH.size>16) PL_PH.delete(PL_PH.keys().next().value); } return P; }
 function plSemi(d){ const iv=(SCALES[S.scale]||SCALES.mpenta).iv, n=iv.length; return iv[((d%n)+n)%n]+12*Math.floor(d/n); }
 const PL_REC=new WeakMap();
-function plRec(G,R,g,t,spb,vf,vm){ const r=S.res, len=8*r, pos=((g%len)+len)%len; let M=PL_REC.get(R); if(!M||M.r!==r||M.n!==R.notes.length){ M={r,n:R.notes.length,map:{}}; R.notes.forEach(x=>{ const p=x.s*r/4, st=Math.floor(p); (M.map[st]||(M.map[st]=[])).push({off:p-st,r:x.r,v:x.v}); }); PL_REC.set(R,M); }
+function plRec(G,R,g,t,spb,vf,vm){ const r=S.res, u=R.res||4, len=(R.bars||2)*4*r, pos=((g%len)+len)%len; let M=PL_REC.get(R); if(!M||M.r!==r||M.n!==R.notes.length){ M={r,n:R.notes.length,map:{}}; R.notes.forEach(x=>{ const p=x.s*r/u, st=Math.floor(p+1e-6); (M.map[st]||(M.map[st]=[])).push({off:Math.max(0,p-st),r:x.r,v:x.v}); }); PL_REC.set(R,M); }
   const ev=M.map[pos]; if(!ev) return; for(const e of ev) plNote(G,vf?vf():G.plaits.lv++%2,t+e.off*spb,S.key+48+e.r,(e.v!=null?e.v:.8)*(vm||1)); }
 function plBar(ctx,G,g,gm,t){ const Q=plEngine(ctx,G); if(!Q) return; const W=leadSpec(), sd=stepDur(S), t0=t+grooveOff(g,S,sd); plSync(G,t);
   plMove(G,g,t);
@@ -5565,7 +5570,8 @@ function initControls(){
     $('leadPat').onclick=()=>{ const W0=leadSpec(), np=best(8,s=>leadLine(W0.seed,s)); hRecord(()=>{ const W=leadSpec(); W.ps=np; delete W.pn; delete W.lock; }); updHist(); save(); leadShown=''; leadUI(); status(recOn()?'New Worp melody on the same sound. You hear it when you switch to Worp; Mine plays your own line.':'New melody, same sound.'); };
     $('midibtn').onclick=()=>midiConnect(false);
     document.querySelectorAll('#midiseg button').forEach(b=>b.onclick=()=>{ S.midiTo=b.dataset.to; midiUI(); save(); status('Your MIDI keys play '+(midiDest()==='pad'?'the Worp pad':midiDest()==='lead'?'the Lead':'nothing yet: switch on the Lead or a Worp pad')+'.'); });
-    $('midilearn').onclick=()=>{ mlSet(!ML.learn); if(!ML.learn) status('MIDI learn off.'); };
+    document.querySelectorAll('.recbars button').forEach(b=>b.onclick=()=>{ if(NREC.st) return; S.recBars=+b.dataset.b; save(); recBarsUI(); }); recBarsUI();
+    $('midilearn').onclick=$('mlearn').onclick=()=>{ mlSet(!ML.learn); if(!ML.learn) status('MIDI learn off.'); };
     { const box=$('kitmix'), lab=document.createElement('span'); lab.className='lbl'; lab.textContent='Mix'; lab.title='Level per group of drums, on top of each track: low, mid and high'; box.append(lab);
       [['low','Low'],['mid','Mid'],['high','High']].forEach(([r,t])=>{ const k=makeKnob({label:t,min:0,max:1.25,step:.01,def:1,get:()=>grpLvl(r),set:v=>{ S.fx[GRP_K[r]]=v; syncGraph(AG); save(); },fmt:v=>Math.round(v*100)+'%'});
         k.classList.add('rg-'+r); k.title='Level of all '+r+' drums together · drag, double-click resets'; box.append(k); UPD.push(()=>k.upd()); }); }

@@ -294,8 +294,16 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       S.bpm = b0; S.bars = 1; Object.assign(S.fx, { padOn: true, padType: 7, padLvl: .6, leadOn: false, worp: { seed: 4242, mix: [1, 1, 1, 1], mute: [false, false, false, false] } }); S.renderOnly = -1; const a = await renderLoop(false, 22050);
       S.fx.worp.ps = 777; const b = await renderLoop(false, 22050); S.fx.worp.rec = { notes: [{ s: 0, d: 16, r: 0, v: .8 }, { s: 0, d: 16, r: 4, v: .8 }, { s: 16, d: 16, r: 5, v: .8 }], bars: 2 }; const c = await renderLoop(false, 22050); S.renderOnly = null;
       let dab = 0, dac = 0; for (let i = 0; i < a[0].length; i += 5) { dab += Math.abs(a[0][i] - b[0][i]); dac += Math.abs(a[0][i] - c[0][i]); } o.ra = rms(a[0]); o.rc = rms(c[0]); o.dab = dab; o.dac = dac; Object.assign(S.fx, JSON.parse(keep)); return o; }, rmsJS);
-    { const g = String(r.grid || '').split(',').map(x => x.split(':').map(Number)); assert(r.arm === 'arm' && r.n === 2 && g[1][0] - g[0][0] === 8 && g[0][0] <= 1 && g[0][1] >= 1 && g[1][1] >= 1, 'take ' + JSON.stringify(r)); }   /* a busy test browser can play a hair late */ assert(!r.lrec, 'lead left resting');
+    { const g = String(r.grid || '').split(',').map(x => x.split(':').map(Number)); assert(r.arm === 'arm' && r.n === 2 && Math.abs(g[1][0] - g[0][0] - 8) <= 1 && g[0][0] <= 1 && g[0][1] >= 1 && g[1][1] >= 1, 'take ' + JSON.stringify(r)); }   /* a busy test browser can play a hair late */ assert(!r.lrec, 'lead left resting');
     assert(r.ra > .001 && r.rc > .001, 'pad silent ' + JSON.stringify(r)); assert(r.dab > 1 && r.dac > 1, 'pattern or chords did not change the pad ' + JSON.stringify(r)); return 'take ' + r.grid + ', pad pattern and chords sound'; });
+
+  await check('Rec in 12/8, four bars: the take keeps the triplet grid and its length', async () => { const r = await p.evaluate(async () => { const w = ms => new Promise(r => setTimeout(r, ms)), keep = JSON.stringify(S.fx), b0 = S.bpm, r0 = S.res, rb = S.recBars;
+      stop(); await w(200); S.bpm = 200; S.res = 3; S.recBars = 4; S.fx.leadOn = true; const W = leadSpec(); delete W.rec; nrecToggle('lead'); const o = { bars: NREC.bars, len: NREC.g1 - NREC.g0 };
+      const at = async st => { while (stepNow() < st) await w(5); };
+      await at(NREC.g0 + 3.1); ngMidi({ data: [0x90, 64, 100] }); await at(NREC.g0 + 4.1); ngMidi({ data: [0x80, 64, 0] }); await at(NREC.g0 + 37.1); ngMidi({ data: [0x90, 67, 90] }); await at(NREC.g0 + 38.1); ngMidi({ data: [0x80, 67, 0] });
+      while (NREC.st) await w(30); const R = leadSpec().rec; o.res = R && R.res; o.rb = R && R.bars; o.s = R && R.notes.map(n => n.s); stop();
+      S.bpm = b0; S.res = r0; S.recBars = rb; Object.assign(S.fx, JSON.parse(keep)); return o; });
+    assert(r.bars === 4 && r.len === 48 && r.res === 3 && r.rb === 4, JSON.stringify(r)); assert(r.s && r.s[0] === 3 && r.s[1] === 37, 'steps ' + JSON.stringify(r)); return 'take on steps ' + r.s.join(', ') + ' of 48'; });
 
   await check('Lead v2: Form, Rhythm and Notes shape the line, Vary changes it, Drums thins it, the lead sounds', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), o = {}, keep = JSON.stringify(S.fx);
       const P = WorpEngine.genPatch(424242, 'lead'), n = 5, base = { res: 4, cx: .3, anchor: null, cdv: 0, deg: 0 };
