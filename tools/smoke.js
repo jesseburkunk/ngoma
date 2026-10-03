@@ -71,6 +71,15 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       const out = { bars: c.bars, ratio: w[0].length / one[0].length, live: S.bars, nb }; S.lanes.forEach((x, i) => x.len = lens[i]); L.len = l0; S.bars = b0; Object.assign(S.fx, JSON.parse(keep)); return out; });
     assert(r.bars === 3 && Math.abs(r.ratio - 3) < .01 && r.live === 1, JSON.stringify(r)); return 'a lane of 3 beats in a 1-bar loop: ' + r.bars + ' bars'; });
 
+  await check('MIDI learn: every control can be learned, a CC turns it, also after a redraw', async () => { const r = await p.evaluate(async () => { const keep = JSON.stringify(ML.map), fx = JSON.stringify(S.fx), out = {}, raf = () => new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
+      const all = [...document.querySelectorAll(ML_SEL)], keys = all.map(mlKey); out.n = all.length; out.nokey = keys.filter(k => !k).length; out.dup = keys.length - new Set(keys).size;
+      ML.map = {}; const low = [...document.querySelectorAll('#kitmix .knob')][0]; mlSet(true, low); mlCC(0, 21, 64); out.learned = ML.map['1:21']; out.half = S.fx.gLow;
+      const kp = document.querySelector('.kpanel[data-i]'), li = +kp.dataset.i, sur = kp.querySelector('.knob'); mlPick(sur); mlCC(0, 22, 0); mlSet(false);
+      mlCC(0, 21, 127); await raf(); out.full = S.fx.gLow; renderLanes(); mlCC(0, 22, 127); await raf(); out.lvl = S.lanes[li].level;
+      out.free = mlCC(0, 99, 10); ML.map = JSON.parse(keep); mlSave(); S.fx = JSON.parse(fx); renderLanes(); syncGraph(AG); return out; });
+    assert(!r.nokey && !r.dup, 'keys: ' + r.nokey + ' without, ' + r.dup + ' double'); assert(r.learned === 'kitmix:Low' && Math.abs(r.half - .63) < .02 && r.full === 1.25, JSON.stringify(r)); assert(r.lvl === 1.6 && r.free === false, JSON.stringify(r));
+    return r.n + ' controls learnable'; });
+
   await check('Surdo Punch adds a kick transient', async () => { const r = await p.evaluate(async () => { const i = INSTR.findIndex(x => x.id === 'surdo'), L = S.lanes[i], keep = { pu: L.punch, mute: L.mute, bars: S.bars }; S.bars = 1; L.mute = false;
       if (!L.steps.some(x => x)) return 'no surdo hits in this rhythm';
       const m = a => { let pk = 0, e = 0, hf = 0; for (let k = 1; k < a.length; k++) { const x = a[k], d = x - a[k - 1]; pk = Math.max(pk, Math.abs(x)); e += x * x; hf += d * d; } return [pk / Math.sqrt(e / a.length), Math.sqrt(hf / e)]; }, out = [];

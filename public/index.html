@@ -181,6 +181,13 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .knobs{display:flex;gap:6px}
 .knob{display:flex;flex-direction:column;align-items:center;width:38px;gap:2px}
 .knob.sep{margin-left:8px}
+.kitmix{display:flex;align-items:center;gap:6px;margin-left:8px}.kitmix .knob.rg-low .kl{color:var(--accent)}.kitmix .knob.rg-mid .kl{color:var(--art2)}.kitmix .knob.rg-high .kl{color:var(--art1)}
+body.mlearn .knob,body.mlearn input[type=range]{outline:1px dashed color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:2px;cursor:crosshair}
+body.mlearn .knob.mlsel,body.mlearn input[type=range].mlsel{outline:2px solid var(--accent);animation:mlpulse 1s ease-in-out infinite}
+@keyframes mlpulse{50%{outline-color:transparent}}
+body.mlearn .knob[data-cc]{position:relative}body.mlearn .knob[data-cc]::after{content:attr(data-cc);position:absolute;top:-6px;right:-4px;font:600 9px/1 "JetBrains Mono",monospace;background:var(--accent);color:var(--onaccent);padding:2px 3px;border-radius:3px;pointer-events:none}
+body.mlearn input[type=range][data-cc]{outline:2px solid var(--accent)}
+.midilearn[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--onaccent)}
 .knob.punch{margin-left:8px}.knob.punch .kl{color:var(--accent);font-weight:700}
 .kickb{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;margin-left:6px;padding:1px 4px;border-radius:3px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent);vertical-align:2px;font-weight:600}
 .kl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -893,7 +900,7 @@ input,select{accent-color:var(--accent)}
       <label class="chk" title="The tuned drums move with the chords and keep their place in it (the root drum on the new root, the fifth on the new fifth). Shakers, triangle, tambourine and claps stay"><input id="chdrums" type="checkbox"> Drums too</label>
       <button class="btn" id="tuneall" title="Low drums to the root, mid drums to the fifth and seventh, inside the scale">Tune to key</button>
       <label class="chk" title="Lock tuning to scale: Tune knobs only land on notes of the scale"><input id="keylock" type="checkbox"> Lock to scale</label></div>
-      <div class="tgrp tmidi" role="group" aria-label="MIDI keyboard"><button class="btn midibtn" id="midibtn" aria-pressed="false" title="Play along from a MIDI keyboard. Click to connect; after the first time Ngoma connects by itself">MIDI: connect</button><span class="seg midiseg" id="midiseg" role="group" aria-label="Your keys play"><button data-to="lead" title="Your keys play the Lead sound (when the Lead is off: the Worp pad)">Lead</button><button data-to="pad" title="Your keys play the Worp pad (when the pad is off or Classic: the Lead)">Pad</button></span><button class="btn midiq" id="midiq" aria-pressed="false" title="Tight: while Ngoma plays, every key you press waits for the next sixteenth, so it lands on the grid (a key just after the line plays at once). Off: your keys sound the moment you press them">Tight</button></div>
+      <div class="tgrp tmidi" role="group" aria-label="MIDI keyboard"><button class="btn midibtn" id="midibtn" aria-pressed="false" title="Play along from a MIDI keyboard. Click to connect; after the first time Ngoma connects by itself">MIDI: connect</button><span class="seg midiseg" id="midiseg" role="group" aria-label="Your keys play"><button data-to="lead" title="Your keys play the Lead sound (when the Lead is off: the Worp pad)">Lead</button><button data-to="pad" title="Your keys play the Worp pad (when the pad is off or Classic: the Lead)">Pad</button></span><button class="btn midilearn" id="midilearn" aria-pressed="false" type="button" title="MIDI learn: click Learn, click a knob or slider, turn a knob on your controller. Works on every knob. Right-click a knob does the same; in Learn, right-click a learned knob to forget it. Esc stops">Learn</button><button class="btn midiq" id="midiq" aria-pressed="false" title="Tight: while Ngoma plays, every key you press waits for the next sixteenth, so it lands on the grid (a key just after the line plays at once). Off: your keys sound the moment you press them">Tight</button></div>
       <div class="tgrp tmix"><button class="tg" id="stablebtn" type="button" aria-pressed="false" title="Stable playback: a bigger audio buffer and a longer look-ahead, for a laptop where the sound stutters. MIDI keys get a little more delay. Kept on this computer">Stable</button><label class="field mvol" title="Master volume for listening. Double-click for full. Exports are not affected: they land at the Level chosen at Export (-16, -14 or -18 LUFS)."><span class="lbl">Volume</span><input id="mvol" type="range" min="0" max="100" step="1" aria-label="Master volume"></label></div>
     </div>
   </header>
@@ -1029,7 +1036,7 @@ input,select{accent-color:var(--accent)}
     <span class="lbl ghl">Kit</span><small class="kitsub">How the drums sound</small>
     <div class="macro kitdice"><div class="row"><label class="lbl" for="diceAmt" title="Rolls tuning (inside the scale), decay, pan, tone variation and push for every unlocked instrument">Dice amount</label><span class="v" id="diceAmtv"></span></div><input type="range" id="diceAmt" min="0" max="100"></div>
     <button class="btn dicebtn" id="rollkit"><svg class="die" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5" cy="5" r="1.2" fill="currentColor"/><circle cx="11" cy="5" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="5" cy="11" r="1.2" fill="currentColor"/><circle cx="11" cy="11" r="1.2" fill="currentColor"/></svg> Roll kit</button>
-    <button class="btn" id="resetkit" title="Tuning, decay, pan, Var and push back to the default kit, tuned to your key. Levels, sends and locked tracks stay.">Reset kit</button>
+    <span class="kitmix" id="kitmix"></span><button class="btn" id="resetkit" title="Tuning, decay, pan, Var and push back to the default kit, tuned to your key. Levels, sends and locked tracks stay.">Reset kit</button>
   </section>
 
   <section class="sound" id="soundP" aria-label="Sound">
@@ -1171,7 +1178,7 @@ THE SOFTWARE.</pre></details>
     <dt>← →</dt><dd>Step back and forth through your last 30 versions, like a browser.<details class="g-more"><summary>More</summary>Every randomize, new variant, Rnd, kit roll, reset and scene is kept as a version, so you can roll freely and return to the one that grooved.</details></dd>
     <dt>Key · Scale · Tune to key</dt><dd>The key and scale of your track. <i>Tune to key</i> tunes the drums: low drums to the root, tumba and bongo to the fifth, djembe to the minor seventh. <i>Lock to scale</i> makes the Tune knobs land only on notes of the scale.</dd>
     <dt>Chords · Per</dt><dd>One chord scheme for the whole piece. The pad, Worp, Resonate and the tuned drums follow it. <i>Per</i> sets how long each chord lasts.<details class="g-more"><summary>More</summary><i>Drone</i> (the default) is Ngoma as it was: no changes. <i>Auto</i> picks a scheme that suits the tradition: Afro-Cuban 1 · 4 · 5 · 4, Caribbean 1 · 4, Middle Eastern and Southern Europe 1 · 7 · 6 · 5; North Indian stays on the drone. <i>Wander</i> finds its own way and comes home now and then. Every chord is built from your scale, so whatever you play on top still fits; in a pentatonic scale many chords have no third and show as sus4. The tuned drums move with the chord and keep their place in it (the root drum lands on the new root, the fifth on the new fifth); shakers, triangle, tambourine and claps stay. Switch that off with <i>Drums too</i>. The scope at the top shows the chord now and the next one. Export a loop at least as long as the scheme to get all of it; Ngoma tells you when it is shorter. With Chords on, the export also has a MIDI file with the chords (three notes from your scale per chord), for a pad or piano in your DAW.</details></dd>
-    <dt>MIDI</dt><dd>Play along from a MIDI keyboard. Click <i>MIDI: connect</i> once; after that Ngoma connects by itself.<details class="g-more"><summary>More</summary><i>Lead</i> or <i>Pad</i> picks what your keys play (the Worp pad; when the one you pick is off, the other plays). <i>Tight</i> makes every key wait for the next sixteenth while Ngoma plays, so what you play lands on the grid; a key just after the line plays at once.</details></dd>
+    <dt>MIDI</dt><dd>Play along from a MIDI keyboard. Click <i>MIDI: connect</i> once; after that Ngoma connects by itself. <i>Learn</i> puts any knob or slider on your controller: click Learn, click the knob, turn a knob on your controller (right-clicking a knob does the same). In Learn, right-click a learned knob to forget it; Esc stops. Your controller map stays in this browser, apart from your sets.<details class="g-more"><summary>More</summary><i>Lead</i> or <i>Pad</i> picks what your keys play (the Worp pad; when the one you pick is off, the other plays). <i>Tight</i> makes every key wait for the next sixteenth while Ngoma plays, so what you play lands on the grid; a key just after the line plays at once.</details></dd>
     <dt>Stable</dt><dd>Next to Volume. For a laptop where the sound stutters: a bigger audio buffer and a longer look-ahead, at the cost of a little more delay on MIDI keys. When the scope shows <i>LATE</i>, Ngoma could not keep up for a moment.</dd>
     <dt>Volume</dt><dd>Master volume for listening, at the end of the scenes line. Double-click for full. Exports are always at -16 LUFS, whatever it says.</dd>
   </dl>
@@ -1226,6 +1233,7 @@ THE SOFTWARE.</pre></details>
   </dl>
   <h3>Sound of a track</h3>
   <dl>
+    <dt>Mix</dt><dd>Under the tracks, next to Roll kit: one level for all low, all mid and all high drums together, on top of each track's own Level.</dd>
     <dt>Level · Tune · Decay · Pan</dt><dd>Volume, pitch in semitones, length of the ring and stereo position.<details class="g-more"><summary>More</summary>Level goes past 100% into boost, up to 160%, and the ring turns red: for a surdo that has to work as a kick. Open and muted strokes sound on the note under the track name; slaps ring a third or fourth higher, always on a note of your scale.</details></dd>
     <dt>Push</dt><dd>Moves the track up to 20 ms ahead of or behind the grid: a shaker slightly behind, a clave slightly ahead.</dd>
     <dt>Var · ~ Drift</dt><dd><i>Var</i> makes every hit a little different, as real drums do. <i>~</i> adds a slow wander of pitch, colour and level over a few bars.<details class="g-more"><summary>More</summary>Drift is off by default and goes up to about 25 cents. While it plays, the bar under ~ sways and the note under the name shows the offset, like B1 +13¢.</details></dd>
@@ -4057,12 +4065,47 @@ function midiQT(now){ if(!S.midiQ||!playing||!actx) return now; const sd=stepDur
 const MHELD=new Map();
 function midiKey(E,on,m,v){ const now=AG.ctx.currentTime; if(on){ const t=midiQT(now); MHELD.set(m,{E,t}); E.noteOn(m,v,t); }
   else { const h=MHELD.get(m); MHELD.delete(m); const E2=h?h.E:E; if(E2&&E2.noteOff) E2.noteOff(m,Math.max(now,h?h.t+.06:now)); } }
-function ngMidi(e){ const P=$('worpPane'); if(P&&!P.hidden){ try{ $('worpFrame').contentWindow.postMessage({t:'midi',data:Array.from(e.data)},'*'); }catch(x){} return; }   /* v174: Worp over Ngoma gets your keys from Ngoma */ const [st,d1,d2=0]=e.data, cmd=st&0xf0, on=cmd===0x90&&d2>0, off=cmd===0x80||(cmd===0x90&&d2===0); if(!on&&!off) return;
+function ngMidi(e){ if((e.data[0]&0xf0)===0xb0 && mlCC(e.data[0]&15,e.data[1],e.data[2]??0)) return; const P=$('worpPane'); if(P&&!P.hidden){ try{ $('worpFrame').contentWindow.postMessage({t:'midi',data:Array.from(e.data)},'*'); }catch(x){} return; }   /* v174: Worp over Ngoma gets your keys from Ngoma */ const [st,d1,d2=0]=e.data, cmd=st&0xf0, on=cmd===0x90&&d2>0, off=cmd===0x80||(cmd===0x90&&d2===0); if(!on&&!off) return;
   const d=midiDest();
   if(on&&d==='lead'&&window.WorpEngine){ ensureCtx(); if(actx.state!=='running') actx.resume().catch(()=>{}); if(AG&&AG.lead){ plEngine(actx,AG); leadSync(AG); } if(actx.state!=='running'&&!playing) status('Click anywhere in Ngoma once, then your keys sound (the browser wants one click first).'); }   /* v137: keys work before Play and right after coming back from Worp */
   if(NREC.st&&NREC.u===d) nrecNote(on,d1,.35+.65*d2/127);   /* v171 */
   if(off){ if(AG) midiKey(null,false,d1); return; }
   const E=AG&&(d==='lead'?plKeys(AG):d==='pad'?AG.worp:null); if(!E||!E.noteOn) return; midiKey(E,true,d1,.35+.65*d2/127); }
+/* v224 MIDI learn (Jesse: drum volume low, mid, high, the layers and all filters). One mechanism for every knob, segment knob, menu
+   knob and slider in Ngoma: Learn, click the control, turn a knob on your controller. A control is found again by a name built from
+   where it sits (the track, or the nearest part of the page with an id) and its label, so learned knobs survive a reload and a
+   redrawn rack. The map belongs to this browser and your controller, not to a set: it is kept apart from your saves and undo. */
+const ML={map:{},learn:false,sel:null,cache:new Map(),pend:new Map(),raf:0}, ML_SEL='.knob,input[type=range]';
+try{ ML.map=JSON.parse(localStorage.getItem('ngoma-midimap')||'{}')||{}; }catch(e){}
+function mlSave(){ try{ localStorage.setItem('ngoma-midimap',JSON.stringify(ML.map)); }catch(e){} }
+function mlKey(el){ if(el.matches('input[type=range]')) return el.id?'r:'+el.id:null;
+  const lab=((el.querySelector('.kl')||{}).textContent||'').trim(); if(!lab) return null;
+  const ln=el.closest('[data-i]'); if(ln&&S.lanes[+ln.dataset.i]&&ln.closest('#lanes')) return 'lane:'+S.lanes[+ln.dataset.i].id+':'+lab;
+  let a=el.parentElement; while(a&&!a.id) a=a.parentElement; const g=el.closest('.fxg'), gl=g&&a&&g!==a&&a.contains(g)?((g.querySelector('.lbl')||{}).textContent||'').trim():'';
+  let n=0; if(a){ for(const x of a.querySelectorAll('.knob')){ if(x===el) break; if(((x.querySelector('.kl')||{}).textContent||'').trim()===lab&&(!g||g.contains(x))) n++; } }   /* two knobs with one label in one group: the second gets #2 */
+  return (a?a.id:'?')+':'+(gl?gl+':':'')+lab+(n?'#'+(n+1):''); }
+function mlName(el){ const k=mlKey(el)||''; if(k.startsWith('lane:')){ const [,id,lab]=k.split(':'); const I=INSTR.find(x=>x.id===id); return (I?I.name:id)+' '+lab; } if(k.split(':').length>2){ const q=k.split(':'); return q[1]+' '+q[2]; }
+  if(el.matches('input[type=range]')){ const l=document.querySelector('label[for="'+el.id+'"]'); return l?l.textContent.trim():el.id; } return k.split(':').pop(); }
+function mlFind(key){ const c=ML.cache.get(key); if(c&&c.isConnected) return c; ML.cache.clear(); document.querySelectorAll(ML_SEL).forEach(el=>{ const k=mlKey(el); if(k&&!ML.cache.has(k)) ML.cache.set(k,el); }); return ML.cache.get(key)||null; }
+function mlApply(key,v){ const el=mlFind(key); if(!el) return; const p=v/127;
+  if(el.matches('input[type=range]')){ const mn=+el.min||0, mx=el.max===''?100:+el.max; el.value=String(mn+p*(mx-mn)); el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); }
+  else if(el.setNorm) el.setNorm(p); }
+function mlCC(ch,cc,v){ const id=(ch+1)+':'+cc;
+  if(ML.learn&&ML.sel){ const k=mlKey(ML.sel); if(!k) return true; Object.keys(ML.map).forEach(x=>{ if(ML.map[x]===k) delete ML.map[x]; }); ML.map[id]=k; mlSave();
+    status('Learned: CC '+cc+(ch?' (channel '+(ch+1)+')':'')+' turns '+mlName(ML.sel)+'.'); ML.sel.classList.remove('mlsel'); ML.sel=null; mlMark(); mlApply(k,v); return true; }
+  const k=ML.map[id]; if(!k) return false; ML.pend.set(k,v);
+  if(!ML.raf) ML.raf=requestAnimationFrame(()=>{ ML.raf=0; const P=[...ML.pend]; ML.pend.clear(); P.forEach(([k,v])=>mlApply(k,v)); }); return true; }
+function mlMark(){ const rev={}; Object.entries(ML.map).forEach(([id,k])=>{ rev[k]=id; });
+  document.querySelectorAll(ML_SEL).forEach(el=>{ const k=mlKey(el), id=k&&rev[k]; if(id){ const [ch,cc]=id.split(':'); el.dataset.cc=(ch!=='1'?ch+'·':'')+cc; } else delete el.dataset.cc; }); }
+function mlSet(on,sel){ ML.learn=on; document.body.classList.toggle('mlearn',on); const b=$('midilearn'); if(b) b.setAttribute('aria-pressed',on);
+  if(ML.sel){ ML.sel.classList.remove('mlsel'); ML.sel=null; }
+  if(on){ if(!MIDIK.on) midiConnect(false); mlMark(); if(sel) mlPick(sel); else status('MIDI learn: click a knob or slider, then turn a knob on your controller. Right-click a learned one to forget it. Esc stops.'); } }
+function mlPick(el){ if(ML.sel) ML.sel.classList.remove('mlsel'); ML.sel=el; el.classList.add('mlsel'); status('Turn a knob on your controller for '+mlName(el)+'.'); }
+function mlForget(el){ const k=mlKey(el); let n=0; Object.keys(ML.map).forEach(x=>{ if(ML.map[x]===k){ delete ML.map[x]; n++; } }); mlSave(); mlMark(); status(n?mlName(el)+' is no longer on your controller.':mlName(el)+' was not learned.'); }
+document.addEventListener('pointerdown',e=>{ if(!ML.learn||e.button!==0) return; const el=e.target.closest(ML_SEL); if(!el||!mlKey(el)) return; e.preventDefault(); e.stopPropagation(); mlPick(el); },true);
+document.addEventListener('click',e=>{ if(ML.learn&&e.target.closest(ML_SEL)){ e.preventDefault(); e.stopPropagation(); } },true);
+document.addEventListener('contextmenu',e=>{ const el=e.target.closest(ML_SEL); if(!el||!mlKey(el)) return; e.preventDefault(); if(ML.learn&&el.dataset.cc) mlForget(el); else mlSet(true,el); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&ML.learn){ mlSet(false); status('MIDI learn off.'); } });
 function midiAuto(){ try{ if(!MIDIK.on&&navigator.permissions) navigator.permissions.query({name:'midi'}).then(s=>{ if(s.state==='granted') midiConnect(true); }).catch(()=>{}); }catch(e){} }   /* v137: MIDI allowed in Worp counts for Ngoma too */
 try{ if(navigator.permissions) navigator.permissions.query({name:'midi'}).then(s=>{ if(s.state==='granted') midiConnect(true); }).catch(()=>{}); }catch(e){}
 function leadAnchorTpl(){ const ids=anchorIds(), want=(ANCHORS[S.trad]||[]).find(w=>ids.includes(w)); let L=want?S.lanes.find(x=>x.id===want&&!x.mute):null;   // the tradition's first anchor (clave before agogô)
@@ -4693,6 +4736,8 @@ function buildRoom(ctx,inp,out){ const sp=ctx.createChannelSplitter(2), hp=[0,1]
   ROOM_TAPS.forEach(([t,l,ch,x],k)=>{ const d=ctx.createDelay(.05), gs=ctx.createGain(), go=ctx.createGain(), f=bq(ctx,'lowpass',9000-k*450,.5); d.delayTime.value=t; gs.gain.value=l*(1-x); go.gain.value=l*x;
     hp[ch].connect(gs).connect(d); hp[1-ch].connect(go).connect(d); d.connect(f).connect(mg,0,ch); });
   mg.connect(lp).connect(wet).connect(out); return {wet}; }
+/* v224 (Jesse: MIDI learn on the drum volume low, mid, high): a level per group of drums, on top of each track's own Level */
+const GRP_K={low:'gLow',mid:'gMid',high:'gHigh'}; function grpLvl(r){ const v=S.fx[GRP_K[r]]; return v==null?1:v; }
 function roomSync(G){ if(!G||!G.room) return; pv(G,G.room.wet.gain,S.renderOnly!=null?0:(S.fx.room??0)*.55); }
 /* The master chain (vetOn, vetAmt; called Vet in v139, Phat in v142, Master since v148): see buildVet below. */
 function clipCurve(){ if(clipCurve.c) return clipCurve.c; const n=4096, c=new Float32Array(n), k=.84, h=.985-k;   /* linear up to -1.5 dBFS, then a soft knee, never above -0.4 dBFS */
@@ -4761,7 +4806,7 @@ function syncFx(G){ cdSync(G);
 function pv(G,prm,v,tc){ if(G.ctx instanceof OfflineAudioContext||!G.ctx.currentTime) prm.value=v; else prm.setTargetAtTime(v,G.ctx.currentTime,tc||.03); }
 function syncGraph(G){ if(!G) return;
   if(G.fat!==S.fat){ const c=shaperCurve(S.fat); G.lanes.forEach(l=>l.sh.curve=c); G.fat=S.fat; }
-  S.lanes.forEach((L,i)=>{ const l=G.lanes[i]; pv(G,l.g.gain,L.level*(1-S.fat*.25)); pv(G,l.p.pan,Math.max(-1,Math.min(1,L.pan*(S.fx.width??1))));   /* v148 Width scales every pan */ pv(G,l.rs.gain,L.rev||0); pv(G,l.ds.gain,L.dly||0); l.sc.gain.value=(S.fx.fEnvSrc===L.id)?2.5:0; });
+  S.lanes.forEach((L,i)=>{ const l=G.lanes[i]; pv(G,l.g.gain,L.level*(1-S.fat*.25)*grpLvl(INSTR[i].reg)); pv(G,l.p.pan,Math.max(-1,Math.min(1,L.pan*(S.fx.width??1))));   /* v148 Width scales every pan */ pv(G,l.rs.gain,L.rev||0); pv(G,l.ds.gain,L.dly||0); l.sc.gain.value=(S.fx.fEnvSrc===L.id)?2.5:0; });
   syncFx(G); magicSync(G); padSync(G); leadSync(G); fldSync(G); vetSync(G); roomSync(G); tlSync(G); bsSync(G);
 }
 // Delay animation: feedback, tone and wow drift along smooth curves whose cycle is the loop length, so exports stay seamless
@@ -4994,11 +5039,13 @@ const FX_TIPS={rvShim:'Bloom only: how far the tail climbs. Off keeps only the c
 function makeSegK({label,opts,get,set,title}){ const w=document.createElement('div'); w.className='knob segk'; if(title) w.title=title;
   const lab=document.createElement('span'); lab.className='kl'; lab.textContent=label; const g=document.createElement('div'); g.className='seg kseg'; g.setAttribute('role','group'); g.setAttribute('aria-label',label);
   const bs=opts.map(([v,t])=>{ const b=document.createElement('button'); b.type='button'; b.textContent=t; b.onclick=()=>{ set(v); upd(); }; g.append(b); return [v,b]; });
-  const upd=()=>{ const c=get(); bs.forEach(([v,b])=>b.setAttribute('aria-pressed',v===c?'true':'false')); }; w.append(lab,g); w.upd=upd; upd(); return w; }
+  const upd=()=>{ const c=get(); bs.forEach(([v,b])=>b.setAttribute('aria-pressed',v===c?'true':'false')); }; w.append(lab,g); w.upd=upd; upd();
+  w.setNorm=p=>{ const o=opts[Math.min(opts.length-1,Math.floor(p*opts.length))]; if(o[0]!==get()){ set(o[0]); upd(); } }; return w; }
 function makeSelK({label,opts,get,set,title}){ const w=document.createElement('div'); w.className='knob selk'; if(title) w.title=title;
   const lab=document.createElement('span'); lab.className='kl'; lab.textContent=label; const sel=document.createElement('select'); sel.setAttribute('aria-label',label);
   opts.forEach(([v,t])=>{ const o=document.createElement('option'); o.value=String(v); o.textContent=t; sel.append(o); }); sel.onchange=()=>{ const o=opts.find(([v])=>String(v)===sel.value); if(o) set(o[0]); };
-  const upd=()=>{ sel.value=String(get()); }; w.append(lab,sel); w.upd=upd; upd(); return w; }
+  const upd=()=>{ sel.value=String(get()); }; w.append(lab,sel); w.upd=upd; upd();
+  w.setNorm=p=>{ const o=opts[Math.min(opts.length-1,Math.floor(p*opts.length))]; if(o[0]!==get()){ set(o[0]); upd(); } }; return w; }
 function makeKnob({label,min,max,step,get,set,fmt,def,stepFn,onRelease}){
   const w=document.createElement('div'); w.className='knob'+(label==='Level'?' lvl':''); if(KNOB_TIPS[label]) w.title=KNOB_TIPS[label]+' · drag, double-click resets';
   const lab=document.createElement('span'); lab.className='kl'; lab.textContent=label;
@@ -5014,7 +5061,7 @@ function makeKnob({label,min,max,step,get,set,fmt,def,stepFn,onRelease}){
   k.addEventListener('pointerup',e=>{ if(k.hasPointerCapture(e.pointerId)){ k.releasePointerCapture(e.pointerId); onRelease&&onRelease(); } });
   k.addEventListener('keydown',e=>{ let dir=0; if(e.key==='ArrowUp'||e.key==='ArrowRight') dir=1; if(e.key==='ArrowDown'||e.key==='ArrowLeft') dir=-1; if(!dir) return; e.preventDefault(); apply(stepFn?stepFn(get(),dir):get()+dir*step); onRelease&&onRelease(); });
   k.addEventListener('dblclick',()=>{ apply(def); onRelease&&onRelease(); });
-  upd(); w.upd=upd; return w;
+  upd(); w.upd=upd; w.setNorm=p=>apply(min+p*(max-min)); return w;
 }
 
 // Step edit modes: per-step chance, trig condition, flam/roll and parameter locks (pitch, decay)
@@ -5114,7 +5161,7 @@ function laneRow(i){
   ledEls[i]=led;
   const kf=document.createElement('button'); kf.type='button'; kf.className='kfold';
   kf.innerHTML='<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const kp=document.createElement('div'); kp.className='kpanel'; kp.append(knobs); if(row._more) kp.append(row._more); row._kp=kp;
+  const kp=document.createElement('div'); kp.className='kpanel'; kp.dataset.i=i; kp.append(knobs); if(row._more) kp.append(row._more); row._kp=kp;
   const kset=()=>{ const open=L.kopen??!!S.knobsOpen; row.classList.toggle('kc',!open); kp.hidden=!open; kf.setAttribute('aria-expanded',open); kf.setAttribute('aria-label',(open?'Hide':'Show')+' the sound controls of '+I.name); kf.title=open?'Hide the controls of this track':'Show the controls of this track: sound knobs (level, tune, decay, pan, push, variation, reverb, delay) and length, swing, drift, lock, Rnd, dice and Euclidean'; };
   kf.onclick=()=>{ L.kopen=!(L.kopen??!!S.knobsOpen); kset(); kfoldSeen(); save(); }; kset();
   const roll=document.createElement('div'); roll.className='roll'+(L.lock?' off':''); roll.append(rb,db);   // the two dice, first in the row: they matter most
@@ -5518,6 +5565,10 @@ function initControls(){
     $('leadPat').onclick=()=>{ const W0=leadSpec(), np=best(8,s=>leadLine(W0.seed,s)); hRecord(()=>{ const W=leadSpec(); W.ps=np; delete W.pn; delete W.lock; }); updHist(); save(); leadShown=''; leadUI(); status(recOn()?'New Worp melody on the same sound. You hear it when you switch to Worp; Mine plays your own line.':'New melody, same sound.'); };
     $('midibtn').onclick=()=>midiConnect(false);
     document.querySelectorAll('#midiseg button').forEach(b=>b.onclick=()=>{ S.midiTo=b.dataset.to; midiUI(); save(); status('Your MIDI keys play '+(midiDest()==='pad'?'the Worp pad':midiDest()==='lead'?'the Lead':'nothing yet: switch on the Lead or a Worp pad')+'.'); });
+    $('midilearn').onclick=()=>{ mlSet(!ML.learn); if(!ML.learn) status('MIDI learn off.'); };
+    { const box=$('kitmix'), lab=document.createElement('span'); lab.className='lbl'; lab.textContent='Mix'; lab.title='Level per group of drums, on top of each track: low, mid and high'; box.append(lab);
+      [['low','Low'],['mid','Mid'],['high','High']].forEach(([r,t])=>{ const k=makeKnob({label:t,min:0,max:1.25,step:.01,def:1,get:()=>grpLvl(r),set:v=>{ S.fx[GRP_K[r]]=v; syncGraph(AG); save(); },fmt:v=>Math.round(v*100)+'%'});
+        k.classList.add('rg-'+r); k.title='Level of all '+r+' drums together · drag, double-click resets'; box.append(k); UPD.push(()=>k.upd()); }); }
     $('midiq').onclick=()=>{ S.midiQ=!S.midiQ; midiUI(); save(); status(S.midiQ?'Tight: your keys land on the next sixteenth while Ngoma plays.':'Tight off: your keys sound the moment you press them.'); };
     midiUI(); setInterval(midiUI,800);
     $('leadLock').onclick=()=>{ const W=leadSpec(), BL=4*S.res; if(W.lock) delete W.lock; else { const g=playing?gStep:0; W.lock={seed:(W.ps!=null?W.ps:W.seed)>>>0,i0:g-(g%BL),len:Math.max(1,Math.min(8,S.bars|0||2))*BL}; } save(); leadShown=''; leadUI(); status(W.lock?'Lead locked: these bars repeat. New sound keeps them.':'Lead unlocked: the line moves on again.'); };
