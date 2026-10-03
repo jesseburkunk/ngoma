@@ -4271,9 +4271,9 @@ function buildBass(ctx,master){ const o1=ctx.createOscillator(), o2=ctx.createOs
    out of the kick itself and is always in tune with it. Here the surdo is the kick. The reverb tail is a seeded noise burst, so an export
    sounds the same every time. Stems skip it, like Room. */
 function rumIR(ctx){ const sr=ctx.sampleRate, n=Math.floor(sr*1.4), b=ctx.createBuffer(2,n,sr); for(let c=0;c<2;c++){ const d=b.getChannelData(c); let x=(c+1)*2654435761>>>0, lp=0;
-    for(let i=0;i<n;i++){ x=(x*1664525+1013904223)>>>0; const w=x/4294967296*2-1; lp+=.06*(w-lp); d[i]=lp*Math.exp(-i/(sr*.38))*(i<sr*.012?i/(sr*.012):1)*4; } } return b; }
-function buildRumble(ctx,master,src){ const inp=ctx.createGain(), pre=bq(ctx,'lowpass',260,.7), cv=ctx.createConvolver(), drv=ctx.createGain(), sh=ctx.createWaveShaper(), lp1=bq(ctx,'lowpass',125,.8), lp2=bq(ctx,'lowpass',125,.6), hp=bq(ctx,'highpass',32,.7), dk=ctx.createGain(), out=ctx.createGain();
-  inp.gain.value=0; out.gain.value=0; drv.gain.value=2.2; cv.normalize=false; cv.buffer=rumIR(ctx); const c=new Float32Array(1024); for(let i=0;i<1024;i++){ const x=i/511.5-1; c[i]=Math.tanh(2.4*x)/Math.tanh(2.4); } sh.curve=c;
+    for(let i=0;i<n;i++){ x=(x*1664525+1013904223)>>>0; const w=x/4294967296*2-1; lp+=.025*(w-lp); d[i]=lp*Math.exp(-i/(sr*.42))*(i<sr*.02?i/(sr*.02):1)*2.5; } } return b; }
+function buildRumble(ctx,master,src){ const inp=ctx.createGain(), pre=bq(ctx,'lowpass',260,.7), cv=ctx.createConvolver(), drv=ctx.createGain(), sh=ctx.createWaveShaper(), lp1=bq(ctx,'lowpass',105,.7), lp2=bq(ctx,'lowpass',105,.6), hp=bq(ctx,'highpass',34,.7), dk=ctx.createGain(), out=ctx.createGain();
+  inp.gain.value=0; out.gain.value=0; drv.gain.value=1; cv.normalize=false; cv.buffer=rumIR(ctx); const c=new Float32Array(1024); for(let i=0;i<1024;i++){ const x=i/511.5-1; c[i]=Math.tanh(1.5*x)/Math.tanh(1.5); } sh.curve=c;
   src.connect(inp).connect(pre).connect(cv).connect(drv).connect(sh).connect(lp1).connect(lp2).connect(hp).connect(dk).connect(out).connect(master); return {inp,dk,out}; }
 /* v211 Saturation (Jesse: a bit of saturation, a few variants, analog modelling, not digital): three curves, 4x oversampled, before the
    filter as in a real channel. Tape: symmetric and soft. Tube: asymmetric, so even harmonics (warm), with a DC blocker after it.
@@ -4285,7 +4285,7 @@ function bsSatT(){ const v=S.fx.bsSat; return BS_SAT.includes(v)?v:'tape'; }
 const BS_SLOPE={tape:3.015,tube:3.75,xfmr:3}, BS_COMP={tape:[1,1.4,2.6],tube:[1.15,1.7,3],xfmr:[1,1.2,2.4]};   // slope of each curve at zero; make-up per type at drive 0, .5, 1 (measured, v211)
 function bsSync(G){ const B=G&&G.bs; if(!B) return; const F=S.fx, on=bsLive(), live=!(G.ctx instanceof OfflineAudioContext), set=(p,v)=>{ if(live) p.setTargetAtTime(v,G.ctx.currentTime,.05); else p.value=v; };
   const fv=F.bsFlt??.4, hz=45*Math.pow(2,fv*7.4); set(B.out.gain,on?Math.pow(F.bsLvl??.5,1.5)*BS_TRIM*2.8:0); set(B.g2.gain,(F.bsBody??.25)*.55);
-  if(B.rum){ const ru=(F.bsOn&&S.renderOnly==null)?(F.bsRum??0):0;   /* Rumble has its own level: it plays with the bass module on, even with the bass line turned down */ set(B.rum.inp.gain,ru>0?1:0); set(B.rum.out.gain,Math.pow(ru,1.4)*.4); }
+  if(B.rum){ const ru=(F.bsOn&&S.renderOnly==null)?(F.bsRum??0):0;   /* Rumble has its own level: it plays with the bass module on, even with the bass line turned down */ set(B.rum.inp.gain,ru>0?1:0); set(B.rum.out.gain,Math.pow(ru,1.4)*.12); }
   set(B.lp1.frequency,hz); set(B.lp2.frequency,Math.min(20000,hz*1.15)); set(B.lp1.Q,.6+7*fv*fv); set(B.lp2.Q,.55);
   if(B.sh){ const ty=bsSatT(), d=F.bsDrv??0, C=BS_COMP[ty], mk=d<.5?C[0]+(C[1]-C[0])*d*2:C[1]+(C[2]-C[1])*(d-.5)*2; if(B.ct!==ty){ B.sh.curve=bsCurve(ty); B.ct=ty; } const os=on&&d>.01?'4x':'none'; if(B.sh.oversample!==os) B.sh.oversample=os;   /* v221: no 4x oversampling while the bass is off or clean */
     const pg=.04+1.4*Math.pow(d,1.2); set(B.pre.gain,pg); set(B.post.gain,mk/(pg*BS_SLOPE[ty]));   /* one path: a dry path beside the oversampled shaper cancelled out (its latency), so drive 0 runs the shaper in its clean, linear part */ set(B.shelf.gain,ty==='xfmr'?6*d:0); } }
@@ -4298,11 +4298,18 @@ function bsBar(bar){ const sd=bsSeed(), st=bsSty(), m=Math.floor(bar/2)*0+(bar%2
   P.sort((a,b)=>a[0]-b[0]); const seen=new Set(); P=P.filter(x=>!seen.has(x[0])&&seen.add(x[0]));
   BS_BAR.set(k,P); if(BS_BAR.size>64) BS_BAR.delete(BS_BAR.keys().next().value); return P; }
 function bsSnap(semi){ const iv=(SCALES[S.scale]||SCALES.mpenta).iv; let best=semi, bd=99; for(let o=-2;o<=2;o++) iv.forEach(x=>{ const c=x+12*o; if(Math.abs(c-semi)<bd){ bd=Math.abs(c-semi); best=c; } }); return best; }
-function bsStep(ctx,G,g,t){ const B=G.bs; if(!B) return; const live=bsLive(); if(!live&&!(S.fx.bsOn&&wiFrom('bass').length)) return;   /* v213: the candy stem still hears the bass notes through Wires */ const F=S.fx, R=S.res, BL=4*R, bar=Math.floor(g/BL), s=g%BL, sd=stepDur(S), q=16/BL;
+/* v229 (Jesse: the rumble is too coarse, it must be ducked hard by the kick, always): gone on every low hit, held for most of a step, then it
+   swells back in the gap. An export also ducks the reverb tail that rings past the loop end, with the hits of the next pass, before the
+   tail is folded onto the start; otherwise the loop's start carried an unducked growl. */
+function rumDuck(B,te,sd){ const d=B.rum.dk.gain; d.cancelScheduledValues(te-.004); d.setTargetAtTime(0,te-.004,.0015); d.setTargetAtTime(1,te+sd*.8,sd*.85); }
+function rumTail(G,g,t,sd){ const B=G.bs; if(!B||!B.rum) return; try{ const S2=S.renderOnly==null?S:Object.assign({},S,{renderOnly:null}); let best=null; for(const e of eventsAt(g,S2)){ if(e.silent||INSTR[e.lane].reg!=='low') continue; if(!best||(e.v||0)>(best.v||0)) best=e; }
+  if(best) rumDuck(B,t+grooveOff(g,S,sd)+(best.dt||0),sd); }catch(err){} }
+function bsStep(ctx,G,g,t){ const B=G.bs; if(!B) return; const live=bsLive(), rumOn=!!B.rum&&!!S.fx.bsOn&&S.renderOnly==null&&(S.fx.bsRum??0)>0; if(!live&&!rumOn&&!(S.fx.bsOn&&wiFrom('bass').length)) return;   /* v213: the candy stem still hears the bass notes through Wires */ const F=S.fx, R=S.res, BL=4*R, bar=Math.floor(g/BL), s=g%BL, sd=stepDur(S), q=16/BL;
   // duck for the surdo: the sub steps aside for its hit
-  let low=null; if(live) try{ const S2=S.renderOnly==null?S:Object.assign({},S,{renderOnly:null}); let best=null; for(const e of eventsAt(g,S2)){ if(e.silent||INSTR[e.lane].reg!=='low') continue; if(!best||(e.v||0)>(best.v||0)) best=e; }   /* v208: every low drum, not only the surdo, and deeper for a harder hit */
-    if(best){ const te=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)+(best.dt||0)), dep=1-.85*Math.min(1,.4+.6*(best.v??.8)); const rl=bsSty()==='roll'; B.dk.gain.setTargetAtTime(dep,te,.003); B.dk.gain.setTargetAtTime(1,te+(rl?.02:.04),rl?.13:.08);   /* v228: Roll pumps back slower, that is the swing */
-      if(B.rum){ B.rum.dk.gain.setTargetAtTime(.08,te,.002); B.rum.dk.gain.setTargetAtTime(1,te+.05,.11); } low=best; } }catch(err){}
+  let low=null; if(live||rumOn) try{ const S2=S.renderOnly==null?S:Object.assign({},S,{renderOnly:null}); let best=null; for(const e of eventsAt(g,S2)){ if(e.silent||INSTR[e.lane].reg!=='low') continue; if(!best||(e.v||0)>(best.v||0)) best=e; }   /* v208: every low drum, not only the surdo, and deeper for a harder hit */
+    if(best){ const te=Math.max(ctx.currentTime||0,t+grooveOff(g,S,sd)+(best.dt||0)), dep=1-.85*Math.min(1,.4+.6*(best.v??.8)); const rl=bsSty()==='roll'; if(live){ B.dk.gain.setTargetAtTime(dep,te,.003); B.dk.gain.setTargetAtTime(1,te+(rl?.02:.04),rl?.13:.08); }   /* v228: Roll pumps back slower, that is the swing */
+      if(rumOn) rumDuck(B,te,sd);
+      low=best; } }catch(err){}
   if(bsSty()==='roll'){ /* v228 Roll: the sub plays the steps between the beats, where the kick is not; the middle one leans. Mostly the root;
        the last beat of every fourth bar may lift to the fifth or octave, so it stays hypnotic without standing still */
     const ph=s%R; if(ph===0||low) return; const sd2=bsSeed(), mid=R===4?2:1, last=bar%4===3&&s>=BL-R, rr=rnd(sd2,bar*31+s,0x7011);
@@ -5911,7 +5918,7 @@ async function renderLoop(dry,sr=EXPORT_SR){ S.exporting=true; try{ return await
 async function renderLoopX(dry,sr){ if(S.fx.padOn&&(S.fx.padType|0)===7) await padMeasure(); if(S.fx.fldOn) await fldLoad(); if(S.fx.cdOn&&cdSrc()!=='synth') await fldLoad(cdFid()); const XB=EXP_BARS||S.bars, total=XB*4*S.res, sd=stepDur(S), dur=total*sd, n=Math.round(total*sd*sr);   /* v196: EXP_BARS, the whole cycle */
     const PRE=.05, pn=Math.round(PRE*sr);   // pre-roll: hits pushed early (negative Push, flam grace notes) on step 0 are not lost
   const tail=dry?2:fxTail(); const oc=new OfflineAudioContext(2,pn+Math.ceil((dur+tail)*sr),sr); await loadFilter(oc); const b0=S.bars; S.bars=XB; let G; try{ G=buildGraph(oc,{dry,export:true}); G.t0=PRE; magicWorklet(G); syncFx(G); magicSync(G);
-      for(let g=0;g<total;g++) scheduleStep(oc,G,g,PRE+g*sd,false); } finally{ S.bars=b0; }   // synchronous: live play never sees the longer loop
+      for(let g=0;g<total;g++) scheduleStep(oc,G,g,PRE+g*sd,false); if(G.bs&&G.bs.rum&&S.fx.bsOn&&(S.fx.bsRum??0)>0&&S.renderOnly==null) for(let g=total;g<total+Math.ceil(tail/sd)+1;g++) rumTail(G,g%total,PRE+g*sd,sd); } finally{ S.bars=b0; }   // synchronous: live play never sees the longer loop
       if(!dry && S.fx.dlOn && S.fx.dlAnim>0) for(let tt=0;tt<dur+tail;tt+=.04) applyAnim(G,PRE+tt,tt,false);
       const buf=await oc.startRendering();
       // fold the tail back to the start and the pre-roll onto the end: the loop sounds as if it has been running forever
