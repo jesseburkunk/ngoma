@@ -485,6 +485,13 @@ body.m4l #tap{display:none}
 .tgrp{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}
 .tgrp+.tgrp{padding-left:14px;border-left:1px solid var(--line)}
 .tgrp.tmix{margin-left:auto;align-self:center}
+.transport.trows{flex-direction:column;align-items:stretch;gap:10px}
+.trow{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}
+.trow.tr-tune,.trow.tr-rec{padding-top:10px;border-top:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.trow .tgrp.tmix{margin-left:auto;align-self:flex-end;display:flex;align-items:center;gap:10px}
+.btn.tsec{height:28px;padding:0 9px;font-size:12px;opacity:.85}label.chk.tsec{font-size:12px;opacity:.85}
+.trec{display:flex;align-items:center;gap:6px}
+.midibtn{min-width:118px}
 .transport .mvk{margin:-6px 0 -8px}
 .tgrp.tmix.inscenes{margin-left:auto;padding-left:0;border-left:0;display:flex;align-items:center}
 .tmix.inscenes .mvk{margin:-10px 0 -12px}
@@ -2318,6 +2325,14 @@ window.WorpEngine={create,genPatch,genName,soundName,ENG,FX_NAME,PH_STYLES,phras
   ['#dareU','#wiU'].forEach(id=>{ const e=q(id); if(e) uF.append(e); }); ['#magicU','#tlU','#spaceU'].forEach(id=>{ const e=q(id); if(e) uS.append(e); }); fxw.append(uS);
   top.after(zP); zP.append(tr,sc); zP.after(zR); zR.append(st,rk,gr,kb); zR.after(zL); zL.append(un); zL.after(zF); zF.append(uF); zF.after(zS); zS.append(fxw,so,ex);
   const mx=q('.tgrp.tmix'), ms=q('#morphseg'); if(mx&&ms){ ms.after(mx); mx.classList.add('inscenes'); }   // v108: volume at the end of the scenes line, so the transport stays on one line
+  /* v226 (Jesse: many buttons up here, Learn jumped to a new line; a more logical order, nothing folded away): the transport in rows by task.
+     Play: what you touch all the time while jamming, with the volume at the end. Tone: key, scale and chords, the set-once buttons small.
+     Record and MIDI: Rec, Capture, Take, then the MIDI controls. */
+  { const row=c=>{ const d=document.createElement('div'); d.className='trow '+c; return d; }, r1=row('tr-play'), r2=row('tr-tune'), r3=row('tr-rec'), g=c=>q('.tgrp.'+c);
+    const tp=g('tplay'), tt=g('ttime'), tu=g('ttune'), tm=g('tmidi'), rec=document.createElement('div'); rec.className='tgrp trec';
+    if(tp&&tt&&tu&&tm){ [...tp.children].filter(e=>/^(jam|capture|take|drag)/.test(e.id||'')).forEach(e=>rec.append(e)); const jb=rec.querySelector('#jam'); if(jb) rec.prepend(jb);
+      r1.append(tp,tt); if(mx){ mx.classList.remove('inscenes'); r1.append(mx); } r2.append(tu); r3.append(rec,tm); tr.append(r1,r2,r3); tr.classList.add('trows');
+      ['#tuneall','#stablebtn'].forEach(x=>{ const e=q(x); if(e) e.classList.add('tsec'); }); ['#keylock','#chdrums'].forEach(x=>{ const e=q(x); if(e&&e.closest('label')) e.closest('label').classList.add('tsec'); }); } }
   const rr=q('.rndrow'), sur=q('#surprise'), srs=q('#sreset'); if(rr&&sur) rr.prepend(sur); if(rr&&srs) rr.append(srs);   // Surprise and Reset join Try something new
   setTimeout(()=>W.querySelectorAll('.zlayers .mgk.big,.zstudio #spaceU .mgk.big').forEach(k=>k.classList.remove('big')),0);   // the layer rows use the compact knobs
 })();
@@ -4061,7 +4076,7 @@ function midiPadOK(){ return !!S.fx.padOn&&(S.fx.padType|0)===7; }
 function midiDest(){ const L=!!S.fx.leadOn, P=midiPadOK(); if(S.midiTo==='pad') return P?'pad':L?'lead':null; return L?'lead':P?'pad':null; }
 function midiShort(n){ n=String(n||'').replace(/\b(MIDI|USB|Port|Device)\b/gi,'').replace(/\s+/g,' ').trim(); return n.length>16?n.slice(0,15)+'…':n||'keyboard'; }
 function midiUI(){ const b=$('midibtn'); if(!b) return; const d=midiDest(), to=d==='pad'?'Pad':d==='lead'?'Lead':'nothing';
-  b.setAttribute('aria-pressed',MIDIK.on?'true':'false'); b.textContent=MIDIK.on?'MIDI: '+midiShort((MIDIK.names||[])[0])+' → '+to:'MIDI: connect';
+  b.setAttribute('aria-pressed',MIDIK.on?'true':'false'); b.textContent=MIDIK.on?'MIDI ● '+(to==='nothing'?'on':to):'MIDI: connect';   /* v226: short and fixed; the device name is in the tooltip, so the row never jumps */
   b.title=MIDIK.on?('MIDI: '+(MIDIK.names||[]).join(', ')+'. Your keys play '+(d==='pad'?'the Worp pad':d==='lead'?'the Lead':'nothing: switch on the Lead or a Worp pad')+'. Pick Lead or Pad next to it'):'Play along from a MIDI keyboard. Click to connect; after the first time Ngoma connects by itself';
   document.querySelectorAll('#midiseg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.to===(S.midiTo==='pad'?'pad':'lead')));
   const q=$('midiq'); if(q) q.setAttribute('aria-pressed',S.midiQ?'true':'false'); }
