@@ -639,6 +639,8 @@ input,select{accent-color:var(--accent)}
 .play:hover{background:#ff7a40;box-shadow:0 2px 0 #a63d10,0 6px 12px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.25)}
 /* v215 patch bay */
 #wiSel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.zlayers #wiU .fxc{flex-wrap:nowrap;align-items:center;width:100%;min-width:0}.zlayers #wiU .pbay{flex:1 1 auto;min-width:560px;max-width:880px}#wiStrip{position:absolute;width:1px;height:1px;overflow:hidden}.zlayers #wiU .knrow{flex:none;align-self:center}.zlayers #wiU .mgw{display:flex!important;grid-template-columns:none!important}
+@media (max-width:900px){.zlayers #wiU .fxc{flex-wrap:wrap}}
 .pbay{flex:1 1 600px;min-width:340px;max-width:860px;height:470px;position:relative;touch-action:none;user-select:none}
 .pbay svg{width:100%;height:100%;overflow:visible;display:block}
 .pbay .jk{cursor:grab}.pbay .jk.dim{opacity:.35}.pbay .jk.ok .ring{stroke:#ece6da;stroke-width:2.2}
@@ -4349,7 +4351,7 @@ function pbFrame(){ PB.raf=0; const svg=PB.svg; if(!svg) return; let busy=false;
     '<radialGradient id="pbNut" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d9d6cf"/><stop offset=".45" stop-color="#8d8a84"/><stop offset="1" stop-color="#3b3a37"/></radialGradient>'+
     '<radialGradient id="pbScr" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#bdb9b1"/><stop offset="1" stop-color="#4a4844"/></radialGradient></defs>');
   parts.push('<rect x="1" y="1" width="'+(W-2)+'" height="'+(H-2)+'" rx="6" fill="url(#pbPan)" stroke="#3a3c3c"/><rect x="1" y="1" width="'+(W-2)+'" height="'+(H-2)+'" rx="6" fill="url(#pbBr)"/><rect x="1" y="1" width="'+(W-2)+'" height="'+(H-2)+'" rx="6" fill="#5fb7c4" opacity=".035"/>');
-  [[10,10],[W-10,10],[10,H-10],[W-10,H-10]].forEach(([x,y])=>parts.push('<g transform="translate('+x+','+y+')"><circle r="4.2" fill="url(#pbScr)" stroke="#1b1b1a" stroke-width=".8"/><path d="M-2.4 -.9 L2.4 .9" stroke="#2a2927" stroke-width="1.1"/></g>'));
+  /* v220: no screws, like the rest of Ngoma */
   parts.push('<text class="pbt" x="'+(W/2)+'" y="27" text-anchor="middle">WIRES</text><text class="pbs" x="'+(W/2)+'" y="39" text-anchor="middle">patch the layers into each other</text>');
   const ox=pbJack('o','low').x, ix=pbJack('i','bf').x, yT=pbJack('o','low').y, yC=pbJack('o','gate').y;
   parts.push('<text class="pbg" x="26" y="'+(yT-31)+'">TRIGGERS</text><line x1="26" y1="'+(yT-26)+'" x2="'+(ox+22)+'" y2="'+(yT-26)+'" class="pbl"/>');
@@ -4369,14 +4371,14 @@ function pbFrame(){ PB.raf=0; const svg=PB.svg; if(!svg) return; let busy=false;
       for(let k=0;k<16;k++){ const v=id==='gate'?(pat[k]==='1'?1:0):(rnd(sd2,k,0xD1CE)<.5?0:.4+.6*rnd(sd2,k,0xD1CF)), x=x0+k*cw, hot=k===cur&&playing;
         parts.push(id==='gate'?'<rect x="'+x.toFixed(1)+'" y="'+(p.y-1)+'" width="'+(cw-1.6).toFixed(1)+'" height="6" rx="1" fill="'+(v?col:'#3a3b3b')+'" opacity="'+(v?(hot?1:.55):(hot?.9:.6))+'"/>':'<rect x="'+x.toFixed(1)+'" y="'+(p.y+5-9*v).toFixed(1)+'" width="'+(cw-1.6).toFixed(1)+'" height="'+(1+9*v).toFixed(1)+'" fill="'+col+'" opacity="'+(hot?1:.5)+'"/>'); }
       if(playing) busy=true; }
-    else if(id==='lfo'){ const b=wiLfoBars(), pts=[]; for(let k=0;k<=24;k++){ const ph=k/24; pts.push((x0+ph*Math.min(w,104)).toFixed(1)+','+(p.y+2-4.5*Math.sin(2*Math.PI*ph*Math.min(b,2)/ (b>2?2:1))).toFixed(1)); } parts.push('<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="1.3" opacity=".75"/><text class="pbd" x="'+(x0+Math.min(w,104)+6)+'" y="'+(p.y+5)+'">'+b+(b>1?' BARS':' BAR')+'</text>'); }
+    else if(id==='lfo'){ const b=wiLfoBars(), pts=[]; for(let k=0;k<=24;k++){ const ph=k/24; pts.push((x0+ph*Math.min(w-44,90)).toFixed(1)+','+(p.y+2-4.5*Math.sin(2*Math.PI*ph*Math.min(b,2)/ (b>2?2:1))).toFixed(1)); } parts.push('<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="1.3" opacity=".75"/><text class="pbd" x="'+(x0+Math.min(w-44,90)+6)+'" y="'+(p.y+5)+'">'+b+(b>1?' BARS':' BAR')+'</text>'); }
     else if(id==='drum'){ const nm=pbSub('drum'); parts.push('<rect x="'+x0+'" y="'+(p.y-4)+'" width="'+Math.min(w,104)+'" height="13" rx="2" fill="#1d1a12" stroke="#3a3426"/><text class="pblcd" x="'+(x0+5)+'" y="'+(p.y+6)+'">'+esc(nm.toUpperCase())+'</text>'); }
     parts.push('<g class="jk" data-s="o" data-j="'+id+'">'+jack(p,col,false,false)+'<circle cx="'+p.x+'" cy="'+p.y+'" r="16" fill="transparent"/></g>'); });
   // inputs
   const ok=D?PB_IN.map(x=>x[0]):[];
   PB_IN.forEach(([id,lab,col])=>{ const p=pbJack('i',id), tw=lab.length*6.4+10; inl.push('<rect x="'+(p.x-18-tw)+'" y="'+(p.y-7)+'" width="'+tw+'" height="14" rx="3" fill="#1b1c1c" opacity=".86"/><text class="pbj" x="'+(p.x-23)+'" y="'+(p.y+3.5)+'" text-anchor="end">'+esc(lab.toUpperCase())+'</text>'); parts.push('<g class="jk" data-s="i" data-j="'+id+'">'+jack(p,col,false,!!D&&ok.includes(id))+'<circle cx="'+p.x+'" cy="'+p.y+'" r="16" fill="transparent"/></g>'); });
   // cables
-  const plug=(p,q,col)=>{ const an=Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI; return '<g transform="translate('+p.x+','+p.y+') rotate('+an.toFixed(1)+')"><rect x="-3" y="-3.2" width="9" height="6.4" rx="1.5" fill="#b9b5ad"/><rect x="5" y="-5.2" width="17" height="10.4" rx="3.5" fill="'+col+'"/><rect x="5" y="-5.2" width="17" height="3.2" rx="2" fill="#fff" opacity=".22"/><rect x="20" y="-3.4" width="6" height="6.8" rx="2.5" fill="#151514"/></g>'; };
+  const plug=(p,q,col)=>'<g transform="translate('+p.x+','+p.y+')"><circle r="7.5" fill="#1a1917"/><circle r="5.5" fill="'+col+'"/><circle r="2" fill="#0d0d0c"/></g>';   /* v220 (Jesse): the round plugs as before */
   const ctrl=(a,b,sag)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2+sag*1.9});
   const cable=(key,a,b,col,C,hov)=>{ const d=Math.hypot(b.x-a.x,b.y-a.y), tgt=Math.min(16+d*.17,Math.max(4,(H-18-(a.y+b.y)/2)/1.9));   /* the cable stays on the panel */ C.v+=(tgt-C.s)*.09; C.v*=.86; C.s+=C.v; if(Math.abs(C.v)>.02||Math.abs(tgt-C.s)>.2) busy=true;
     const gl=Math.max(0,(C.glow||0)-(now-(C.gt||0))/260); if(gl>0) busy=true; const pth=pbPath(a,b,C.s), op=hov?1:.93, br=1+gl*.9+(hov?.25:0), c=ctrl(a,b,C.s);
