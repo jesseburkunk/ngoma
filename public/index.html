@@ -1282,7 +1282,7 @@ THE SOFTWARE.</pre></details>
     <dt>Low · Mid · High</dt><dd>A simple master EQ. High starts at -2 dB, where long sessions tire the ear first.<details class="g-more"><summary>More</summary>A low shelf at 150 Hz, a bell at 1.2 kHz where the skin tones sit and a high shelf at 4 kHz.</details></dd>
     <dt>Filter: Clean · Ladder · MS · SEM</dt><dd>A low-pass over the whole mix, in four classic characters. <i>Cutoff</i>, <i>Reso</i> and <i>Drive</i> set it.<details class="g-more"><summary>More</summary><b>Clean</b>: transparent. <b>Ladder</b>: after the Moog ladder, 24 dB, round and warm. <b>MS</b>: after the Korg MS-20, 12 dB, keeps the bass and bites, screams at high resonance. <b>SEM</b>: after the Oberheim SEM, 12 dB, soft and open. Drive goes up to +18 dB with the level compensated, so louder does not fool your ear.</details></dd>
     <dt>Move: Env · LFO · Rate</dt><dd>Makes the filter move: <i>Env</i> opens it on every hit, the <i>LFO</i> sweeps it in time with the loop.<details class="g-more"><summary>More</summary><i>Rate</i> is once per loop, bar, half bar or beat, so the export stays seamless; <i>Sync</i> switches to a free speed in Hz. <i>Env from</i> picks what opens the filter: the whole mix, or one track as a sidechain. A dot on the Cutoff knob shows where the filter is right now. Ngoma starts with the filter breathing lightly.</details></dd>
-    <dt>Master · Width · Room</dt><dd>The finishing chain: glue, a light tape saturation, the lows in mono, a little width and air. Loudness stays about the same, so On and Off compare fairly.<details class="g-more"><summary>More</summary><b>Width</b> spreads the players over the stereo field (0% is mono). <b>Room</b> puts the drums in a small wooden room, early reflections only; it is not the reverb. Stems skip Room and Master.</details></dd>
+    <dt>Master · Width · Room</dt><dd>The finishing chain: glue, a light tape saturation, the lows in mono, a little width and air. Loudness stays about the same, so On and Off compare fairly.<details class="g-more"><summary>More</summary><b>Width</b> spreads the players over the stereo field (0% is mono). <b>Room</b> puts the drums in a small wooden room, early reflections only; it is not the reverb, and it is off until you turn it up. Stems skip Room and Master.</details></dd>
     <dt>Weight · Kit pitch</dt><dd><i>Weight</i> adds body and saturation inside every drum (25% by default). <i>Kit pitch</i> moves every drum up or down in semitones.</dd>
     <dt>Flat</dt><dd>EQ flat, filter open, no drive, kit pitch 0, Master off and Weight 10%.</dd>
   </dl>
@@ -2769,6 +2769,7 @@ if(!S.v9){ S.compact=false; S.v9=1; }
 if(!S.v37){ S.compact=true; S.v37=1; }   // v37: only the tracks that play, the rest one click away
 delete S.lead; delete S.leadAmt; if(S.preset==='mbalax'){ S.preset='kuku'; S.trad='west'; } if(S.preset==='teen'){ S.preset='keherwa'; S.trad='ind'; }   // v57: teentaal removed (Jesse: too plain as a loop)   // v45: mbalax removed (no source)   // v38: the lead solo is gone
 if(!S.v128){ S.kickroom=false; S.v128=1; }   // v128: Leave room for kick off by default, also once for saved sets (Jesse uses the surdo as his kick; with it on the export dropped it)
+if(!S.v222){ if(S.fx) S.fx.room=0; S.v222=1; }   // v222 (Jesse: all echo off, yet I hear a delay): the Room's early reflections (5 to 30 ms) read as a slap on sharp hits; off by default, also once for saved sets
 if(!S.v125){ S.knobsOpen=true; (S.lanes||[]).forEach(L=>{ delete L.kopen; }); S.v125=1; }   // v125: track controls open by default, also for saved sets (feedback: people did not find the fold arrow); fold one or all closed as before
 if(S.life==null) S.life=.35;   /* v147 */
 if(!S.v13){ S.lanes.forEach(L=>L.drift=false); S.v13=1; }   // v13: back to the original sound, drift opt-in   // v9: all tracks visible by default
@@ -2990,7 +2991,7 @@ function rollLane(i,amt){ const I=INSTR[i], L=S.lanes[i], r=()=>Math.random();
 // Pattern and kit data: a pattern (what plays) and a kit (how it sounds) can be saved and loaded separately
 const PAT_KEYS=['res','preset','trad','bpm','key','density','mutate','mutmode','swing','groove','humanize','life','kickroom','poly','dialog','seed','autofill'];
 function patternData(){ const o={}; PAT_KEYS.forEach(k=>o[k]=S[k]); o.lanes=S.lanes.map(L=>({id:L.id,btpl:L.btpl,blen:L.blen,xs:L.xs,eu:L.eu,sw:L.sw,mute:L.mute,solo:L.solo,lock:L.lock})); return JSON.parse(JSON.stringify(o)); }
-function kitData(){ return JSON.parse(JSON.stringify({fat:S.fat,keylock:S.keylock,fx:S.fx,lanes:S.lanes.map(L=>({id:L.id,tune:L.tune,decay:L.decay,level:L.level,pan:L.pan,push:L.push,tvar:L.tvar,col:L.col||0,drift:L.drift,rev:L.rev,dly:L.dly}))})); }
+function kitData(){ return JSON.parse(JSON.stringify({fat:S.fat,keylock:S.keylock,fx:S.fx,lanes:S.lanes.map(L=>({id:L.id,tune:L.tune,decay:L.decay,level:L.level,pan:L.pan,push:L.push,tvar:L.tvar,col:L.col||0,drift:L.drift,rev:L.rev,dly:L.dly,punch:L.punch||0}))})); }
 function applyPattern(p){
   if(!p||!p.lanes) return; PAT_KEYS.forEach(k=>{ if(p[k]!==undefined) S[k]=JSON.parse(JSON.stringify(p[k])); });
   const by=Object.fromEntries(p.lanes.map(l=>[l.id,l]));
@@ -3002,7 +3003,7 @@ function applyPattern(p){
 function applyKit(k){
   if(!k||!k.lanes) return; if(k.fat!=null) S.fat=k.fat; if(k.keylock!=null) S.keylock=k.keylock; if(k.fx) S.fx=migrateFx(Object.assign({...FX_DEFAULT},k.fx));
   const by=Object.fromEntries(k.lanes.map(l=>[l.id,l]));
-  S.lanes.forEach(L=>{ const l=by[L.id]; if(l) ['tune','decay','level','pan','push','tvar','drift','rev','dly','col'].forEach(f=>{ if(l[f]!=null) L[f]=l[f]; }); });
+  S.lanes.forEach(L=>{ const l=by[L.id]; if(l) ['tune','decay','level','pan','push','tvar','drift','rev','dly','col','punch'].forEach(f=>{ if(l[f]!=null) L[f]=l[f]; }); });
   save();
 }
 
@@ -4692,7 +4693,7 @@ function buildRoom(ctx,inp,out){ const sp=ctx.createChannelSplitter(2), hp=[0,1]
   ROOM_TAPS.forEach(([t,l,ch,x],k)=>{ const d=ctx.createDelay(.05), gs=ctx.createGain(), go=ctx.createGain(), f=bq(ctx,'lowpass',9000-k*450,.5); d.delayTime.value=t; gs.gain.value=l*(1-x); go.gain.value=l*x;
     hp[ch].connect(gs).connect(d); hp[1-ch].connect(go).connect(d); d.connect(f).connect(mg,0,ch); });
   mg.connect(lp).connect(wet).connect(out); return {wet}; }
-function roomSync(G){ if(!G||!G.room) return; pv(G,G.room.wet.gain,S.renderOnly!=null?0:(S.fx.room??.25)*.55); }
+function roomSync(G){ if(!G||!G.room) return; pv(G,G.room.wet.gain,S.renderOnly!=null?0:(S.fx.room??0)*.55); }
 /* The master chain (vetOn, vetAmt; called Vet in v139, Phat in v142, Master since v148): see buildVet below. */
 function clipCurve(){ if(clipCurve.c) return clipCurve.c; const n=4096, c=new Float32Array(n), k=.84, h=.985-k;   /* linear up to -1.5 dBFS, then a soft knee, never above -0.4 dBFS */
   for(let i=0;i<n;i++){ const x=i/(n-1)*2-1, ax=Math.abs(x); c[i]=Math.sign(x)*(ax<=k?ax:k+h*Math.tanh((ax-k)/h)); } return clipCurve.c=c; }
@@ -5582,7 +5583,7 @@ function initControls(){
     kw.classList.add('big'); kw.title='Body, deeper pitch drop and saturation inside every drum · double-click resets'; $('weightSlot').replaceWith(kw); UPD.push(kw.upd); }
   { const kw=makeKnob({label:'Width',min:0,max:150,step:1,get:()=>Math.round((S.fx.width??1)*100),set:v=>{ S.fx.width=v/100; syncGraph(AG); invalidate(); },fmt:v=>v+'%',def:100});
     kw.classList.add('big'); kw.title='Width: how far the players stand apart, left to right. 100% is the ensemble as set, 0% is mono · double-click resets'; $('widthSlot').replaceWith(kw);
-    const kr=makeKnob({label:'Room',min:0,max:100,step:1,get:()=>Math.round((S.fx.room??.25)*100),set:v=>{ S.fx.room=v/100; roomSync(AG); invalidate(); },fmt:v=>v?v+'%':'off',def:25});
+    const kr=makeKnob({label:'Room',min:0,max:100,step:1,get:()=>Math.round((S.fx.room??0)*100),set:v=>{ S.fx.room=v/100; roomSync(AG); invalidate(); },fmt:v=>v?v+'%':'off',def:0});
     kr.title='Room: the drums in a small wooden room, early reflections only, so they stand in a space. It is not the reverb · double-click resets'; $('roomSlot').replaceWith(kr);
     kr.classList.add('big'); UPD.push(()=>{ kw.upd(); kr.upd(); }); }
   { const kv=makeKnob({label:'Master',min:0,max:100,step:1,get:()=>Math.round(vetAmt()*100),set:v=>{ S.fx.vetAmt=v/100; S.fx.vetOn=true; vetSync(AG); vu(); invalidate(); },fmt:v=>v+'%',def:Math.round(FX_DEFAULT.vetAmt*100)});
