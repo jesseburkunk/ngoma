@@ -80,6 +80,13 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     assert(!r.nokey && !r.dup, 'keys: ' + r.nokey + ' without, ' + r.dup + ' double'); assert(r.learned === 'kitmix:Low' && Math.abs(r.half - .63) < .02 && r.full === 1.25, JSON.stringify(r)); assert(r.lvl === 1.6 && r.free === false, JSON.stringify(r));
     return r.n + ' controls learnable'; });
 
+  await check('Bass Roll plays between the beats, Rumble adds low end from the surdo', async () => { const r = await p.evaluate(async rj => { const rms = eval(rj), keep = JSON.stringify(S.fx), b0 = S.bars, o = {}; S.bars = 1;
+      Object.assign(S.fx, { bsOn: true, bsSty: 'roll', bsLvl: .5, bsRum: 0 }); S.renderOnly = -5; const w = await renderLoop(false, 22050); S.renderOnly = null; const h = Math.floor(w[0].length / (4 * S.res)); let on = 0, off = 0;
+      for (let k = 0; k < 4 * S.res; k++) { let m = 0; for (let j = k * h + Math.floor(h * .1); j < k * h + Math.floor(h * .6); j++) m = Math.max(m, Math.abs(w[0][j])); if (k % S.res) off += m; else on += m; } o.on = on / 4; o.off = off / (4 * (S.res - 1));
+      const surd = S.lanes[INSTR.findIndex(x => x.id === 'surdo')]; o.hits = surd.steps.filter(Boolean).length;
+      S.fx.bsLvl = 0; const a = await renderLoop(false, 22050); S.fx.bsRum = .8; const b = await renderLoop(false, 22050); o.ra = rms(a[0]); o.rb = rms(b[0]); S.fx = JSON.parse(keep); syncGraph(AG); S.bars = b0; return o; }, rmsJS);
+    assert(r.off > r.on * 1.5, 'roll ' + JSON.stringify(r)); if (r.hits) assert(r.rb > r.ra * 1.03, 'rumble ' + JSON.stringify(r)); return 'roll between ' + r.off.toFixed(2) + ' vs on beat ' + r.on.toFixed(2) + (r.hits ? ', rumble +' + (20 * Math.log10(r.rb / r.ra)).toFixed(1) + ' dB' : ''); });
+
   await check('Surdo Punch adds a kick transient', async () => { const r = await p.evaluate(async () => { const i = INSTR.findIndex(x => x.id === 'surdo'), L = S.lanes[i], keep = { pu: L.punch, mute: L.mute, bars: S.bars }; S.bars = 1; L.mute = false;
       if (!L.steps.some(x => x)) return 'no surdo hits in this rhythm';
       const m = a => { let pk = 0, e = 0, hf = 0; for (let k = 1; k < a.length; k++) { const x = a[k], d = x - a[k - 1]; pk = Math.max(pk, Math.abs(x)); e += x * x; hf += d * d; } return [pk / Math.sqrt(e / a.length), Math.sqrt(hf / e)]; }, out = [];
