@@ -71,6 +71,14 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
       const out = { bars: c.bars, ratio: w[0].length / one[0].length, live: S.bars, nb }; S.lanes.forEach((x, i) => x.len = lens[i]); L.len = l0; S.bars = b0; Object.assign(S.fx, JSON.parse(keep)); return out; });
     assert(r.bars === 3 && Math.abs(r.ratio - 3) < .01 && r.live === 1, JSON.stringify(r)); return 'a lane of 3 beats in a 1-bar loop: ' + r.bars + ' bars'; });
 
+  await check('Surdo Punch adds a kick transient', async () => { const r = await p.evaluate(async () => { const i = INSTR.findIndex(x => x.id === 'surdo'), L = S.lanes[i], keep = { pu: L.punch, mute: L.mute, bars: S.bars }; S.bars = 1; L.mute = false;
+      if (!L.steps.some(x => x)) return 'no surdo hits in this rhythm';
+      const m = a => { let pk = 0, e = 0, hf = 0; for (let k = 1; k < a.length; k++) { const x = a[k], d = x - a[k - 1]; pk = Math.max(pk, Math.abs(x)); e += x * x; hf += d * d; } return [pk / Math.sqrt(e / a.length), Math.sqrt(hf / e)]; }, out = [];
+      for (const pu of [0, 1]) { L.punch = pu; S.renderOnly = i; const w = await renderLoop(false, 44100); S.renderOnly = null; out.push(m(w[0])); }
+      L.punch = keep.pu; L.mute = keep.mute; S.bars = keep.bars; return out; });
+    if (typeof r === 'string') return r;
+    assert(r[1][1] > r[0][1] * 1.3, 'brightness ' + r.map(x => x[1].toFixed(3)).join(' -> ')); return 'crest ' + r.map(x => x[0].toFixed(1)).join(' -> ') + ', brightness ' + r.map(x => x[1].toFixed(3)).join(' -> '); });
+
   await check('Candy Attack softens the transients', async () => { const r = await p.evaluate(async () => { const keep = JSON.stringify(S.fx); S.bars = 1; Object.assign(S.fx, { cdOn: true, cdSrc: 'synth', cdLvl: .6, cdAmt: .7 });
       const crest = a => { let pk = 0, e = 0; for (const x of a) { pk = Math.max(pk, Math.abs(x)); e += x * x; } return pk / Math.sqrt(e / a.length); }, out = [];
       for (const at of [0, 1]) { S.fx.cdAtk = at; S.renderOnly = -4; const w = await renderLoop(true, 22050); S.renderOnly = null; out.push(crest(w[0])); } Object.assign(S.fx, JSON.parse(keep)); return out; });

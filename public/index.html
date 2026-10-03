@@ -181,6 +181,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .knobs{display:flex;gap:6px}
 .knob{display:flex;flex-direction:column;align-items:center;width:38px;gap:2px}
 .knob.sep{margin-left:8px}
+.knob.punch{margin-left:8px}.knob.punch .kl{color:var(--accent);font-weight:700}
+.kickb{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;margin-left:6px;padding:1px 4px;border-radius:3px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent);vertical-align:2px;font-weight:600}
 .kl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .kv{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--text);white-space:nowrap}
 .knob.lvl .kl{font-weight:800;color:var(--text)}
@@ -3041,10 +3043,14 @@ function tone(ctx,out,t,o){ // o: {type,f,bend,bt,drift,peak,att,d}
 const cents=c=>Math.pow(2,c/1200);
 // rv: three values -1..1 per hit, tv: tone variation of the track 0..1
 function vMem(ctx,out,t,v,hz,T,p,rv,tv){
-  const fat=S.fat;
+  const fat=S.fat, pu=p.pu||0;
+  /* v222 Punch (surdo only, Jesse: I use it as my kick). At 0 nothing changes. Turned up: a faster, deeper pitch dive, a tighter tail,
+     a short click and a thump on top, and the whole voice through a soft saturator, so the hit reads as a kick without losing the skin. */
+  if(pu>0){ const k=1+pu*2.4, n=1024, c=new Float32Array(n); for(let j=0;j<n;j++){ const x=j/(n-1)*2-1; c[j]=Math.tanh(k*x)/Math.tanh(k); }
+    const ws=ctx.createWaveShaper(); ws.curve=c; const tg=ctx.createGain(); tg.gain.value=1-pu*.18; ws.connect(tg).connect(out); out=ws; }
   const f=Math.min(hz*p.pm*cents(rv[0]*tv*18+(v-.6)*6),9000);          // micro detune + harder = slightly sharper
-  const d=Math.max(.03,T*p.dm*(1+fat*.25)*(1+rv[2]*tv*.15));
-  const bend=Math.pow(p.bend,(1+fat*.7)*(.7+.6*v)), bt=(.03+fat*.035)*(1+rv[1]*tv*.2);
+  const d=Math.max(.03,T*p.dm*(1+fat*.25)*(1+rv[2]*tv*.15)*(1-pu*.32));
+  const bend=Math.pow(p.bend*(1+pu*1.4),(1+fat*.7)*(.7+.6*v)), bt=(.03+fat*.035)*(1+rv[1]*tv*.2)*(1-pu*.45);
   const edge=Math.max(0,Math.min(1,.35+rv[1]*tv*.6+(p.nz>.5?.4:0)));     // hit closer to the rim = more overtones
   const gl=p.gl||0, gt=(p.gt||.15)*(1+rv[1]*tv*.25);
   const fd=p.fd??1, md=p.md??1;   /* v157: per table, how much fundamental and how much of the skin's modes */
@@ -3059,6 +3065,11 @@ function vMem(ctx,out,t,v,hz,T,p,rv,tv){
   // punch-transient
   { const x=ctx.createOscillator(); x.frequency.setValueAtTime(f*4,t); x.frequency.exponentialRampToValueAtTime(f,t+.012);
     const g=ctx.createGain(); env(g,t,v*.5*fat,.018,.0008); x.connect(g).connect(out); x.start(t); x.stop(t+.05); }
+  if(pu>0){ // Punch: thump (a sine diving from three times the note) and a beater click
+    const x=ctx.createOscillator(); x.frequency.setValueAtTime(Math.min(f*3,600),t); x.frequency.exponentialRampToValueAtTime(f,t+.028);
+    const g=ctx.createGain(); env(g,t,v*.75*pu,.045,.0006); x.connect(g).connect(out); x.start(t); x.stop(t+.09);
+    const n=noise(ctx,t,.02), h=bq(ctx,'highpass',2600), b=bq(ctx,'peaking',4200,1), cg=ctx.createGain(); b.gain.value=6;
+    env(cg,t,v*.55*pu,.005,.0003); n.connect(h).connect(b).connect(cg).connect(out); }
   if(p.nz>0){ const n=noise(ctx,t,p.nd+.02); const b=bq(ctx,'bandpass',p.nf*(1+rv[1]*tv*.2),.8);
     const g=ctx.createGain(); env(g,t,v*p.nz*(1+rv[0]*tv*.2),p.nd,.001); n.connect(b).connect(g).connect(out); }
   // snare wires (cajón) or the gut snare of a bendir: a buzz that follows the skin
@@ -3252,6 +3263,7 @@ function voice(ctx,out,i,a,t,v,acc,rv,tn=0,dc=1){
 function voiceKind(ctx,out,I,a,t,v,acc,rv,m,hz,T,tv){
   if(I.gain){ const tg=ctx.createGain(); tg.gain.value=I.gain; tg.connect(out); out=tg; }   // per-voice trim (tumba: Jesse found it too dominant, -3.5 dB)
   if(I.kind==='mem'){ let p=ARTP[I.tbl][I.arts[a]]||ARTP[I.tbl][I.arts[0]];
+    if(I.id==='surdo'){ const pu=(S.lanes.find(l=>l.id==='surdo')||{}).punch||0; if(pu>0) p={...p,pu}; }
     if(p.slapIv){ const d=[3,4,5,2].find(x=>inScale(m+x,S.key)) ?? 3; p={...p,pm:Math.pow(2,d/12)}; }   // the slap rings a third or so above the open tone: pick the one in your scale
     vMem(ctx,out,t,v,hz,T,p,rv,tv); }
   else if(I.kind==='bell') vBell(ctx,out,t,v,hz,T,a,rv,tv);
@@ -3276,7 +3288,7 @@ function vcSpec(i,a,t,v,acc,rv,tn,dc){ const I=INSTR[i], L=S.lanes[i]; if(!I||!L
   const T0=I.dec*L.decay*dc*(dr?dr.d:1), T=Math.pow(2,Math.round(Math.log2(Math.max(.01,T0))*8)/8);   /* lengths in steps of about 9% */
   const vl=v>.75?1:v>.36?.55:.25, r=rv||[0,0,0], k=Math.floor(((r[0]+1)*2.9+(r[2]+1)*1.7))%3, e=Math.round(((L.col||0)*.9+(dr?dr.e:0))/.3)*.3;
   const p=I.kind==='mem'?(ARTP[I.tbl][I.arts[a]]||{}):{};
-  const key=[i,a,m,T.toFixed(4),vl,k,e.toFixed(1),tv.toFixed(2),(S.fat||0).toFixed(2),I.kind==='shk'?(acc?1:0):'',p.slapIv?S.key:''].join('|');
+  const key=[i,a,m,T.toFixed(4),vl,k,e.toFixed(1),tv.toFixed(2),(S.fat||0).toFixed(2),I.kind==='shk'?(acc?1:0):'',p.slapIv?S.key:'',I.id==='surdo'?(L.punch||0).toFixed(2):''].join('|');
   return {key,i,a,m,T,vl,k,e,tv,acc,g:v/vl*(dr?dr.l:1),cents:dr?dr.c:0}; }
 function vcGet(sp,sr){ if(VC.sr!==sr){ VC.sr=sr; VC.map.clear(); VC.q.length=0; VC.pend.clear(); }
   const b=VC.map.get(sp.key); if(b){ VC.map.delete(sp.key); VC.map.set(sp.key,b); return b; }
@@ -5050,6 +5062,9 @@ function laneRow(i){
     makeKnob({label:'Rev',min:0,max:1,step:.01,def:0,get:()=>L.rev,set:v=>{L.rev=v;syncGraph(AG);save();},fmt:v=>Math.round(v*100)}),
     makeKnob({label:'Dly',min:0,max:1,step:.01,def:0,get:()=>L.dly,set:v=>{L.dly=v;syncGraph(AG);save();},fmt:v=>Math.round(v*100)})
   );
+  if(I.id==='surdo'){ const pk=makeKnob({label:'Punch',min:0,max:1,step:.01,def:0,get:()=>L.punch||0,set:v=>{L.punch=v;save();},fmt:v=>Math.round(v*100)+'%',onRelease:()=>{ if(AUD) preview(i,0); }});
+    pk.classList.add('punch'); pk.title='Punch: turns the surdo into a kick. A faster pitch dive, a click, a thump and a little saturation'; knobs.append(pk);
+    const kb=document.createElement('i'); kb.className='kickb'; kb.textContent='kick'; nb.append(kb); }
   const ctl=document.createElement('div'); ctl.className='lctl';
   const len=document.createElement('input'); len.type='number'; len.min=2; len.max=32; len.className='len'; len.id='len'+i; len.title='Length in steps'; len.setAttribute('aria-label',I.name+' length');
   len.onchange=()=>{ const n=Math.max(2,Math.min(32,parseInt(len.value)||L.blen)); L.blen=n; L.btpl=L.btpl.padEnd(n,'.').slice(0,n);
@@ -5529,7 +5544,7 @@ function initControls(){
   { // Space (Simple view): one knob for reverb return and the delay send. It writes the real settings, so Full shows the result.
     const dlFrom=v=>v<=70 ? .08*v/70 : .08+(v-70)/30*.22;
     const ks=makeKnob({label:'Space',min:0,max:100,step:1,get:()=>Math.round((S.fx.rvOn?S.fx.rvLevel:0)*100),
-      set:v=>{ S.fx.rvLevel=v/100; S.fx.dlSend=+dlFrom(v).toFixed(3); if(v>0){ S.fx.rvOn=true; S.fx.dlOn=true; } fxSync(); },
+      set:v=>{ S.fx.rvLevel=v/100; S.fx.dlSend=+dlFrom(v).toFixed(3); if(v>0){ S.fx.rvOn=true; S.fx.dlOn=true; } else { S.fx.rvOn=false; S.fx.dlOn=false; } fxSync(); },   /* v222 (Jesse: everything off, yet I hear a delay): Space at 0 is dry; before, the tracks' own Dly sends still reached the delay */
       fmt:v=>v+'%',def:70});
     ks.title='More room around the drums: reverb and echo together · drag, double-click resets'; ks.classList.add('big','mgk');
     const wr=document.createElement('div'); wr.className='mgw'; wr.append(ks); $('spSlot').replaceWith(wr); UPD.push(()=>ks.upd()); } fsel('rvType','rvType',true); fsel('dlTime','dlTime'); fsel('dlMode','dlMode'); fsel('dlType','dlType'); fsel('dlHeads','dlHeads');
